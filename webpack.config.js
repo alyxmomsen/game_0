@@ -1,32 +1,38 @@
-
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require('path');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const path = require("path");
 
 module.exports = {
-
-    entry:{
-        main:'./src/index.js' ,
-    } , 
-    output: {
-        filename:'[name].[contenthash].js' ,
-        path:path.resolve(__dirname , 'dist') ,
-        clean:true ,
-    } , 
-    module: {
-        rules: [
-          {
-            test: /\.css$/i,
-            use: ['style-loader', 'css-loader'],
-          },
-        ],
+  entry: {
+    main: "./src/index.ts",
+  },
+  output: {
+    filename: "[name].[contenthash].js",
+    path: path.resolve(__dirname, "dist"),
+    clean: true,
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
+  },
+  devtool: "inline-source-map",
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
       },
-    mode:'production' , 
-    plugins:[
-        new HtmlWebpackPlugin({
-            template:'./src/template.html' , 
-            inject:'body' ,
-        })
-    ]
-
-
-}
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  mode: "production",
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/template.html",
+      inject: "body",
+    }),
+  ],
+};
