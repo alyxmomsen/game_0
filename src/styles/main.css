@@ -1,0 +1,9 @@
+
+.object-body {
+    width: 200px;
+    height: auto;
+    margin: 2px;
+    padding: 6px;
+    background-color: aqua;
+    border: 1px solid black;
+}
