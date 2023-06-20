@@ -13,6 +13,14 @@ export class Tick {
     }
   }
 
+  setSpeed(value: number = 0) {
+    if (value >= 0) {
+      this.speed = value;
+    } else {
+      this.speed = 0;
+    }
+  }
+
   constructor(speed = 0) {
     if (speed < 0) {
       speed = 0;
@@ -20,6 +28,40 @@ export class Tick {
     this.speed = speed;
     this.currentTick = Date.now();
   }
+}
+
+export function calculateMovementDirection(keys: string[]): {
+  x: 0 | 1 | -1;
+  y: 0 | 1 | -1;
+} {
+  let w = keys.includes("w");
+  let s = keys.includes("s");
+  let a = keys.includes("a");
+  let d = keys.includes("d");
+
+  const f = function (a: boolean, b: boolean) {
+    if (a && !b) {
+      return -1;
+    } else if (b && !a) {
+      return 1;
+    } else if ((!a && !b) || (a && b)) {
+      return 0;
+    } else {
+      return 0;
+    }
+  };
+
+  return { x: f(a, d), y: f(w, s) };
+}
+
+export function generateMovementDirection(): { x: 0 | 1 | -1; y: -1 | 1 | 0 } {
+  const x = Math.floor(Math.random() * 3) - 1;
+  const y = Math.floor(Math.random() * 3) - 1;
+
+  return {
+    x: x === 1 || x === 0 || x === -1 ? x : 0,
+    y: y === 1 || y === 0 || y === -1 ? y : 0,
+  };
 }
 
 export function buildGameObjectStatsHTMLElement({

@@ -1,11 +1,3 @@
-
-
 export class GameObjectManager {
-
-    
-    
-
-    constructor () {
-
-    }
+  constructor() {}
 }

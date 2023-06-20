@@ -1,10 +1,8 @@
 import { ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
-import { Tick, calculateMovementDirection } from "../library/main";
 import GameObject, { Position } from "./gameobject";
-// import { heroActions, moveHero } from "./player_keys_checker";
 
-export class Player extends GameObject {
+export class DamageEntity extends GameObject {
   constructor({
     id,
     armorKind,
@@ -18,19 +16,13 @@ export class Player extends GameObject {
   }) {
     super({
       id, //
-      backgroundColor: "green",
-      kind: "player",
+      backgroundColor: "white",
+      kind: "damage-entity",
       armorKind,
       damaged,
       walkSpeed: 20,
-      color: "green",
+      color: "white",
       position,
     });
-
-    this.movement = { direction: "down" };
-
-    console.log("переопределенный метод");
-
-    console.log("player constructed");
   }
 }

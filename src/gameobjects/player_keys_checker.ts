@@ -4,9 +4,7 @@ export function heroActions({ keys = [] }: { keys: string[] }) {
   if (keys.includes("g")) {
     if (!this.shot_options.ticker) {
       this.shot_options.ticker = new Tick(this.shot_options.speed);
-      // console.log('yahoo it s gggggg') ;
     } else if (this.shot_options.ticker.tick()) {
-      // console.log('yahoo it s gggggg') ;
     }
   }
 }

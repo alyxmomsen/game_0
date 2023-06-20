@@ -22,7 +22,8 @@ import "./styles/main.css";
   }
 
   const time = new Date();
-  const theGame = new Game({ root, infcDisplay });
+  const fieldDimentions = { width: 60, height: 40 };
+  const theGame = new Game({ root, infcDisplay, fieldDimentions });
 
   const mainLoop = function () {
     theGame.update();
