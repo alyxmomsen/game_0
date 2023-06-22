@@ -60,7 +60,7 @@ export default class Game {
           kind: "game_object",
           position: generatePostion(fieldDimentions),
           backgroundColor: "grey",
-          walkSpeed: 10,
+          walkTickValue: 10,
           color: "grey",
           damage ,
           direction:{x:1, y:0} ,
@@ -72,7 +72,7 @@ export default class Game {
           kind: "game_object",
           position: generatePostion(fieldDimentions),
           backgroundColor: "white",
-          walkSpeed: 10,
+          walkTickValue: 1,
           color: "white",
           damage,
           direction:{x:1, y:0} ,
@@ -95,13 +95,13 @@ export default class Game {
     this.bullets.forEach((elem) => {
       elem.update({
         keys,
-        damage: 100,
         objects: [...this.enemies, this.player],
       });
     });
 
     // обновление объектов
-    this.player.update({ keys, damage: 0, objects: [] });
+    this.player.update({ keys, objects: [] });
+
     /* generation objects */
 
     if (this.player.attack.status) {
@@ -124,7 +124,6 @@ export default class Game {
     this.enemies.forEach((enemy, i) => {
       enemy.update({
         keys,
-        damage: 0,
         objects: [...this.enemies, this.player],
       });
     });

@@ -7,6 +7,7 @@ import {
   calculateMovementDirection,
   generateMovementDirection,
 } from "../library/main";
+import { Movement } from "../library/movement";
 import { Player } from "./player";
 import { heroActions, moveHero } from "./player_keys_checker";
 
@@ -28,7 +29,7 @@ export type GameObjectConstructor = {
   id: number;
   backgroundColor: string;
   kind: GameObjectType;
-  walkSpeed: number;
+  walkTickValue: number;
   color: string;
   position: Position;
   damage: Damage;
@@ -49,12 +50,14 @@ export default class GameObject {
 
   movement: { direction: Direction };
 
-  walkSpeed: { velocity: number; ticker: null | Tick; speed: number } = {
+  walk: { velocity: number; ticker: null | Tick; tickSpeed: number } = {
     // объект движения
     velocity: 1,
-    speed: Math.round(1000 / 20),
+    tickSpeed: Math.round(1000 / 20),
     ticker: null,
   };
+
+  movemnt:Movement ;
 
   /* ================================ */
 
@@ -63,12 +66,12 @@ export default class GameObject {
   id: number;
 
   health = 100;
-
+  isDied:boolean ;
   attack: Attack;
 
-  damage: Damage;
-  attackInterval = 200;
-  attackTicker: Tick = null;
+  // damage: Damage;
+  // attackInterval = 200;
+  // attackTicker: Tick = null;
   // ddamage = 10;
   armor: Armor;
 
@@ -88,11 +91,8 @@ export default class GameObject {
 
   // атака на указаный объект
   attackTo(object: GameObject) {
-    object.damaged.push(new Damage(this.damage.class, this.damage.value));
+    object.damaged.push(new Damage(this.attack.damage.class, this.attack.damage.value));
   }
-
-  // создание сущности наносящее урон
-  generateDamageEntity(keys: string[], auto: boolean = true) {}
 
   checkColissionWith({ x, y }: Position) {
     return this.position.x === x && this.position.y === y ? true : false;
@@ -124,11 +124,11 @@ export default class GameObject {
 
   update({
     keys,
-    damage,
+    
     objects,
   }: {
     keys: string[];
-    damage: number;
+
     objects: GameObject[];
   }) {
     // блок ходов
@@ -137,7 +137,7 @@ export default class GameObject {
 
     // this.movement.direction = this.generanteDirection();
 
-    if (this.walkSpeed.ticker.tick()) {
+    if (this.walk.ticker.tick()) {
       if (this.kind === "player") {
         this.move(calculateMovementDirection(keys));
       } else if (this.kind === "enemy") {
@@ -154,13 +154,8 @@ export default class GameObject {
 
     for (const object of objects) {
       if (object !== this && this.checkColissionWith(object.position)) {
-        if (!this.attackTicker) {
-          this.attackTicker = new Tick(this.attackInterval);
+        if (this.attack.ticker.tick()) {
           this.attackTo(object);
-        } else {
-          if (this.attackTicker.tick()) {
-            this.attackTo(object);
-          }
         }
       }
     }
@@ -171,11 +166,19 @@ export default class GameObject {
       if (this.damaged.length) {
         for (const damage of this.damaged) {
           this.health -= damage.value;
+          
         }
       }
 
       this.damaged = [];
     })();
+
+
+    // check if this died
+
+    if(this.health <= 0) {
+      this.isDied = true ;
+    }
 
     // заявки на атаки
 
@@ -198,25 +201,29 @@ export default class GameObject {
     position,
     backgroundColor,
     kind,
-    walkSpeed,
+    walkTickValue,
     damage,
     direction,
   }: GameObjectConstructor) {
+
     this.position = position;
-    this.damage = damage;
     this.attack = new Attack(damage ,new Tick(150));
-    this.movement = { direction };
     /* --------------- */
-    this.walkSpeed.speed = Math.round(1000 / walkSpeed);
-    this.walkSpeed.ticker = new Tick(this.walkSpeed.speed);
+    this.movement = { direction };
+    this.walk.tickSpeed = walkTickValue;
+    this.walk.ticker = new Tick(this.walk.tickSpeed);
     /* -------------------------- */
 
     this.armor = new Armor("light");
 
     this.damaged = [];
-
+    this.isDied = false ;
     this.kind = kind;
     this.id = id;
+
+    /* ================= exp ================= */
+
+    this.movemnt = new Movement(walkTickValue , direction);
 
     /* display --------------------------*/
 

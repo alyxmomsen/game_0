@@ -15,7 +15,7 @@ export class DamageEntity extends GameObject {
       id, //
       backgroundColor: "white",
       kind: "damage-entity",
-      walkSpeed: 20,
+      walkTickValue: 20,
       color: "white",
       position,
       damage: new Damage("phisical", 100),

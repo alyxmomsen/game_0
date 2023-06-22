@@ -10,7 +10,7 @@ export class Enemy extends GameObject {
       id,
       kind: "enemy",
       position,
-      walkSpeed: 5,
+      walkTickValue: 900,
       damage: new Damage("phisical", 0),
       direction: { x: 1, y: 0 },
     });

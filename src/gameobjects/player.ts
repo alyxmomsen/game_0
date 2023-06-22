@@ -10,7 +10,7 @@ export class Player extends GameObject {
       id,
       backgroundColor: "green",
       kind: "player",
-      walkSpeed: 20,
+      walkTickValue: 100,
       color: "green",
       position,
       damage: new Damage("phisical", 0),

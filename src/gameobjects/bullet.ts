@@ -6,7 +6,7 @@ export class Bullet extends GameObject {
     position,
     id,
     direction,
-    damage,
+    damage ,
   }: {
     position: Position;
     id: number;
@@ -20,7 +20,7 @@ export class Bullet extends GameObject {
       id,
       kind: "damage-entity",
       position,
-      walkSpeed: 100,
+      walkTickValue: 20,
       direction,
     });
   }
