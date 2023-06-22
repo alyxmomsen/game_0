@@ -6,7 +6,7 @@ export class Bullet extends GameObject {
     position,
     id,
     direction,
-    damage ,
+    damage,
   }: {
     position: Position;
     id: number;

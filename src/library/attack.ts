@@ -17,9 +17,9 @@ export class Attack {
     this.status = false;
   }
 
-  constructor(damage:Damage , ticker: Tick) {
+  constructor(damage: Damage, ticker: Tick) {
     this.ticker = ticker;
     this.speed = this.ticker.speed;
-    this.damage = damage ;
+    this.damage = damage;
   }
 }

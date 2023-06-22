@@ -48,7 +48,7 @@ export default class GameObject {
 
   /* ================================ */
 
-  movement: { direction: Direction };
+  // movement: { direction: Direction };
 
   walk: { velocity: number; ticker: null | Tick; tickSpeed: number } = {
     // объект движения
@@ -57,7 +57,7 @@ export default class GameObject {
     ticker: null,
   };
 
-  movemnt:Movement ;
+  movement: Movement;
 
   /* ================================ */
 
@@ -66,7 +66,7 @@ export default class GameObject {
   id: number;
 
   health = 100;
-  isDied:boolean ;
+  isDied: boolean;
   attack: Attack;
 
   // damage: Damage;
@@ -91,7 +91,9 @@ export default class GameObject {
 
   // атака на указаный объект
   attackTo(object: GameObject) {
-    object.damaged.push(new Damage(this.attack.damage.class, this.attack.damage.value));
+    object.damaged.push(
+      new Damage(this.attack.damage.class, this.attack.damage.value)
+    );
   }
 
   checkColissionWith({ x, y }: Position) {
@@ -124,26 +126,25 @@ export default class GameObject {
 
   update({
     keys,
-    
     objects,
   }: {
     keys: string[];
-
     objects: GameObject[];
   }) {
+
     // блок ходов
 
     // генерация направления
 
     // this.movement.direction = this.generanteDirection();
-
-    if (this.walk.ticker.tick()) {
-      if (this.kind === "player") {
-        this.move(calculateMovementDirection(keys));
+    
+    if (this.movement.ticker.tick()) { 
+      if (this.kind === "player") { 
+        this.move(calculateMovementDirection(keys)) ;
       } else if (this.kind === "enemy") {
-        this.move(generateMovementDirection());
+        this.move(generateMovementDirection()) ;
       } else if (this.kind === "damage-entity") {
-        this.move(this.movement.direction);
+        this.move(this.movement.direction) ;
       }
     }
 
@@ -153,6 +154,7 @@ export default class GameObject {
     // проверка коллизий
 
     for (const object of objects) {
+      
       if (object !== this && this.checkColissionWith(object.position)) {
         if (this.attack.ticker.tick()) {
           this.attackTo(object);
@@ -166,21 +168,19 @@ export default class GameObject {
       if (this.damaged.length) {
         for (const damage of this.damaged) {
           this.health -= damage.value;
-          
         }
       }
 
       this.damaged = [];
     })();
 
-
     // check if this died
 
-    if(this.health <= 0) {
-      this.isDied = true ;
+    if (this.health <= 0) {
+      this.isDied = true;
     }
 
-    // заявки на атаки
+    // attacks
 
     if (this.kind === "player") {
       if (keys.includes(" ") && this.attack.ticker.tick()) {
@@ -205,27 +205,20 @@ export default class GameObject {
     damage,
     direction,
   }: GameObjectConstructor) {
-
+    this.movement = new Movement(walkTickValue, direction);
     this.position = position;
-    this.attack = new Attack(damage ,new Tick(150));
-    /* --------------- */
-    this.movement = { direction };
-    this.walk.tickSpeed = walkTickValue;
-    this.walk.ticker = new Tick(this.walk.tickSpeed);
-    /* -------------------------- */
+    this.attack = new Attack(damage, new Tick(150));
 
     this.armor = new Armor("light");
 
     this.damaged = [];
-    this.isDied = false ;
+    this.isDied = false;
     this.kind = kind;
     this.id = id;
 
-    /* ================= exp ================= */
+    /* ================= test zone ================= */
 
-    this.movemnt = new Movement(walkTickValue , direction);
-
-    /* display --------------------------*/
+    /* ----------- display --------------------------*/
 
     this.main_html_element = document.createElement("div");
     this.main_html_element.className = "object-body";
