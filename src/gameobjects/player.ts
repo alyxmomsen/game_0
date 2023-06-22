@@ -13,9 +13,11 @@ export class Player extends GameObject {
   }: {
     id: number;
     armorKind: ArmorClass;
-    damaged: Damage | null;
+    damaged: Damage[] ;
     position: Position;
   }) {
+
+    
     super({
       id, //
       backgroundColor: "green",
@@ -25,6 +27,7 @@ export class Player extends GameObject {
       walkSpeed: 20,
       color: "green",
       position,
+      damage:new Damage('phisical' , 100) ,
     });
 
     this.movement = { direction: "down" };

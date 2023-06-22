@@ -11,7 +11,7 @@ export class Enemy extends GameObject {
   }: {
     id: number;
     armorKind: ArmorClass;
-    damaged: Damage | null;
+    damaged: Damage[] ;
     position: Position;
   }) {
     super({
@@ -23,6 +23,7 @@ export class Enemy extends GameObject {
       kind: "enemy",
       position,
       walkSpeed: 5,
+      damage:new Damage('phisical' , 100) ,
     });
 
     this.movement = { direction: "down" };

@@ -11,7 +11,7 @@ export class DamageEntity extends GameObject {
   }: {
     id: number;
     armorKind: ArmorClass;
-    damaged: Damage | null;
+    damaged: Damage[];
     position: Position;
   }) {
     super({
@@ -23,6 +23,7 @@ export class DamageEntity extends GameObject {
       walkSpeed: 20,
       color: "white",
       position,
+      damage:new Damage('phisical' , 100) ,
     });
   }
 }

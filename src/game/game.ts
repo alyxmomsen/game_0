@@ -1,4 +1,5 @@
 // import GameObject, { Enemy } from "../gameobjects/gameobject";
+import { Bullet } from "../gameobjects/bullet";
 import { Enemy } from "../gameobjects/enemy";
 import GameObject, {
   Dimentions,
@@ -18,22 +19,19 @@ import { Tick, buildField, generateColor } from "../library/main";
 
 
 export default class Game {
-  actions: { from: number; to: number; action: Attack }[];
-  gameObjects: GameObject[] = [];
-  enemies: GameObject[] = [];
+  
+
+
   // hero: GameObject = null;
   field: { dimentions: Dimentions };
-
-
+  
+  
+  enemies: GameObject[] = [];
+  gameObjects: GameObject[] = [];
+  bullets: GameObject[] = [] ;
   // объект игрока
   player: Player;
 
-  // заявки на генерацию объектов
-  toGenerate: {
-    position: { x: number; y: number };
-    class: GameObjectType;
-    direction: "up" | "right" | "down" | "left";
-  }[] = [];
 
 
   // Объект менеджера ключей клавиш
@@ -45,11 +43,6 @@ export default class Game {
 
   /* ======================== */
 
-  /* experimental fields */
-
-  randomDamageTick = new Tick(100);
-
-  /* ==================== */
 
   createGameObject({
     kind = "game_object",
@@ -57,7 +50,7 @@ export default class Game {
     fieldDimentions,
   }: {
     kind: GameObjectType;
-    damaged: Damage | null;
+    damaged: Damage[];
     fieldDimentions: { width: number; height: number };
   }) {
     let doLoopAgain = false; // флаг для повторной генерации рандомного ID, если обнаружен дублирующий ID
@@ -89,7 +82,7 @@ export default class Game {
         return new Enemy({
           id: newID,
           armorKind: "heavy",
-          damaged: null,
+          damaged: [],
           position: generatePostion({ width: 60, height: 40 }),
         });
       },
@@ -97,7 +90,7 @@ export default class Game {
         return new Player({
           id: newID,
           armorKind: "heavy",
-          damaged: null,
+          damaged: [],
           position: generatePostion({ width: 60, height: 40 }),
         });
       },
@@ -105,24 +98,26 @@ export default class Game {
         return new GameObject({
           id: newID,
           armorKind: "heavy",
-          damaged: null,
+          damaged: [],
           kind: "game_object",
           position: generatePostion({ width: 60, height: 40 }),
           backgroundColor: "grey",
           walkSpeed: 10,
           color: "grey",
+          damage: new Damage('phisical' , 0) ,
         });
       },
       "damage-entity": () => {
         return new GameObject({
           id: newID,
           armorKind: "heavy",
-          damaged: null,
+          damaged: [],
           kind: "game_object",
           position: generatePostion({ width: 60, height: 40 }),
           backgroundColor: "white",
           walkSpeed: 10,
           color: "white",
+          damage:new Damage('phisical' , 100) ,
         });
       },
     };
@@ -131,19 +126,23 @@ export default class Game {
   }
 
   update() {
-
+    
     /* Game управляет действиями Player (bdw, возможно они названны иначе, но это "пока" )
     на самом деле, как правило, игра сама наносит урон другим объектам, не создавая событие Attack у Player
 
     так же Player, как и другие объекты могут генерировать состояния такие как голод , усталость и т. д. */
 
-
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
+    
+    this.bullets.forEach(elem => {
+      
+      elem.update({keys , damage:100 , objects:[...this.enemies , this.player]});
 
-
+    });
+    
     // обновление объектов 
-    this.player.update({ keys, damage: 0, objects: [...this.enemies] }) ;
+    this.player.update({ keys, damage: 0, objects: [] }) ;
     
     this.enemies.forEach((enemy, i) => {
       enemy.update({
@@ -155,15 +154,12 @@ export default class Game {
 
     /* generation objects */
 
-    for (const toGenElement of this.toGenerate) {
-      this.gameObjects.push(
-        this.createGameObject({
-          kind: toGenElement.class,
-          damaged: null,
-          fieldDimentions: this.field.dimentions,
-        })
-      );
+    if(this.player.attack.status) {
+      
+      this.bullets.push(new Bullet({position:{x:this.player.position.x + 1 , y:this.player.position.y}}));
+      this.player.attack.reset(); 
     }
+    
     
     /* ================== */
   }
@@ -186,6 +182,11 @@ export default class Game {
   }
 
   render(field: HTMLElement = null) {
+
+    this.bullets.forEach(elem => {
+      this.renderGameObject({elem , field});
+    });
+
     this.renderGameObject({ elem: this.player, field });
 
     this.gameObjects.forEach((elem) => {
@@ -206,40 +207,45 @@ export default class Game {
     infcDisplay: HTMLElement;
     fieldDimentions: { width: number; height: number };
   }) {
+    this.keysManager = new KeysManager();
     this.field = { dimentions: fieldDimentions };
-
+    
     this.infcDisplay = infcDisplay;
 
-    this.keysManager = new KeysManager();
+    
+
 
     root.append(
       buildField(this.field.dimentions.height, this.field.dimentions.width)
     );
 
+
+    //////////////////////////////////
+
     this.player = new Player({
       id: 0,
       armorKind: "light",
-      damaged: null,
+      damaged: [],
       position: generatePostion(this.field.dimentions),
     });
 
     this.gameObjects.push(
       this.createGameObject({
-        damaged: null,
+        damaged: [],
         kind: "game_object",
         fieldDimentions,
       })
     );
     this.gameObjects.push(
       this.createGameObject({
-        damaged: null,
+        damaged: [],
         kind: "game_object",
         fieldDimentions,
       })
     );
     this.gameObjects.push(
       this.createGameObject({
-        damaged: null,
+        damaged: [],
         kind: "game_object",
         fieldDimentions,
       })
@@ -248,24 +254,26 @@ export default class Game {
     this.enemies.push(
       this.createGameObject({
         kind: "enemy",
-        damaged: null,
+        damaged: [],
         fieldDimentions,
       })
     );
     this.enemies.push(
       this.createGameObject({
         kind: "enemy",
-        damaged: null,
+        damaged: [],
         fieldDimentions,
       })
     );
     this.enemies.push(
       this.createGameObject({
         kind: "enemy",
-        damaged: null,
+        damaged: [],
         fieldDimentions,
       })
     );
+
+    //////////////////////////////////////////////
 
     this.enemies.forEach((enemy) => {
       this.infcDisplay.append(enemy.infc_display.mainHTMLElement);

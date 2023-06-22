@@ -26,10 +26,11 @@ export type GameObjectConstructor = {
   backgroundColor: string;
   kind: GameObjectType;
   armorKind: ArmorClass;
-  damaged: Damage | null;
+  damaged: Damage[]
   walkSpeed: number;
   color: string;
   position: Position;
+  damage:Damage ;
 };
 
 export type Dimentions = {
@@ -40,7 +41,7 @@ export type Dimentions = {
 export default class GameObject {
   dimentions: Dimentions;
   color: string;
-  damaged: Damage[] = []; // в данный момент получаемыe уроны
+  damaged: Damage[]; // в данный момент получаемыe уроны
 
   /* ================================ */
 
@@ -63,7 +64,7 @@ export default class GameObject {
 
   attack:Attack ;
 
-  damage: Damage = new Damage("phisical", 0) ;
+  damage: Damage ;
   attackInterval = 200;
   attackTicker: Tick = null;
   // ddamage = 10;
@@ -85,6 +86,7 @@ export default class GameObject {
 
   // атака на указаный объект
   attackTo(object: GameObject) {
+    
     object.damaged.push(new Damage(this.damage.class, this.damage.value));
   }
 
@@ -127,29 +129,26 @@ export default class GameObject {
     objects: GameObject[];
   }) {
 
-    if(!this.walkSpeed.ticker) {
-      this.walkSpeed.ticker = new Tick(this.walkSpeed.speed) ;
+    
+    // блок ходов
+
+    if(this.walkSpeed.ticker.tick()) {
 
       if (this.kind === "player") {
-        // двигаем объект
+        
         this.move(calculateMovementDirection(keys));
-        // experimental
-        this.generateDamageEntity(keys);
+        
       } else if (this.kind === "enemy") {
+        
         this.move(generateMovementDirection());
-      }
-      
-    } else if(this.walkSpeed.ticker.tick()) {
 
-      if (this.kind === "player") {
-        // двигаем объект
-        this.move(calculateMovementDirection(keys));
-        // experimental
-        this.generateDamageEntity(keys);
-      } else if (this.kind === "enemy") {
-        this.move(generateMovementDirection());
       }
     }
+
+    
+
+    // итерация по объектам
+    //...
 
     // проверка коллизий
 
@@ -166,9 +165,12 @@ export default class GameObject {
       }
     }
 
-    (() => {
+    // получение урона
 
+    (() => {
+      
       if (this.damaged.length) {
+        
         for (const damage of this.damaged) {
           this.health -= damage.value;
         }
@@ -177,6 +179,19 @@ export default class GameObject {
       this.damaged = [];
 
     })();
+
+
+    // заявки на атаки
+
+    if(this.kind === 'player') {
+      
+      if(keys.includes(' ') && this.attack.ticker.tick()) {
+
+        this.attack.setTrueStatus();
+      }
+    }
+    
+
   }
 
   render() {
@@ -194,20 +209,27 @@ export default class GameObject {
     armorKind,
     damaged,
     walkSpeed,
+    damage ,
   }: GameObjectConstructor) {
     this.position = position;
     this.attack = new Attack();
+    this.damage = damage;
+    this.damaged = [] ;
 
+    /* --------------- */
     this.walkSpeed.speed = Math.round(1000 / walkSpeed);
+    this.walkSpeed.ticker = new Tick(this.walkSpeed.speed);
+    /* -------------------------- */
+    
     this.armor = new Armor("light");
-
-    if (damaged) {
-      this.damaged.push(damaged);
-    }
-
+    
+    this.damaged = damaged ;
+    
     this.kind = kind;
-
     this.id = id;
+
+
+    /* display --------------------------*/
 
     this.main_html_element = document.createElement("div");
     this.main_html_element.className = "object-body";
