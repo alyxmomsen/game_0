@@ -16,6 +16,9 @@ export type GameObjectType =
   | "player"
   | "damage-entity";
 
+// export type Direction = "up" | "right" | "down" | "left";
+export type Direction = { x: 0 | 1 | -1; y: 0 | 1 | -1 };
+
 export type Position = {
   x: number;
   y: number;
@@ -25,12 +28,11 @@ export type GameObjectConstructor = {
   id: number;
   backgroundColor: string;
   kind: GameObjectType;
-  armorKind: ArmorClass;
-  damaged: Damage[]
   walkSpeed: number;
   color: string;
   position: Position;
-  damage:Damage ;
+  damage: Damage;
+  direction: Direction;
 };
 
 export type Dimentions = {
@@ -45,14 +47,14 @@ export default class GameObject {
 
   /* ================================ */
 
-  movement: { direction: "left" | "right" | "up" | "down" };
+  movement: { direction: Direction };
 
   walkSpeed: { velocity: number; ticker: null | Tick; speed: number } = {
     // объект движения
     velocity: 1,
-    speed: Math.round(1000 / 20) ,
+    speed: Math.round(1000 / 20),
     ticker: null,
-  } ;
+  };
 
   /* ================================ */
 
@@ -62,9 +64,9 @@ export default class GameObject {
 
   health = 100;
 
-  attack:Attack ;
+  attack: Attack;
 
-  damage: Damage ;
+  damage: Damage;
   attackInterval = 200;
   attackTicker: Tick = null;
   // ddamage = 10;
@@ -86,38 +88,39 @@ export default class GameObject {
 
   // атака на указаный объект
   attackTo(object: GameObject) {
-    
     object.damaged.push(new Damage(this.damage.class, this.damage.value));
   }
 
   // создание сущности наносящее урон
-  generateDamageEntity(keys:string[] ,auto:boolean = true) {
-
-    
-
-    
-  }
+  generateDamageEntity(keys: string[], auto: boolean = true) {}
 
   checkColissionWith({ x, y }: Position) {
-
     return this.position.x === x && this.position.y === y ? true : false;
   }
 
   move({ x, y }: { x: 1 | -1 | 0; y: 1 | -1 | 0 }) {
     if (x !== 0 || y !== 0) {
-
       this.position.y += y;
       this.position.x += x;
     }
 
-    if (x === 0) {
-      if (y !== 0) {
-        this.movement.direction = y > 0 ? "down" : "up";
+    if (x !== 0) {
+      if (this.kind === "player") {
+        console.log(x, y, x > 0 ? "right" : "left");
       }
-    } else {
-      this.movement.direction = x > 0 ? "right" : "left";
+      this.movement.direction = { x, y };
+    } else if (y !== 0) {
+      if (this.kind === "player") {
+        console.log(x, y, y > 0 ? "down" : "up");
+      }
+      this.movement.direction = { x, y };
     }
   }
+
+  /* generanteDirection ():Direction {
+    const direttions:Direction[] = ['up' , 'right' , 'down' , 'left'] ;
+    return direttions[Math.floor(Math.random() * 4)];
+  } */
 
   update({
     keys,
@@ -128,24 +131,21 @@ export default class GameObject {
     damage: number;
     objects: GameObject[];
   }) {
-
-    
     // блок ходов
 
-    if(this.walkSpeed.ticker.tick()) {
+    // генерация направления
 
+    // this.movement.direction = this.generanteDirection();
+
+    if (this.walkSpeed.ticker.tick()) {
       if (this.kind === "player") {
-        
         this.move(calculateMovementDirection(keys));
-        
       } else if (this.kind === "enemy") {
-        
         this.move(generateMovementDirection());
-
+      } else if (this.kind === "damage-entity") {
+        this.move(this.movement.direction);
       }
     }
-
-    
 
     // итерация по объектам
     //...
@@ -168,30 +168,22 @@ export default class GameObject {
     // получение урона
 
     (() => {
-      
       if (this.damaged.length) {
-        
         for (const damage of this.damaged) {
           this.health -= damage.value;
         }
       }
 
       this.damaged = [];
-
     })();
-
 
     // заявки на атаки
 
-    if(this.kind === 'player') {
-      
-      if(keys.includes(' ') && this.attack.ticker.tick()) {
-
+    if (this.kind === "player") {
+      if (keys.includes(" ") && this.attack.ticker.tick()) {
         this.attack.setTrueStatus();
       }
     }
-    
-
   }
 
   render() {
@@ -205,29 +197,26 @@ export default class GameObject {
     id, //
     position,
     backgroundColor,
-    kind = "game_object",
-    armorKind,
-    damaged,
+    kind,
     walkSpeed,
-    damage ,
+    damage,
+    direction,
   }: GameObjectConstructor) {
     this.position = position;
-    this.attack = new Attack();
     this.damage = damage;
-    this.damaged = [] ;
-
+    this.attack = new Attack(damage ,new Tick(150));
+    this.movement = { direction };
     /* --------------- */
     this.walkSpeed.speed = Math.round(1000 / walkSpeed);
     this.walkSpeed.ticker = new Tick(this.walkSpeed.speed);
     /* -------------------------- */
-    
+
     this.armor = new Armor("light");
-    
-    this.damaged = damaged ;
-    
+
+    this.damaged = [];
+
     this.kind = kind;
     this.id = id;
-
 
     /* display --------------------------*/
 

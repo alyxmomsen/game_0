@@ -1,27 +1,25 @@
+import { Damage } from "./damage";
 import { Tick } from "./main";
 
 export type AttackClass = "phisical" | "magic";
 
 export class Attack {
-  
-  status:boolean ;
-  speed:number ;
-  ticker:Tick ;
+  status: boolean;
+  speed: number;
+  ticker: Tick;
+  damage: Damage;
 
-  setTrueStatus () {
-
-    this.status = true ;
+  setTrueStatus() {
+    this.status = true;
   }
 
   reset() {
-    this.status = false ;
+    this.status = false;
   }
 
-  constructor () {
-
-    this.speed = 100 ;
-    this.ticker = new Tick(this.speed);
-
+  constructor(damage:Damage , ticker: Tick) {
+    this.ticker = ticker;
+    this.speed = this.ticker.speed;
+    this.damage = damage ;
   }
-  
 }

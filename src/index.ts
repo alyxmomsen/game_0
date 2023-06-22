@@ -22,7 +22,7 @@ import "./styles/main.css";
   }
 
   const time = new Date();
-  const fieldDimentions = { width: 60, height: 40 };
+  const fieldDimentions = { width: 40, height: 20 };
   const theGame = new Game({ root, infcDisplay, fieldDimentions });
 
   const mainLoop = function () {

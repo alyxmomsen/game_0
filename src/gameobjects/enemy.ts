@@ -3,29 +3,16 @@ import { Damage } from "../library/damage";
 import GameObject, { Position } from "./gameobject";
 
 export class Enemy extends GameObject {
-  constructor({
-    id,
-    armorKind,
-    damaged,
-    position,
-  }: {
-    id: number;
-    armorKind: ArmorClass;
-    damaged: Damage[] ;
-    position: Position;
-  }) {
+  constructor({ id, position }: { id: number; position: Position }) {
     super({
-      armorKind,
       backgroundColor: "yellow",
       color: "yellow",
-      damaged,
       id,
       kind: "enemy",
       position,
       walkSpeed: 5,
-      damage:new Damage('phisical' , 100) ,
+      damage: new Damage("phisical", 0),
+      direction: { x: 1, y: 0 },
     });
-
-    this.movement = { direction: "down" };
   }
 }
