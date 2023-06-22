@@ -14,7 +14,8 @@ import { generatePostion } from "../library/generatePosition";
 import KeysManager from "../library/keysManager";
 import { Tick, buildField, generateColor } from "../library/main";
 
-//
+
+
 
 export default class Game {
   actions: { from: number; to: number; action: Attack }[];
@@ -23,6 +24,8 @@ export default class Game {
   // hero: GameObject = null;
   field: { dimentions: Dimentions };
 
+
+  // объект игрока
   player: Player;
 
   // заявки на генерацию объектов
@@ -32,6 +35,8 @@ export default class Game {
     direction: "up" | "right" | "down" | "left";
   }[] = [];
 
+
+  // Объект менеджера ключей клавиш
   keysManager: KeysManager = null;
 
   /* ======== html ========== */
@@ -126,18 +131,20 @@ export default class Game {
   }
 
   update() {
-    // Game управляет действиями Player (bdw, возможно они названны иначе, но это "пока" )
-    // на самом деле, как правило, игра сама наносит урон другим объектам, не создавая событие Attack у Player
 
-    // так же Player, как и другие объекты могут генерировать состояния такие как голод , усталость и т. д.
+    /* Game управляет действиями Player (bdw, возможно они названны иначе, но это "пока" )
+    на самом деле, как правило, игра сама наносит урон другим объектам, не создавая событие Attack у Player
 
+    так же Player, как и другие объекты могут генерировать состояния такие как голод , усталость и т. д. */
+
+
+    // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
-    
 
+    // обновление объектов 
     this.player.update({ keys, damage: 0, objects: [...this.enemies] }) ;
-    // this.player
-
+    
     this.enemies.forEach((enemy, i) => {
       enemy.update({
         keys,
@@ -145,7 +152,6 @@ export default class Game {
         objects: [...this.enemies, this.player],
       });
     });
-
 
     /* generation objects */
 
@@ -160,8 +166,6 @@ export default class Game {
     }
     
     /* ================== */
-
-
   }
 
   renderGameObject({ elem, field }: { elem: GameObject; field: HTMLElement }) {
@@ -208,7 +212,6 @@ export default class Game {
 
     this.keysManager = new KeysManager();
 
-    // this.field.dimentions = fieldDimentions ;
     root.append(
       buildField(this.field.dimentions.height, this.field.dimentions.width)
     );

@@ -91,47 +91,21 @@ export default class GameObject {
   // создание сущности наносящее урон
   generateDamageEntity(keys:string[] ,auto:boolean = true) {
 
-    if(auto) {
-
-    }
-
-    if(!this.attackTicker) {
-
-      this.attackTicker = new Tick(500);
-
-      this.attack.status = true ;
-    }
-    else {
-      if(this.attackTicker.tick()) {
-        console.log('attack') ;
-      }
-    }
+    
 
     
   }
 
   checkColissionWith({ x, y }: Position) {
-    this.position.x === x && this.position.y === y ? true : false;
 
-    // console.log('check check check');
     return this.position.x === x && this.position.y === y ? true : false;
   }
 
   move({ x, y }: { x: 1 | -1 | 0; y: 1 | -1 | 0 }) {
     if (x !== 0 || y !== 0) {
-      // создаем тикер если его нет
 
-      if (!this.walkSpeed.ticker) {
-        this.walkSpeed.ticker = new Tick(this.walkSpeed.speed);
-
-        this.position.y += y;
-        this.position.x += x;
-      } else {
-        if (this.walkSpeed.ticker.tick()) {
-          this.position.y += y;
-          this.position.x += x;
-        }
-      }
+      this.position.y += y;
+      this.position.x += x;
     }
 
     if (x === 0) {
@@ -153,18 +127,31 @@ export default class GameObject {
     objects: GameObject[];
   }) {
 
+    if(!this.walkSpeed.ticker) {
+      this.walkSpeed.ticker = new Tick(this.walkSpeed.speed) ;
 
+      if (this.kind === "player") {
+        // двигаем объект
+        this.move(calculateMovementDirection(keys));
+        // experimental
+        this.generateDamageEntity(keys);
+      } else if (this.kind === "enemy") {
+        this.move(generateMovementDirection());
+      }
+      
+    } else if(this.walkSpeed.ticker.tick()) {
 
-
-    if (this.kind === "player") {
-      this.move(calculateMovementDirection(keys));
-      this.generateDamageEntity(keys);
-
-    } else if (this.kind === "enemy") {
-      this.move(generateMovementDirection());
+      if (this.kind === "player") {
+        // двигаем объект
+        this.move(calculateMovementDirection(keys));
+        // experimental
+        this.generateDamageEntity(keys);
+      } else if (this.kind === "enemy") {
+        this.move(generateMovementDirection());
+      }
     }
 
-    // console.log('check check check');
+    // проверка коллизий
 
     for (const object of objects) {
       if (object !== this && this.checkColissionWith(object.position)) {
@@ -180,15 +167,15 @@ export default class GameObject {
     }
 
     (() => {
-      if (this.damaged.length) {
 
+      if (this.damaged.length) {
         for (const damage of this.damaged) {
-          
           this.health -= damage.value;
         }
       }
 
       this.damaged = [];
+
     })();
   }
 
