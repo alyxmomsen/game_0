@@ -16,7 +16,7 @@ export class Enemy extends GameObject {
       weapons , 
       direction: { x: 1, y: 0 },
       health: 66,
-      // bang_interval ,
+      // bang_interval , 
     });
   }
 }

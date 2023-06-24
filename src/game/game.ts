@@ -213,52 +213,29 @@ export default class Game {
     this.player = new Player({
       id: this.IDManager.genID(),
       position: generatePostion(this.field.dimentions),
-      weapons:[new Weapon({damage:new Damage({damageClass:'phisical' , value:10})})] ,
+      weapons:[new Weapon({damage:new Damage({damageClass:'phisical' , value:20})})] ,
     });
 
-    this.gameObjects.push(
-      this.createGameObject({
-        kind: "game_object",
-        fieldDimentions: this.field.dimentions,
-        ownDamage: new Damage({damageClass:"phisical", value:0}),
-      })
-    );
-    this.gameObjects.push(
-      this.createGameObject({
-        kind: "game_object",
-        fieldDimentions: this.field.dimentions,
-        ownDamage: new Damage({damageClass:"phisical", value:0}),
-      })
-    );
-    this.gameObjects.push(
-      this.createGameObject({
-        kind: "game_object",
-        fieldDimentions: this.field.dimentions,
-        ownDamage: new Damage({damageClass:"phisical", value:0}),
-      })
-    );
+    for (let i=0 ; i<5 ; i++) {
+      this.gameObjects.push(
+        this.createGameObject({
+          kind: "game_object",
+          fieldDimentions: this.field.dimentions,
+          ownDamage: new Damage({damageClass:"phisical", value:0}),
+        })
+      );
+    }
 
-    this.enemies.push(
-      this.createGameObject({
-        kind: "enemy",
-        fieldDimentions: this.field.dimentions,
-        ownDamage: new Damage({damageClass:"phisical", value:100}),
-      })
-    );
-    this.enemies.push(
-      this.createGameObject({
-        kind: "enemy",
-        fieldDimentions: this.field.dimentions,
-        ownDamage: new Damage({damageClass:"phisical", value:100}),
-      })
-    );
-    this.enemies.push(
-      this.createGameObject({
-        kind: "enemy",
-        fieldDimentions: this.field.dimentions,
-        ownDamage: new Damage({damageClass:"phisical", value:100}),
-      })
-    );
+    for(let i=0 ; i<10 ; i++) {
+
+      this.enemies.push(
+        this.createGameObject({
+          kind: "enemy",
+          fieldDimentions: this.field.dimentions,
+          ownDamage: new Damage({damageClass:"phisical", value:100}),
+        })
+      );
+    }
 
     //////////////////////////////////////////////
 

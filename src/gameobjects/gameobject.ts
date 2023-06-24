@@ -83,7 +83,8 @@ export default class GameObject {
   infc_display: {
     title: HTMLElement;
     health: HTMLElement;
-    id: HTMLElement;
+    // id: HTMLElement;
+    armor:HTMLElement ;
     mainHTMLElement: HTMLElement;
   };
   main_html_element: HTMLElement;
@@ -94,6 +95,20 @@ export default class GameObject {
     object.damaged.push(
       new Damage(this.attack.ownDamage)
     );
+  }
+
+  getDamage(damage:number) {
+
+    if(this.armor.health > 0) {
+
+      this.armor.health -= (damage / 100 * this.armor.dempher) ;
+      this.health -= (damage / 100 * (100 - this.armor.dempher)) ;
+
+    }
+    else {
+      this.health -= damage ;
+    }
+
   }
 
   checkColissionWith({ x, y }: Position) {
@@ -150,7 +165,10 @@ export default class GameObject {
 
       if (this.damaged.length) {
         for (const damage of this.damaged) {
-          this.health -= damage.value;
+          
+          // this.health -= damage.value;
+          this.getDamage(damage.value);
+
         }
       }
 
@@ -190,7 +208,8 @@ export default class GameObject {
 
   render() {
     this.infc_display.health.innerText = `${this.health}`;
-    this.infc_display.id.innerText = `${this.id}`;
+    // this.infc_display.id.innerText = `${this.id}`;
+    this.infc_display.armor.innerText = `${this.armor.health}` ;
     this.infc_display.mainHTMLElement.style.backgroundColor =
       this.backgroundColor;
   }
@@ -212,7 +231,7 @@ export default class GameObject {
     this.movement = new Movement(walkTickValue, direction);
     this.position = position;
     this.attack = new Attack(ownDamage, new Tick(bang_speed) , weapons);
-    this.armor = new Armor("light");
+    this.armor = new Armor({health:101 , dempher:80});
     this.damaged = [];
     this.isDied = false;
     this.kind = kind;
@@ -231,6 +250,7 @@ export default class GameObject {
     this.infc_display = buildGameObjectStatsHTMLElement({
       objectTitle: this.kind,
       newId: this.id,
+      armor:this.armor.health ,
     });
 
     console.log("object done: ", this);
