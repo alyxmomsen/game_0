@@ -8,6 +8,7 @@ export class Attack {
   speed: number;
   ticker: Tick;
   damage: Damage;
+  
 
   setTrueStatus() {
     this.status = true;

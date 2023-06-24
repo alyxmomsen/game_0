@@ -7,11 +7,13 @@ export class Bullet extends GameObject {
     id,
     direction,
     damage,
+    health,
   }: {
     position: Position;
     id: number;
     direction: Direction;
     damage: Damage;
+    health: number;
   }) {
     super({
       damage,
@@ -22,6 +24,7 @@ export class Bullet extends GameObject {
       position,
       walkTickValue: 20,
       direction,
+      health,
     });
   }
 }

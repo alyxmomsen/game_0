@@ -13,8 +13,9 @@ export class Player extends GameObject {
       walkTickValue: 100,
       color: "green",
       position,
-      damage: new Damage("phisical", 0),
+      damage: new Damage({damageClass:"phisical", value:10}),
       direction: { x: 1, y: 0 },
+      health: 99,
     });
   }
 }

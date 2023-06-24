@@ -1,3 +1,5 @@
+import { Direction } from "../gameobjects/gameobject";
+
 export class Tick {
   currentTick;
   speed = 0;
@@ -30,10 +32,7 @@ export class Tick {
   }
 }
 
-export function calculateMovementDirection(keys: string[]): {
-  x: 0 | 1 | -1;
-  y: 0 | 1 | -1;
-} {
+export function calculateMovementDirection(keys: string[]):Direction {
   let w = keys.includes("w");
   let s = keys.includes("s");
   let a = keys.includes("a");
