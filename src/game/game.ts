@@ -72,6 +72,7 @@ export default class Game {
           color: "grey",
           damage,
           direction: { x: 1, y: 0 },
+          health: 100,
         });
       },
       "damage-entity": () => {
@@ -84,6 +85,7 @@ export default class Game {
           color: "white",
           damage,
           direction: { x: 1, y: 0 },
+          health: 100,
         });
       },
     };
@@ -92,7 +94,6 @@ export default class Game {
   }
 
   update() {
-    
     /* Game управляет действиями Player (bdw, возможно они названны иначе, но это "пока" )
     на самом деле, как правило, игра сама наносит урон другим объектам, не создавая событие Attack у Player
 
@@ -110,6 +111,7 @@ export default class Game {
           id: this.IDManager.genID(),
           direction: this.player.movement.direction,
           damage: new Damage("phisical", 10),
+          health: 1,
         })
       );
       this.player.attack.reset();
@@ -123,7 +125,7 @@ export default class Game {
     this.bullets.forEach((elem) => {
       elem.update({
         keys,
-        objects: [...this.enemies, this.player],
+        objects: [...this.enemies],
       });
     });
 
@@ -135,7 +137,7 @@ export default class Game {
     this.enemies.forEach((enemy, i) => {
       enemy.update({
         keys,
-        objects: [...this.enemies, this.player],
+        objects: [...this.bullets],
       });
     });
 
@@ -143,12 +145,12 @@ export default class Game {
   }
 
   renderGameObject({ elem, field }: { elem: GameObject; field: HTMLElement }) {
-    // console.log('field' , field);
-
+    
     if (
+      !elem.isDied &&
       field &&
       field.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
-        elem.position.x
+        elem.position.x /* если html нода с такими координатами существет */
       ] !== undefined
     ) {
       field.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
@@ -229,21 +231,21 @@ export default class Game {
       this.createGameObject({
         kind: "enemy",
         fieldDimentions: this.field.dimentions,
-        damage: new Damage("phisical", 0),
+        damage: new Damage("phisical", 100),
       })
     );
     this.enemies.push(
       this.createGameObject({
         kind: "enemy",
         fieldDimentions: this.field.dimentions,
-        damage: new Damage("phisical", 0),
+        damage: new Damage("phisical", 100),
       })
     );
     this.enemies.push(
       this.createGameObject({
         kind: "enemy",
         fieldDimentions: this.field.dimentions,
-        damage: new Damage("phisical", 0),
+        damage: new Damage("phisical", 100),
       })
     );
 

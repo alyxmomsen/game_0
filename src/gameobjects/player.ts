@@ -15,6 +15,7 @@ export class Player extends GameObject {
       position,
       damage: new Damage("phisical", 0),
       direction: { x: 1, y: 0 },
+      health: 99,
     });
   }
 }

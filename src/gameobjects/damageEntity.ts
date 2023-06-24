@@ -20,6 +20,7 @@ export class DamageEntity extends GameObject {
       position,
       damage: new Damage("phisical", 100),
       direction: { x: 1, y: 0 },
+      health: 10,
     });
   }
 }
