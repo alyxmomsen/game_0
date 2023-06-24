@@ -1,5 +1,6 @@
 import { Damage } from "./damage";
 import { Tick } from "./main";
+import { Weapon } from "./weapon";
 
 export type AttackClass = "phisical" | "magic";
 
@@ -7,8 +8,11 @@ export class Attack {
   status: boolean;
   speed: number;
   ticker: Tick;
-  damage: Damage;
-  
+  // damage: Damage;
+
+  weapons:Weapon[] ;
+  currentWeapon:Weapon ;
+  ownDamage:Damage ;
 
   setTrueStatus() {
     this.status = true;
@@ -18,9 +22,18 @@ export class Attack {
     this.status = false;
   }
 
-  constructor(damage: Damage, ticker: Tick) {
+  constructor(ownDamage: Damage, ticker: Tick , weapons:Weapon[] ) {
     this.ticker = ticker;
     this.speed = this.ticker.speed;
-    this.damage = damage;
+    // this.damage = damage;
+    this.ownDamage = ownDamage ;
+
+    // получение арсенала
+    this.weapons = weapons ;
+
+    // установка текущего оружия
+    this.weapons.length ? this.weapons[0] : null 
+    
+
   }
 }

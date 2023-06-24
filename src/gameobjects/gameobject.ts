@@ -8,6 +8,7 @@ import {
   generateMovementDirection,
 } from "../library/main";
 import { Movement } from "../library/movement";
+import { Weapon } from "../library/weapon";
 import { Player } from "./player";
 import { heroActions, moveHero } from "./player_keys_checker";
 
@@ -32,9 +33,11 @@ export type GameObjectConstructor = {
   walkTickValue: number;
   color: string;
   position: Position;
-  damage: Damage;
+  ownDamage: Damage;
   direction: Direction;
   health: number;
+  weapons:Weapon[] ;
+  // bang_interval:number ;
 };
 
 export type Dimentions = {
@@ -89,7 +92,7 @@ export default class GameObject {
   // атака на указаный объект
   attackTo(object: GameObject) {
     object.damaged.push(
-      new Damage(this.attack.damage)
+      new Damage(this.attack.ownDamage)
     );
   }
 
@@ -105,12 +108,12 @@ export default class GameObject {
 
     if (x !== 0) {
       if (this.kind === "player") {
-        console.log(x, y, x > 0 ? "right" : "left");
+        // console.log(x, y, x > 0 ? "right" : "left");
       }
       this.movement.direction = { x, y };
     } else if (y !== 0) {
       if (this.kind === "player") {
-        console.log(x, y, y > 0 ? "down" : "up");
+        // console.log(x, y, y > 0 ? "down" : "up");
       }
       this.movement.direction = { x, y };
     }
@@ -141,20 +144,6 @@ export default class GameObject {
     // итерация по объектам
     //...
 
-    // проверка коллизий
-
-    for (const object of objects) {
-      // если объект не является сам собой и если объект не "умер"
-      if (object !== this && !this.isDied) {
-        if (this.checkColissionWith(object.position)) {
-          if (/* this.attack.ticker.tick() */ true) {
-
-            this.attackTo(object);
-          }
-        }
-      }
-    }
-
     // получение урона
 
     (() => {
@@ -169,6 +158,21 @@ export default class GameObject {
 
     })();
 
+    // проверка коллизий
+
+    for (const object of objects) {
+      // если объект не является сам собой и если объект не "умер"
+      if (object !== this && !this.isDied) {
+        if (this.checkColissionWith(object.position)) {
+          if (/* this.attack.ticker.tick() */ true) {
+            console.log('collision');
+            this.attackTo(object);
+          }
+        }
+      }
+    }
+
+  
     // check if this died
 
     if (this.health <= 0) {
@@ -197,13 +201,17 @@ export default class GameObject {
     backgroundColor,
     kind,
     walkTickValue,
-    damage,
+    ownDamage,
     direction,
     health,
+    weapons ,
   }: GameObjectConstructor) {
+
+    const bang_speed = 100 ;
+
     this.movement = new Movement(walkTickValue, direction);
     this.position = position;
-    this.attack = new Attack(damage, new Tick(150));
+    this.attack = new Attack(ownDamage, new Tick(bang_speed) , weapons);
     this.armor = new Armor("light");
     this.damaged = [];
     this.isDied = false;

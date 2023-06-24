@@ -8,9 +8,4 @@ export class Damage {
     this.damageClass = damageClass;
     this.value = value;
   }
-
-  // constructor({class , value}/* damageClass: DamageClass, value: number = 0 */) {
-    // this.class = damageClass;
-    // this.value = value;
-  // } 
 }
