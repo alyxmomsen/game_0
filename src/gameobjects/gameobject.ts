@@ -9,8 +9,7 @@ import {
 } from "../library/main";
 import { Movement } from "../library/movement";
 import { Weapon } from "../library/weapon";
-import { Player } from "./player";
-import { heroActions, moveHero } from "./player_keys_checker";
+import { Bullet } from "./bullet";
 
 export type GameObjectType =
   | "game_object"
@@ -28,7 +27,7 @@ export type Position = {
 
 export type GameObjectConstructor = {
   id: number;
-  backgroundColor: string;
+  // backgroundColor: string;
   kind: GameObjectType;
   walkTickValue: number;
   color: string;
@@ -36,7 +35,6 @@ export type GameObjectConstructor = {
   ownDamage: Damage;
   direction: Direction;
   health: number;
-
   weapons: Weapon[];
   // bang_interval:number ;
 };
@@ -50,6 +48,7 @@ export default class GameObject {
   dimentions: Dimentions;
   color: string;
   damaged: Damage[]; // в данный момент получаемыe уроны
+  // bullets:Bullet[] ;
 
   /* ================================ */
 
@@ -146,7 +145,7 @@ export default class GameObject {
       } else if (this.kind === "enemy") {
         this.move(generateMovementDirection());
       } else if (this.kind === "damage-entity") {
-        this.move(this.movement.direction);
+        this.move(this.movement.direction) ; 
       }
     }
 
@@ -159,7 +158,7 @@ export default class GameObject {
       // если объект не является сам собой и если объект не "умер"
       if (object !== this && !this.isDied) {
         if (this.checkColissionWith(object.position)) {
-          if (/* this.attack.ticker.tick() */ true) {
+          if (this.attack.ticker.tick() /* true */) {
             this.attackTo(object);
           }
         }
@@ -219,7 +218,7 @@ export default class GameObject {
   constructor({
     id, //
     position,
-    backgroundColor,
+    // backgroundColor,
     kind,
     walkTickValue,
     ownDamage,
@@ -228,11 +227,11 @@ export default class GameObject {
 
     weapons,
   }: GameObjectConstructor) {
-    const bang_speed = 100;
+    const fireRate = 100; // 
 
     this.movement = new Movement(walkTickValue, direction);
     this.position = position;
-    this.attack = new Attack(ownDamage, new Tick(bang_speed), weapons);
+    this.attack = new Attack(ownDamage, new Tick(fireRate), weapons);
     this.armor = new Armor({ health: 101, dempher: 80 });
     this.damaged = [];
     this.isDied = false;
@@ -246,7 +245,7 @@ export default class GameObject {
 
     this.main_html_element = document.createElement("div");
     this.main_html_element.className = "object-body";
-    this.backgroundColor = backgroundColor;
+    // this.backgroundColor = backgroundColor;
     this.main_html_element.style.backgroundColor = this.backgroundColor;
 
     this.infc_display = buildGameObjectStatsHTMLElement({

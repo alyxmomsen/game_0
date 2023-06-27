@@ -8,20 +8,16 @@ export class Bullet extends GameObject {
     direction,
     ownDamage,
     health,
-  }: // bang_interval ,
+  }:
   {
     position: Position;
     id: number;
     direction: Direction;
-
-    // damage: Damage;
     health: number;
     ownDamage: Damage;
-    // bang_interval:number ;
   }) {
     super({
       ownDamage,
-      backgroundColor: "white",
       color: "white",
       id,
       kind: "damage-entity",
@@ -29,9 +25,7 @@ export class Bullet extends GameObject {
       walkTickValue: 1,
       direction,
       health,
-
       weapons: [],
-      // bang_interval ,
     });
   }
 }

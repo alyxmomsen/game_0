@@ -25,7 +25,6 @@ export class Attack {
   constructor(ownDamage: Damage, ticker: Tick, weapons: Weapon[]) {
     this.ticker = ticker;
     this.speed = this.ticker.speed;
-    // this.damage = damage;
     this.ownDamage = ownDamage;
 
     // получение арсенала

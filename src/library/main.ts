@@ -1,14 +1,17 @@
 import { Direction } from "../gameobjects/gameobject";
 
 export class Tick {
-  currentTick;
+
+  lastTick:number ;
+
+  // currentTick ;
   speed = 0;
 
   tick() {
     const now = Date.now();
 
-    if (now - this.currentTick > this.speed) {
-      this.currentTick = now;
+    if (now - this.lastTick > this.speed) {
+      this.lastTick = now;
       return true;
     } else {
       return false;
@@ -24,11 +27,14 @@ export class Tick {
   }
 
   constructor(speed = 0) {
+
+    this.lastTick = 0 ;
+
     if (speed < 0) {
       speed = 0;
     }
     this.speed = speed;
-    this.currentTick = Date.now();
+    this.lastTick = Date.now();
   }
 }
 

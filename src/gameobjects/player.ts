@@ -9,17 +9,15 @@ export class Player extends GameObject {
   constructor({
     id,
     position,
-    weapons /* bang_interval */,
+    weapons,
   }: {
-    /* bang_interval:number  ;*/ id: number;
+    id: number;
     position: Position;
     weapons: Weapon[];
   }) {
     super({
       id,
-      backgroundColor: "green",
       kind: "player",
-
       walkTickValue: 100,
       color: "green",
       position,
@@ -27,7 +25,6 @@ export class Player extends GameObject {
       weapons,
       direction: { x: 1, y: 0 },
       health: 99,
-      // bang_interval ,
       
     });
   }

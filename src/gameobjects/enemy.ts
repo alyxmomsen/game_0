@@ -1,4 +1,4 @@
-import { ArmorClass } from "../library/armore";
+
 import { Damage } from "../library/damage";
 import { Weapon } from "../library/weapon";
 import GameObject, { Position } from "./gameobject";
@@ -14,7 +14,7 @@ export class Enemy extends GameObject {
     weapons: Weapon[];
   }) {
     super({
-      backgroundColor: "yellow",
+      // backgroundColor: "yellow",
       color: "yellow",
       id,
       kind: "enemy",
