@@ -1,15 +1,22 @@
 import { Damage } from "../library/damage";
-import GameObject, { Direction, Position } from "./gameobject";
+import GameObject, { Dimentions, Direction, Position } from "./gameobject";
 
 export class Bullet extends GameObject {
+  update({
+    keys,
+    objects,
+    fieldDimentions,
+  }: {
+    keys: string[];
+    objects: GameObject[];
+    fieldDimentions: Dimentions;
+  }): false | Bullet {
+    if (!this.isDied && this.movement.ticker.tick()) {
+      this.move(this.movement.direction);
+    }
 
-  update({ keys, objects }: { keys: string[]; objects: GameObject[]; }): false | Bullet {
-    
-    const result = super.update({keys , objects});
-    
-    // if(this.position.x > )
-    
-    return result ;
+    const result = super.update({ keys, objects, fieldDimentions });
+    return result;
   }
 
   constructor({
@@ -18,8 +25,7 @@ export class Bullet extends GameObject {
     direction,
     ownDamage,
     health,
-  }:
-  {
+  }: {
     position: Position;
     id: number;
     direction: Direction;

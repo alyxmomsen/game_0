@@ -1,8 +1,25 @@
 import { ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
-import GameObject, { Position } from "./gameobject";
+import { Bullet } from "./bullet";
+import GameObject, { Dimentions, Position } from "./gameobject";
 
 export class DamageEntity extends GameObject {
+  update({
+    keys,
+    objects,
+    fieldDimentions,
+  }: {
+    keys: string[];
+    objects: GameObject[];
+    fieldDimentions: Dimentions;
+  }): false | Bullet {
+    if (!this.isDied && this.movement.ticker.tick()) {
+      this.move(this.movement.direction);
+    }
+
+    return super.update({ keys, objects, fieldDimentions });
+  }
+
   constructor({
     id,
     position,

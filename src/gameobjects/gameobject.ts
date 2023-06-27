@@ -47,37 +47,25 @@ export type Dimentions = {
 export default class GameObject {
   id: number;
   color: string;
-  kind: GameObjectType ;
+  kind: GameObjectType;
   dimentions: Dimentions;
   position: { x: number; y: number } | null = null;
   damaged: Damage[]; // в данный момент получаемыe уроны
-  
+
   health: number;
   armor: Armor;
   isDied: boolean;
   attack: Attack;
 
   movement: Movement;
-  
-  // backgroundColor: string;
-  
-  
-  
-  
-  
-  /* ================================ */
-
-  // walk: { velocity: number; ticker: null | Tick; tickSpeed: number } = {
-  //   // объект движения
-  //   velocity: 1,
-  //   tickSpeed: Math.round(1000 / 20),
-  //   ticker: null,
-  // };
 
 
   /* ================================ */
-  
+
   /* -------- html --------- */
+
+  myHTML:''
+
   infc_display: {
     title: HTMLElement;
     health: HTMLElement;
@@ -114,34 +102,22 @@ export default class GameObject {
     }
 
     if (x !== 0) {
-      
       this.movement.direction = { x, y };
     } else if (y !== 0) {
-      
       this.movement.direction = { x, y };
     }
+
   }
 
-  /* generanteDirection ():Direction {
-    const direttions:Direction[] = ['up' , 'right' , 'down' , 'left'] ;
-    return direttions[Math.floor(Math.random() * 4)];
-  } */
-
-  update({ keys, objects }: { keys: string[]; objects: GameObject[] }):Bullet|false {
-    
-    
-    
-    if (!this.isDied && this.movement.ticker.tick()) {
-      
-      if (this.kind === "player") {
-        this.move(calculateMovementDirection(keys));
-      } else if (this.kind === "enemy") {
-        this.move(generateMovementDirection());
-      } else if (this.kind === "damage-entity") {
-        this.move(this.movement.direction) ; 
-      }
-    }
-
+  update({
+    keys,
+    objects,
+    fieldDimentions ,
+  }: {
+    keys: string[];
+    objects: GameObject[];
+    fieldDimentions: Dimentions;
+  }): Bullet | false {
     // получение урона
 
     (() => {
@@ -158,8 +134,6 @@ export default class GameObject {
     // проверка коллизий
 
     for (const object of objects) {
-
-      
       // если объект не является сам собой и если объект не "умер"
       if (object !== this && !this.isDied) {
         if (this.checkColissionWith(object.position)) {
@@ -177,34 +151,32 @@ export default class GameObject {
       this.isDied = true;
     }
 
-    
+    if(this.position.x > fieldDimentions.width || this.position.x < -1 || this.position.y > fieldDimentions.height || this.position.y < -1) {
+      this.isDied = true ;
+    }
 
-    return (keys.includes(" ") &&  this.attack.ticker?.tick() && this.kind === "player") ? new Bullet({
-      direction:this.movement.direction , 
-      health:1 , 
-      id:0 , 
-      ownDamage:new Damage({damageClass:'phisical'  , value:10}) , 
-      position:{x:this.position.x , y:this.position.y} ,
-    }) : false ;
-
-
-    // if(keys.includes(" ") && this.attack.ticker.tick()) {
-    //   console.log('attack');
-    // }
-
-
+    return keys.includes(" ") &&
+      this.attack.ticker?.tick() &&
+      this.kind === "player"
+      ? new Bullet({
+          direction: this.movement.direction,
+          health: 1,
+          id: 0,
+          ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
+          position: { x: this.position.x, y: this.position.y },
+        })
+      : false;
   }
 
   render() {
     this.infc_display.health.innerText = `${this.health}`;
     // this.infc_display.id.innerText = `${this.id}`;
     this.infc_display.armor.innerText = `${this.armor.health}`;
-    this.infc_display.mainHTMLElement.style.backgroundColor =
-      this.color;
+    this.infc_display.mainHTMLElement.style.backgroundColor = this.color;
   }
 
   constructor({
-    id, 
+    id,
     position,
     kind,
     walkTickValue,
@@ -213,7 +185,6 @@ export default class GameObject {
     health,
     weapons,
   }: GameObjectConstructor) {
-    const fireRate = 100; // 
 
     this.movement = new Movement(walkTickValue, direction);
     this.position = position;

@@ -2,10 +2,27 @@ import { ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
 import { Tick, calculateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
-import GameObject, { Position } from "./gameobject";
+import { Bullet } from "./bullet";
+import GameObject, { Dimentions, Position } from "./gameobject";
 // import { heroActions, moveHero } from "./player_keys_checker";
 
 export class Player extends GameObject {
+  update({
+    keys,
+    objects,
+    fieldDimentions,
+  }: {
+    keys: string[];
+    objects: GameObject[];
+    fieldDimentions: Dimentions;
+  }): false | Bullet {
+    if (!this.isDied && this.movement.ticker.tick()) {
+      this.move(calculateMovementDirection(keys));
+    }
+
+    return super.update({ keys, objects, fieldDimentions });
+  }
+
   constructor({
     id,
     position,
@@ -17,7 +34,7 @@ export class Player extends GameObject {
   }) {
     super({
       id,
-      kind: "player" ,
+      kind: "player",
       walkTickValue: 100,
       color: "green",
       position,

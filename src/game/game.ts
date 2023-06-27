@@ -1,4 +1,3 @@
-
 import { Bullet } from "../gameobjects/bullet";
 import { Enemy } from "../gameobjects/enemy";
 import GameObject, { Dimentions } from "../gameobjects/gameobject";
@@ -6,26 +5,30 @@ import { Player } from "../gameobjects/player";
 import { Damage } from "../library/damage";
 import { IDManager } from "../library/id_manager";
 import KeysManager from "../library/keysManager";
-import { Tick, buildField, generateColor, generateUniqueID } from "../library/main";
+import {
+  Tick,
+  buildField,
+  generateColor,
+  generateUniqueID,
+} from "../library/main";
 import { Weapon } from "../library/weapon";
 
 export default class Game {
   // hero: GameObject = null;
   keysManager: KeysManager = null; // Объект менеджера ключей клавиш
-  
+
   field: { dimentions: Dimentions };
   weapons: Weapon[];
 
-  toCreate:(Enemy|Bullet)[] ;
-  
-  
+  toCreate: (Enemy | Bullet)[];
+
   player: Player; // объект игрока
   enemies: Enemy[] = [];
   gameObjects: GameObject[] = [];
   bullets: Bullet[] = [];
 
   // IDManager: IDManager;
-  
+
   /* ======== html ========== */
 
   infcDisplay: HTMLElement = null;
@@ -41,45 +44,57 @@ export default class Game {
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
+    /* ========================================= */
 
-    this.toCreate.forEach(objectToCreate => {
-      
-      if(objectToCreate instanceof Bullet) {
-
+    this.toCreate.forEach((objectToCreate) => {
+      if (objectToCreate instanceof Bullet) {
         this.bullets.push(objectToCreate);
-
       } else if (objectToCreate instanceof Enemy) {
-
         this.enemies.push(objectToCreate);
       }
-
-
     });
 
-    const toCreate = this.player.update({keys , objects:[]});
-    if(toCreate !== false) {
-      this.toCreate.push(toCreate) ;
-      
+    /* ========================================= */
+    const toCreate = this.player.update({
+      keys,
+      objects: [],
+      fieldDimentions: this.field.dimentions,
+    });
+    
+
+    if (toCreate !== false) {
+      this.toCreate.push(toCreate);
     }
 
     this.enemies.forEach((enemy, i) => {
       enemy.update({
         keys,
         objects: [],
+        fieldDimentions: this.field.dimentions,
       });
     });
-    
-    this.bullets.forEach(bullet => {
+
+
+    this.bullets.forEach((bullet) => {
       bullet.update({
         keys,
-        objects: [...this.enemies] ,
+        objects: [...this.enemies],
+        fieldDimentions: this.field.dimentions,
       });
-    }) ;
-    
+    });
+
+    this.bullets = this.bullets.filter(elem => !elem.isDied);
+
     // delete diedEnemies[0];
   }
 
-  renderGameObject({ elem, field }: { elem:GameObject|Enemy|Player; field: HTMLElement }) {
+  renderGameObject({
+    elem,
+    field,
+  }: {
+    elem: GameObject | Enemy | Player;
+    field: HTMLElement;
+  }) {
     if (
       !elem.isDied &&
       field &&
@@ -126,29 +141,35 @@ export default class Game {
     this.field = { dimentions: fieldDimentions };
 
     this.player = new Player({
-      id:0 , position:{x:6 , y:6} , weapons:[new Weapon({damage:new Damage({damageClass:'phisical' , value:5}) , fireRate:50})]
-    }) ;
+      id: 0,
+      position: { x: 6, y: 6 },
+      weapons: [
+        new Weapon({
+          damage: new Damage({ damageClass: "phisical", value: 5 }),
+          fireRate: 200,
+        }),
+      ],
+    });
 
-    for (let i=0 ; i<10 ; i++) {
-      this.enemies.push(new Enemy({
-        id:0 , position:{x:6 , y:6} , weapons:[]
-      })) ;
+    for (let i = 0; i < 10; i++) {
+      this.enemies.push(
+        new Enemy({
+          id: 0,
+          position: { x: 6, y: 6 },
+          weapons: [],
+        })
+      );
     }
 
-    this.toCreate = [] ;
+    this.toCreate = [];
 
-    
     /* ============================= */
-    
+
     this.infcDisplay = infcDisplay;
 
     root.append(
       buildField(this.field.dimentions.height, this.field.dimentions.width)
     );
-
-    
-
-    
 
     this.infcDisplay.append(this.player.infc_display.mainHTMLElement);
   }

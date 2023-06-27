@@ -7,7 +7,6 @@ import "./styles/main.css";
   const root = document.querySelector<HTMLElement>(".root");
   const infcDisplay = document.querySelector<HTMLElement>("#stats-display");
 
-  
   const time = new Date();
   const fieldDimentions = { width: 40, height: 20 };
   const theGame = new Game({ root, infcDisplay, fieldDimentions });

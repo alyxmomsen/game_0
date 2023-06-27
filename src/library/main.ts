@@ -1,8 +1,7 @@
 import GameObject, { Direction } from "../gameobjects/gameobject";
 
 export class Tick {
-
-  lastTick:number ;
+  lastTick: number;
 
   // currentTick ;
   speed = 0;
@@ -27,8 +26,7 @@ export class Tick {
   }
 
   constructor(speed = 0) {
-
-    this.lastTick = 0 ;
+    this.lastTick = 0;
 
     if (speed < 0) {
       speed = 0;
@@ -154,8 +152,6 @@ export function generateColor(length = 3) {
   return str;
 }
 
-export function generateUniqueID (ids:{id:number , object:GameObject}[]) {
-  
-  return 0 ;
-
+export function generateUniqueID(ids: { id: number; object: GameObject }[]) {
+  return 0;
 }
