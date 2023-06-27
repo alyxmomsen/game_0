@@ -7,20 +7,7 @@ import "./styles/main.css";
   const root = document.querySelector<HTMLElement>(".root");
   const infcDisplay = document.querySelector<HTMLElement>("#stats-display");
 
-  if (!start) {
-    console.log("switched off");
-    return false;
-  } else {
-    console.log("switched on");
-  }
-
-  if (!root) {
-    console.log("no root");
-    return false;
-  } else {
-    console.log("root is exist");
-  }
-
+  
   const time = new Date();
   const fieldDimentions = { width: 40, height: 20 };
   const theGame = new Game({ root, infcDisplay, fieldDimentions });
