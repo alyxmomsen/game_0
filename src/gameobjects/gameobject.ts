@@ -8,6 +8,7 @@ import {
   generateMovementDirection,
 } from "../library/main";
 import { Movement } from "../library/movement";
+import { GameObjectUI_HTML } from "../library/objecthtml";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 
@@ -64,7 +65,7 @@ export default class GameObject {
 
   /* -------- html --------- */
 
-  myHTML:''
+  UI:GameObjectUI_HTML ;
 
   infc_display: {
     title: HTMLElement;
@@ -169,10 +170,13 @@ export default class GameObject {
   }
 
   render() {
-    this.infc_display.health.innerText = `${this.health}`;
-    // this.infc_display.id.innerText = `${this.id}`;
-    this.infc_display.armor.innerText = `${this.armor.health}`;
-    this.infc_display.mainHTMLElement.style.backgroundColor = this.color;
+
+    this.UI.update({title:this.id.toString() , health:this.health.toString() , armor:this.armor.health.toString()});
+
+    // this.infc_display.health.innerText = `${this.health}`;
+    // // this.infc_display.id.innerText = `${this.id}`;
+    // this.infc_display.armor.innerText = `${this.armor.health}`;
+    // this.infc_display.mainHTMLElement.style.backgroundColor = this.color;
   }
 
   constructor({
@@ -206,6 +210,10 @@ export default class GameObject {
     this.main_html_element.className = "object-body";
     // this.backgroundColor = backgroundColor;
     this.main_html_element.style.backgroundColor = this.color;
+
+
+    this.UI = new GameObjectUI_HTML({title:this.id.toString() , health:this.health.toString() , armor:this.armor.health.toString()});
+
 
     this.infc_display = buildGameObjectStatsHTMLElement({
       objectTitle: this.kind,

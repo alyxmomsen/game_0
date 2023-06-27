@@ -3,13 +3,12 @@ import Game from "./game/game";
 import "./styles/main.css";
 
 (function () {
-  const start = true;
-  const root = document.querySelector<HTMLElement>(".root");
-  const infcDisplay = document.querySelector<HTMLElement>("#stats-display");
 
-  const time = new Date();
+  const root = document.querySelector<HTMLElement>(".root");
+  const UI = document.querySelector<HTMLElement>("#stats-display");
+
   const fieldDimentions = { width: 40, height: 20 };
-  const theGame = new Game({ root, infcDisplay, fieldDimentions });
+  const theGame = new Game({ root, UI, fieldDimentions });
 
   const mainLoop = function () {
     theGame.update();

@@ -3,13 +3,9 @@ import { Enemy } from "../gameobjects/enemy";
 import GameObject, { Dimentions } from "../gameobjects/gameobject";
 import { Player } from "../gameobjects/player";
 import { Damage } from "../library/damage";
-import { IDManager } from "../library/id_manager";
 import KeysManager from "../library/keysManager";
 import {
-  Tick,
   buildField,
-  generateColor,
-  generateUniqueID,
 } from "../library/main";
 import { Weapon } from "../library/weapon";
 
@@ -31,7 +27,7 @@ export default class Game {
 
   /* ======== html ========== */
 
-  infcDisplay: HTMLElement = null;
+  UI: HTMLElement ;
 
   /* ======================== */
 
@@ -109,6 +105,7 @@ export default class Game {
       elem.render();
     } else {
       elem.main_html_element.style.display = "none";
+      elem.render();
     }
   }
 
@@ -130,11 +127,11 @@ export default class Game {
 
   constructor({
     root,
-    infcDisplay,
     fieldDimentions,
+    UI ,
   }: {
     root: HTMLElement;
-    infcDisplay: HTMLElement;
+    UI: HTMLElement;
     fieldDimentions: { width: number; height: number };
   }) {
     this.keysManager = new KeysManager();
@@ -165,12 +162,15 @@ export default class Game {
 
     /* ============================= */
 
-    this.infcDisplay = infcDisplay;
+    this.UI = UI ;
+    
+    this.enemies.forEach(enemy => {
+      this.UI.append(enemy.UI.wrapper);
+    });
 
     root.append(
       buildField(this.field.dimentions.height, this.field.dimentions.width)
     );
 
-    this.infcDisplay.append(this.player.infc_display.mainHTMLElement);
   }
 }
