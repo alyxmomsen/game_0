@@ -28,6 +28,7 @@ export class Player extends GameObject {
       direction: { x: 1, y: 0 },
       health: 99,
       // bang_interval ,
+      
     });
   }
 }
