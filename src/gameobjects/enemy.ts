@@ -1,31 +1,45 @@
-import { ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
+import { generateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
-import GameObject, { Position } from "./gameobject";
+import { Bullet } from "./bullet";
+import GameObject, { Dimentions, Position } from "./gameobject";
 
 export class Enemy extends GameObject {
+  update({
+    keys,
+    objects,
+    fieldDimentions,
+  }: {
+    keys: string[];
+    objects: GameObject[];
+    fieldDimentions: Dimentions;
+  }): false | Bullet {
+    if (!this.isDied && this.movement.ticker.tick()) {
+      this.move(generateMovementDirection());
+    }
+
+    return super.update({ keys, objects, fieldDimentions });
+  }
+
   constructor({
     id,
     position,
-    weapons /* bang_interval */,
+    weapons,
   }: {
-    /* bang_interval:number ;*/ id: number;
+    id: number;
     position: Position;
     weapons: Weapon[];
   }) {
     super({
-      backgroundColor: "yellow",
       color: "yellow",
       id,
       kind: "enemy",
       position,
-
       walkTickValue: 1000,
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,
       direction: { x: 1, y: 0 },
       health: 66,
-      // bang_interval ,
     });
   }
 }

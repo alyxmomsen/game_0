@@ -22,16 +22,21 @@ export class Attack {
     this.status = false;
   }
 
-  constructor(ownDamage: Damage, ticker: Tick, weapons: Weapon[]) {
-    this.ticker = ticker;
-    this.speed = this.ticker.speed;
-    // this.damage = damage;
+  setCurrentWeapon() {
+    if (this.weapons.length) {
+      this.currentWeapon = this.weapons[0];
+      this.ticker = new Tick(this.currentWeapon.fireRate);
+    } else {
+      this.currentWeapon = null;
+      this.ticker = null;
+    }
+  }
+
+  constructor(ownDamage: Damage, weapons: Weapon[]) {
+    // this.speed = this.ticker.speed;
     this.ownDamage = ownDamage;
+    this.weapons = weapons; // получение арсенала
 
-    // получение арсенала
-    this.weapons = weapons;
-
-    // установка текущего оружия
-    this.weapons.length ? this.weapons[0] : null;
+    this.setCurrentWeapon();
   }
 }

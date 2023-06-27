@@ -1,27 +1,39 @@
 import { Damage } from "../library/damage";
-import GameObject, { Direction, Position } from "./gameobject";
+import GameObject, { Dimentions, Direction, Position } from "./gameobject";
 
 export class Bullet extends GameObject {
+  update({
+    keys,
+    objects,
+    fieldDimentions,
+  }: {
+    keys: string[];
+    objects: GameObject[];
+    fieldDimentions: Dimentions;
+  }): false | Bullet {
+    if (!this.isDied && this.movement.ticker.tick()) {
+      this.move(this.movement.direction);
+    }
+
+    const result = super.update({ keys, objects, fieldDimentions });
+    return result;
+  }
+
   constructor({
     position,
     id,
     direction,
     ownDamage,
     health,
-  }: // bang_interval ,
-  {
+  }: {
     position: Position;
     id: number;
     direction: Direction;
-
-    // damage: Damage;
     health: number;
     ownDamage: Damage;
-    // bang_interval:number ;
   }) {
     super({
       ownDamage,
-      backgroundColor: "white",
       color: "white",
       id,
       kind: "damage-entity",
@@ -29,9 +41,7 @@ export class Bullet extends GameObject {
       walkTickValue: 1,
       direction,
       health,
-
       weapons: [],
-      // bang_interval ,
     });
   }
 }

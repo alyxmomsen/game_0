@@ -1,12 +1,28 @@
 import { ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
-import GameObject, { Position } from "./gameobject";
+import { Bullet } from "./bullet";
+import GameObject, { Dimentions, Position } from "./gameobject";
 
 export class DamageEntity extends GameObject {
+  update({
+    keys,
+    objects,
+    fieldDimentions,
+  }: {
+    keys: string[];
+    objects: GameObject[];
+    fieldDimentions: Dimentions;
+  }): false | Bullet {
+    if (!this.isDied && this.movement.ticker.tick()) {
+      this.move(this.movement.direction);
+    }
+
+    return super.update({ keys, objects, fieldDimentions });
+  }
+
   constructor({
     id,
     position,
-    bang_interval,
   }: {
     id: number;
     armorKind: ArmorClass;
@@ -15,7 +31,6 @@ export class DamageEntity extends GameObject {
   }) {
     super({
       id, //
-      backgroundColor: "white",
       kind: "damage-entity",
       walkTickValue: 20,
       color: "white",
@@ -23,9 +38,7 @@ export class DamageEntity extends GameObject {
       ownDamage: new Damage({ damageClass: "phisical", value: 50 }),
       direction: { x: 1, y: 0 },
       health: 10,
-
       weapons: [],
-      // bang_interval ,
     });
   }
 }

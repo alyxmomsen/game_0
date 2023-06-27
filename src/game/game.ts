@@ -1,104 +1,33 @@
-// import GameObject, { Enemy } from "../gameobjects/gameobject";
-// import { ids } from "webpack";
 import { Bullet } from "../gameobjects/bullet";
 import { Enemy } from "../gameobjects/enemy";
-import GameObject, {
-  Dimentions,
-  GameObjectConstructor,
-  GameObjectType,
-  Position,
-} from "../gameobjects/gameobject";
+import GameObject, { Dimentions } from "../gameobjects/gameobject";
 import { Player } from "../gameobjects/player";
-import { ArmorClass } from "../library/armore";
-import { Attack } from "../library/attack";
 import { Damage } from "../library/damage";
-import { generatePostion } from "../library/generatePosition";
-import { IDManager } from "../library/id_manager";
 import KeysManager from "../library/keysManager";
-import { Tick, buildField, generateColor } from "../library/main";
+import { buildField } from "../library/main";
 import { Weapon } from "../library/weapon";
 
 export default class Game {
   // hero: GameObject = null;
+  keysManager: KeysManager = null; // Объект менеджера ключей клавиш
+
   field: { dimentions: Dimentions };
-
-  enemies: GameObject[] = [];
-  gameObjects: GameObject[] = [];
-  bullets: GameObject[] = [];
-  // объект игрока
-  player: Player;
-
   weapons: Weapon[];
 
-  // Объект менеджера ключей клавиш
-  keysManager: KeysManager = null;
+  toCreate: (Enemy | Bullet)[];
 
-  IDManager: IDManager;
+  player: Player; // объект игрока
+  enemies: Enemy[] = [];
+  gameObjects: GameObject[] = [];
+  bullets: Bullet[] = [];
+
+  // IDManager: IDManager;
 
   /* ======== html ========== */
 
-  infcDisplay: HTMLElement = null;
+  UI: HTMLElement;
 
   /* ======================== */
-
-  createGameObject({
-    kind = "game_object",
-    fieldDimentions,
-    ownDamage,
-  }: {
-    kind: GameObjectType;
-    ownDamage: Damage;
-    fieldDimentions: { width: number; height: number };
-  }) {
-    // объект автоматического выбора класса
-
-    const obj = {
-      enemy: () => {
-        return new Enemy({
-          id: this.IDManager.genID(),
-          position: generatePostion(fieldDimentions),
-          weapons: [],
-        });
-      },
-      player: () => {
-        return new Player({
-          id: this.IDManager.genID(),
-          position: generatePostion(fieldDimentions),
-          weapons: [],
-        });
-      },
-      game_object: () => {
-        return new GameObject({
-          id: this.IDManager.genID(),
-          kind: "game_object",
-          position: generatePostion(fieldDimentions),
-          backgroundColor: "grey",
-          walkTickValue: 10,
-          color: "grey",
-          ownDamage,
-          direction: { x: 1, y: 0 },
-          health: 100,
-          weapons: [],
-        });
-      },
-      "damage-entity": () => {
-        return new GameObject({
-          id: this.IDManager.genID(),
-          kind: "game_object",
-          position: generatePostion(fieldDimentions),
-          backgroundColor: "white",
-          walkTickValue: 1,
-          color: "white",
-          ownDamage,
-          weapons: [],
-          direction: { x: 1, y: 0 },
-          health: 100,
-        });
-      },
-    };
-
-    return obj[kind]();
-  }
 
   update() {
     /* Game управляет действиями Player (bdw, возможно они названны иначе, но это "пока" )
@@ -109,54 +38,61 @@ export default class Game {
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
-    /* generation objects */
+    /* ========================================= */
 
-    if (this.player.attack.status) {
-      this.bullets.push(
-        new Bullet({
-          position: {
-            x: this.player.position.x + this.player.movement.direction.x,
-            y: this.player.position.y + this.player.movement.direction.y,
-          },
-          id: this.IDManager.genID(),
-          direction: this.player.movement.direction,
-
-          // damage: new Damage(this.player.attack.ownDamage),
-          health: 1,
-          ownDamage: this.player.attack.weapons[0].damage, // hard set
-        })
-      );
-      this.player.attack.reset();
-    }
-
-    /* ================== */
-
-    this.bullets.forEach((elem) => {
-      elem.update({
-        keys,
-        objects: [...this.enemies],
-      });
+    this.toCreate.forEach((objectToCreate) => {
+      if (objectToCreate instanceof Bullet) {
+        this.bullets.push(objectToCreate);
+      } else if (objectToCreate instanceof Enemy) {
+        this.enemies.push(objectToCreate);
+      }
     });
 
-    // обновление объектов
-    this.player.update({ keys, objects: [] });
+    /* ========================================= */
+    const toCreate = this.player.update({
+      keys,
+      objects: [],
+      fieldDimentions: this.field.dimentions,
+    });
 
-    // const diedEnemies: GameObject[] = [];
+    if (toCreate !== false) {
+      this.toCreate.push(toCreate);
+    }
 
     this.enemies.forEach((enemy, i) => {
       enemy.update({
         keys,
-        objects: [...this.bullets],
+        objects: [],
+        fieldDimentions: this.field.dimentions,
       });
     });
 
-    // delete diedEnemies[0];
+    this.enemies = this.enemies.filter( enemy  => !enemy.isDied);
+
+    this.bullets.forEach((bullet) => {
+      bullet.update({
+        keys,
+        objects: [...this.enemies],
+        fieldDimentions: this.field.dimentions,
+      });
+    });
+
+    this.bullets = this.bullets.filter((elem) => !elem.isDied);
+
+    
   }
 
-  renderGameObject({ elem, field }: { elem: GameObject; field: HTMLElement }) {
+  renderGameObject({
+    elem,
+    field,
+  }: {
+    elem: GameObject | Enemy | Player;
+    field: HTMLElement;
+  }) {
     if (
       !elem.isDied &&
       field &&
+      elem.main_html_element &&
       field.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
         elem.position.x /* если html нода с такими координатами существет */
       ] !== undefined
@@ -168,6 +104,8 @@ export default class Game {
       elem.render();
     } else {
       elem.main_html_element.style.display = "none";
+      
+      elem.render();
     }
   }
 
@@ -189,61 +127,49 @@ export default class Game {
 
   constructor({
     root,
-    infcDisplay,
     fieldDimentions,
+    UI,
   }: {
     root: HTMLElement;
-    infcDisplay: HTMLElement;
+    UI: HTMLElement;
     fieldDimentions: { width: number; height: number };
   }) {
     this.keysManager = new KeysManager();
-    this.IDManager = new IDManager();
     this.field = { dimentions: fieldDimentions };
 
-    this.infcDisplay = infcDisplay;
-
-    root.append(
-      buildField(this.field.dimentions.height, this.field.dimentions.width)
-    );
-
-    //////////////////////////////////
-
     this.player = new Player({
-      id: this.IDManager.genID(),
-      position: generatePostion(this.field.dimentions),
+      id: 0,
+      position: { x: 6, y: 6 },
       weapons: [
         new Weapon({
-          damage: new Damage({ damageClass: "phisical", value: 20 }),
+          damage: new Damage({ damageClass: "phisical", value: 50 }),
+          fireRate: 100,
         }),
       ],
     });
 
-    for (let i = 0; i < 5; i++) {
-      this.gameObjects.push(
-        this.createGameObject({
-          kind: "game_object",
-          fieldDimentions: this.field.dimentions,
-          ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
-        })
-      );
-    }
-
     for (let i = 0; i < 10; i++) {
       this.enemies.push(
-        this.createGameObject({
-          kind: "enemy",
-          fieldDimentions: this.field.dimentions,
-          ownDamage: new Damage({ damageClass: "phisical", value: 100 }),
+        new Enemy({
+          id: 0,
+          position: { x: 6, y: 6 },
+          weapons: [],
         })
       );
     }
 
-    //////////////////////////////////////////////
+    this.toCreate = [];
+
+    /* ============================= */
+
+    this.UI = UI;
 
     this.enemies.forEach((enemy) => {
-      this.infcDisplay.append(enemy.infc_display.mainHTMLElement);
+      this.UI.append(enemy.UI.wrapper);
     });
 
-    this.infcDisplay.append(this.player.infc_display.mainHTMLElement);
+    root.append(
+      buildField(this.field.dimentions.height, this.field.dimentions.width)
+    );
   }
 }

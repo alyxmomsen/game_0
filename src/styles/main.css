@@ -6,6 +6,10 @@ body {
   width: 100%;
   height: 100%;
   background-color: red;
+  display: flex;
+  justify-content: center ;
+  align-content: center;
+  
 }
 
 .game-field {
@@ -30,13 +34,19 @@ body {
   position: relative;
 }
 
+.game-object-element {
+  display: flex ;
+  justify-content: center ;
+  align-items: center ;
+}
+
 div#stats-display {
   display: flex;
 }
 
 .object-stats {
   padding: 5px;
-  width: a;
+  /* width: 200px; */
   width: 100px;
   display: flex;
   flex-direction: column;
