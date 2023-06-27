@@ -20,6 +20,8 @@ export class Player extends GameObject {
       this.move(calculateMovementDirection(keys));
     }
 
+    this.setAttackDirection(keys);
+
     return super.update({ keys, objects, fieldDimentions });
   }
 

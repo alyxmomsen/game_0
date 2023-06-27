@@ -57,7 +57,7 @@ export default class Game {
       this.toCreate.push(toCreate);
     }
 
-    this.enemies.forEach((enemy, i) => {
+    this.enemies.forEach((enemy) => {
       enemy.update({
         keys,
         objects: [],
@@ -70,7 +70,7 @@ export default class Game {
     this.bullets.forEach((bullet) => {
       bullet.update({
         keys,
-        objects: [...this.enemies],
+        objects: [...this.enemies , this.player],
         fieldDimentions: this.field.dimentions,
       });
     });

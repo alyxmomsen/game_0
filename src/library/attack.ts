@@ -1,3 +1,4 @@
+import { Direction } from "../gameobjects/gameobject";
 import { Damage } from "./damage";
 import { Tick } from "./main";
 import { Weapon } from "./weapon";
@@ -8,7 +9,8 @@ export class Attack {
   status: boolean;
   speed: number;
   ticker: Tick;
-  // damage: Damage;
+  
+  direction:Direction ;
 
   weapons: Weapon[];
   currentWeapon: Weapon;
@@ -36,7 +38,7 @@ export class Attack {
     // this.speed = this.ticker.speed;
     this.ownDamage = ownDamage;
     this.weapons = weapons; // получение арсенала
-
+    this.direction = {x:1 , y:0} ;
     this.setCurrentWeapon();
   }
 }
