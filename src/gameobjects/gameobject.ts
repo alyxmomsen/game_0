@@ -60,12 +60,11 @@ export default class GameObject {
 
   movement: Movement;
 
-
   /* ================================ */
 
   /* -------- html --------- */
 
-  UI:GameObjectUI_HTML ;
+  UI: GameObjectUI_HTML;
 
   infc_display: {
     title: HTMLElement;
@@ -107,13 +106,12 @@ export default class GameObject {
     } else if (y !== 0) {
       this.movement.direction = { x, y };
     }
-
   }
 
   update({
     keys,
     objects,
-    fieldDimentions ,
+    fieldDimentions,
   }: {
     keys: string[];
     objects: GameObject[];
@@ -152,8 +150,13 @@ export default class GameObject {
       this.isDied = true;
     }
 
-    if(this.position.x > fieldDimentions.width || this.position.x < -1 || this.position.y > fieldDimentions.height || this.position.y < -1) {
-      this.isDied = true ;
+    if (
+      this.position.x > fieldDimentions.width ||
+      this.position.x < -1 ||
+      this.position.y > fieldDimentions.height ||
+      this.position.y < -1
+    ) {
+      this.isDied = true;
     }
 
     return keys.includes(" ") &&
@@ -170,13 +173,13 @@ export default class GameObject {
   }
 
   render() {
+    
+    this.UI.update({
+      title: this.id.toString(),
+      health: this.health.toString(),
+      armor: this.armor.health.toString(),
+    });
 
-    this.UI.update({title:this.id.toString() , health:this.health.toString() , armor:this.armor.health.toString()});
-
-    // this.infc_display.health.innerText = `${this.health}`;
-    // // this.infc_display.id.innerText = `${this.id}`;
-    // this.infc_display.armor.innerText = `${this.armor.health}`;
-    // this.infc_display.mainHTMLElement.style.backgroundColor = this.color;
   }
 
   constructor({
@@ -189,7 +192,6 @@ export default class GameObject {
     health,
     weapons,
   }: GameObjectConstructor) {
-
     this.movement = new Movement(walkTickValue, direction);
     this.position = position;
 
@@ -211,9 +213,11 @@ export default class GameObject {
     // this.backgroundColor = backgroundColor;
     this.main_html_element.style.backgroundColor = this.color;
 
-
-    this.UI = new GameObjectUI_HTML({title:this.id.toString() , health:this.health.toString() , armor:this.armor.health.toString()});
-
+    this.UI = new GameObjectUI_HTML({
+      title: this.id.toString(),
+      health: this.health.toString(),
+      armor: this.armor.health.toString(),
+    });
 
     this.infc_display = buildGameObjectStatsHTMLElement({
       objectTitle: this.kind,

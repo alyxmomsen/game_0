@@ -15,4 +15,3 @@ export class Damage {
     this.value = value;
   }
 }
-

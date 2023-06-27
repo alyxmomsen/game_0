@@ -3,7 +3,6 @@ import Game from "./game/game";
 import "./styles/main.css";
 
 (function () {
-
   const root = document.querySelector<HTMLElement>(".root");
   const UI = document.querySelector<HTMLElement>("#stats-display");
 

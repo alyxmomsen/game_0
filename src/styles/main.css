@@ -36,7 +36,7 @@ div#stats-display {
 
 .object-stats {
   padding: 5px;
-  width: a;
+  /* width: 200px; */
   width: 100px;
   display: flex;
   flex-direction: column;

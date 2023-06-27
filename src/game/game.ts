@@ -4,9 +4,7 @@ import GameObject, { Dimentions } from "../gameobjects/gameobject";
 import { Player } from "../gameobjects/player";
 import { Damage } from "../library/damage";
 import KeysManager from "../library/keysManager";
-import {
-  buildField,
-} from "../library/main";
+import { buildField } from "../library/main";
 import { Weapon } from "../library/weapon";
 
 export default class Game {
@@ -27,7 +25,7 @@ export default class Game {
 
   /* ======== html ========== */
 
-  UI: HTMLElement ;
+  UI: HTMLElement;
 
   /* ======================== */
 
@@ -56,7 +54,6 @@ export default class Game {
       objects: [],
       fieldDimentions: this.field.dimentions,
     });
-    
 
     if (toCreate !== false) {
       this.toCreate.push(toCreate);
@@ -70,7 +67,6 @@ export default class Game {
       });
     });
 
-
     this.bullets.forEach((bullet) => {
       bullet.update({
         keys,
@@ -79,7 +75,7 @@ export default class Game {
       });
     });
 
-    this.bullets = this.bullets.filter(elem => !elem.isDied);
+    this.bullets = this.bullets.filter((elem) => !elem.isDied);
 
     // delete diedEnemies[0];
   }
@@ -128,7 +124,7 @@ export default class Game {
   constructor({
     root,
     fieldDimentions,
-    UI ,
+    UI,
   }: {
     root: HTMLElement;
     UI: HTMLElement;
@@ -162,15 +158,14 @@ export default class Game {
 
     /* ============================= */
 
-    this.UI = UI ;
-    
-    this.enemies.forEach(enemy => {
+    this.UI = UI;
+
+    this.enemies.forEach((enemy) => {
       this.UI.append(enemy.UI.wrapper);
     });
 
     root.append(
       buildField(this.field.dimentions.height, this.field.dimentions.width)
     );
-
   }
 }
