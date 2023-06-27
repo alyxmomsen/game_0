@@ -30,11 +30,9 @@ export default class Game {
   /* ======================== */
 
   update() {
-    /* Game управляет действиями Player (bdw, возможно они названны иначе, но это "пока" )
-    на самом деле, как правило, игра сама наносит урон другим объектам, не создавая событие Attack у Player
 
-    так же Player, как и другие объекты могут генерировать состояния такие как голод , усталость и т. д. */
-
+    
+    
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
@@ -142,7 +140,7 @@ export default class Game {
       position: { x: 6, y: 6 },
       weapons: [
         new Weapon({
-          damage: new Damage({ damageClass: "phisical", value: 50 }),
+          damage: new Damage({ damageClass: "phisical", value: 200 }),
           fireRate: 100,
         }),
       ],
