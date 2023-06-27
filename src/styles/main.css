@@ -6,6 +6,10 @@ body {
   width: 100%;
   height: 100%;
   background-color: red;
+  display: flex;
+  justify-content: center ;
+  align-content: center;
+  
 }
 
 .game-field {
@@ -28,6 +32,12 @@ body {
   height: auto;
   background-color: #3b3a56;
   position: relative;
+}
+
+.game-object-element {
+  display: flex ;
+  justify-content: center ;
+  align-items: center ;
 }
 
 div#stats-display {

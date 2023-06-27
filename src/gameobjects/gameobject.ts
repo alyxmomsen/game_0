@@ -66,13 +66,6 @@ export default class GameObject {
 
   UI: GameObjectUI_HTML;
 
-  infc_display: {
-    title: HTMLElement;
-    health: HTMLElement;
-    // id: HTMLElement;
-    armor: HTMLElement;
-    mainHTMLElement: HTMLElement;
-  };
   main_html_element: HTMLElement;
   /* ----------------------- */
 
@@ -119,16 +112,14 @@ export default class GameObject {
   }): Bullet | false {
     // получение урона
 
-    (() => {
-      if (this.damaged.length) {
-        for (const damage of this.damaged) {
-          // this.health -= damage.value;
-          this.getDamage(damage.value);
-        }
-      }
+    if (this.damaged.length) {
+      for (const damage of this.damaged) {
 
-      this.damaged = [];
-    })();
+        this.getDamage(damage.value);
+      }
+    }
+
+    this.damaged = [];
 
     // проверка коллизий
 
@@ -139,6 +130,12 @@ export default class GameObject {
           if (/* this.attack.ticker.tick() */ true) {
             console.log("collision");
             this.attackTo(object);
+            
+            if(this instanceof Bullet) {
+              this.isDied = true ;
+              this.main_html_element.remove();
+            }
+
           }
         }
       }
@@ -148,6 +145,7 @@ export default class GameObject {
 
     if (this.health <= 0) {
       this.isDied = true;
+      this.main_html_element.remove();
     }
 
     if (
@@ -166,19 +164,21 @@ export default class GameObject {
           direction: this.movement.direction,
           health: 1,
           id: 0,
-          ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
+          ownDamage: new Damage(this.attack.currentWeapon.damage) ,
           position: { x: this.position.x, y: this.position.y },
         })
       : false;
   }
 
   render() {
-    
+
     this.UI.update({
       title: this.id.toString(),
       health: this.health.toString(),
       armor: this.armor.health.toString(),
     });
+
+    this.main_html_element.innerText = this.health.toString() ;
 
   }
 
@@ -210,19 +210,12 @@ export default class GameObject {
 
     this.main_html_element = document.createElement("div");
     this.main_html_element.className = "object-body";
-    // this.backgroundColor = backgroundColor;
     this.main_html_element.style.backgroundColor = this.color;
 
     this.UI = new GameObjectUI_HTML({
       title: this.id.toString(),
       health: this.health.toString(),
       armor: this.armor.health.toString(),
-    });
-
-    this.infc_display = buildGameObjectStatsHTMLElement({
-      objectTitle: this.kind,
-      newId: this.id,
-      armor: this.armor.health,
     });
 
     console.log("object done: ", this);

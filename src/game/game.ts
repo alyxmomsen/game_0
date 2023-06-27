@@ -67,6 +67,8 @@ export default class Game {
       });
     });
 
+    this.enemies = this.enemies.filter( enemy  => !enemy.isDied);
+
     this.bullets.forEach((bullet) => {
       bullet.update({
         keys,
@@ -77,7 +79,7 @@ export default class Game {
 
     this.bullets = this.bullets.filter((elem) => !elem.isDied);
 
-    // delete diedEnemies[0];
+    
   }
 
   renderGameObject({
@@ -90,6 +92,7 @@ export default class Game {
     if (
       !elem.isDied &&
       field &&
+      elem.main_html_element &&
       field.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
         elem.position.x /* если html нода с такими координатами существет */
       ] !== undefined
@@ -101,6 +104,7 @@ export default class Game {
       elem.render();
     } else {
       elem.main_html_element.style.display = "none";
+      
       elem.render();
     }
   }
@@ -138,8 +142,8 @@ export default class Game {
       position: { x: 6, y: 6 },
       weapons: [
         new Weapon({
-          damage: new Damage({ damageClass: "phisical", value: 5 }),
-          fireRate: 200,
+          damage: new Damage({ damageClass: "phisical", value: 50 }),
+          fireRate: 100,
         }),
       ],
     });
