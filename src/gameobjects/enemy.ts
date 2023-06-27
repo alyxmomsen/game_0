@@ -7,25 +7,25 @@ export class Enemy extends GameObject {
   constructor({
     id,
     position,
-    weapons /* bang_interval */,
+    weapons,
   }: {
-    /* bang_interval:number ;*/ id: number;
+    id: number;
     position: Position;
     weapons: Weapon[];
   }) {
     super({
-      // backgroundColor: "yellow",
       color: "yellow",
       id,
       kind: "enemy",
       position,
-
       walkTickValue: 1000,
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,
       direction: { x: 1, y: 0 },
       health: 66,
-      // bang_interval ,
     });
+
+
+    
   }
 }

@@ -45,40 +45,38 @@ export type Dimentions = {
 };
 
 export default class GameObject {
-  dimentions: Dimentions;
-  color: string;
-  damaged: Damage[]; // в данный момент получаемыe уроны
-  // bullets:Bullet[] ;
-
-  /* ================================ */
-
-  // movement: { direction: Direction };
-
-  walk: { velocity: number; ticker: null | Tick; tickSpeed: number } = {
-    // объект движения
-    velocity: 1,
-    tickSpeed: Math.round(1000 / 20),
-    ticker: null,
-  };
-
-  movement: Movement;
-
-  /* ================================ */
-
-  kind: GameObjectType = "game_object";
-
   id: number;
-
+  color: string;
+  kind: GameObjectType ;
+  dimentions: Dimentions;
+  position: { x: number; y: number } | null = null;
+  damaged: Damage[]; // в данный момент получаемыe уроны
+  
   health: number;
+  armor: Armor;
   isDied: boolean;
   attack: Attack;
 
-  armor: Armor;
+  movement: Movement;
+  
+  // backgroundColor: string;
+  
+  
+  
+  
+  
+  /* ================================ */
 
-  position: { x: number; y: number } | null = null;
+  // walk: { velocity: number; ticker: null | Tick; tickSpeed: number } = {
+  //   // объект движения
+  //   velocity: 1,
+  //   tickSpeed: Math.round(1000 / 20),
+  //   ticker: null,
+  // };
 
-  backgroundColor: string;
 
+  /* ================================ */
+  
   /* -------- html --------- */
   infc_display: {
     title: HTMLElement;
@@ -93,6 +91,7 @@ export default class GameObject {
   // атака на указаный объект
   attackTo(object: GameObject) {
     object.damaged.push(new Damage(this.attack.ownDamage));
+    // alert();
   }
 
   getDamage(damage: number) {
@@ -115,14 +114,10 @@ export default class GameObject {
     }
 
     if (x !== 0) {
-      if (this.kind === "player") {
-        // console.log(x, y, x > 0 ? "right" : "left");
-      }
+      
       this.movement.direction = { x, y };
     } else if (y !== 0) {
-      if (this.kind === "player") {
-        // console.log(x, y, y > 0 ? "down" : "up");
-      }
+      
       this.movement.direction = { x, y };
     }
   }
@@ -132,36 +127,18 @@ export default class GameObject {
     return direttions[Math.floor(Math.random() * 4)];
   } */
 
-  update({ keys, objects }: { keys: string[]; objects: GameObject[] }) {
-    // блок ходов
-
-    // генерация направления
-
-    // this.movement.direction = this.generanteDirection();
-
+  update({ keys, objects }: { keys: string[]; objects: GameObject[] }):Bullet|false {
+    
+    
+    
     if (!this.isDied && this.movement.ticker.tick()) {
+      
       if (this.kind === "player") {
         this.move(calculateMovementDirection(keys));
       } else if (this.kind === "enemy") {
         this.move(generateMovementDirection());
       } else if (this.kind === "damage-entity") {
         this.move(this.movement.direction) ; 
-      }
-    }
-
-    // итерация по объектам
-    //...
-
-    // проверка коллизий
-
-    for (const object of objects) {
-      // если объект не является сам собой и если объект не "умер"
-      if (object !== this && !this.isDied) {
-        if (this.checkColissionWith(object.position)) {
-          if (this.attack.ticker.tick() /* true */) {
-            this.attackTo(object);
-          }
-        }
       }
     }
 
@@ -181,6 +158,8 @@ export default class GameObject {
     // проверка коллизий
 
     for (const object of objects) {
+
+      
       // если объект не является сам собой и если объект не "умер"
       if (object !== this && !this.isDied) {
         if (this.checkColissionWith(object.position)) {
@@ -198,13 +177,22 @@ export default class GameObject {
       this.isDied = true;
     }
 
-    // attacks
+    
 
-    if (this.kind === "player") {
-      if (keys.includes(" ") && this.attack.ticker.tick()) {
-        this.attack.setTrueStatus();
-      }
-    }
+    return (keys.includes(" ") &&  this.attack.ticker?.tick() && this.kind === "player") ? new Bullet({
+      direction:this.movement.direction , 
+      health:1 , 
+      id:0 , 
+      ownDamage:new Damage({damageClass:'phisical'  , value:10}) , 
+      position:{x:this.position.x , y:this.position.y} ,
+    }) : false ;
+
+
+    // if(keys.includes(" ") && this.attack.ticker.tick()) {
+    //   console.log('attack');
+    // }
+
+
   }
 
   render() {
@@ -212,26 +200,26 @@ export default class GameObject {
     // this.infc_display.id.innerText = `${this.id}`;
     this.infc_display.armor.innerText = `${this.armor.health}`;
     this.infc_display.mainHTMLElement.style.backgroundColor =
-      this.backgroundColor;
+      this.color;
   }
 
   constructor({
-    id, //
+    id, 
     position,
-    // backgroundColor,
     kind,
     walkTickValue,
     ownDamage,
     direction,
     health,
-
     weapons,
   }: GameObjectConstructor) {
     const fireRate = 100; // 
 
     this.movement = new Movement(walkTickValue, direction);
     this.position = position;
-    this.attack = new Attack(ownDamage, new Tick(fireRate), weapons);
+
+    this.attack = new Attack(ownDamage, weapons);
+
     this.armor = new Armor({ health: 101, dempher: 80 });
     this.damaged = [];
     this.isDied = false;
@@ -246,7 +234,7 @@ export default class GameObject {
     this.main_html_element = document.createElement("div");
     this.main_html_element.className = "object-body";
     // this.backgroundColor = backgroundColor;
-    this.main_html_element.style.backgroundColor = this.backgroundColor;
+    this.main_html_element.style.backgroundColor = this.color;
 
     this.infc_display = buildGameObjectStatsHTMLElement({
       objectTitle: this.kind,

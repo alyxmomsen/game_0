@@ -2,6 +2,16 @@ import { Damage } from "../library/damage";
 import GameObject, { Direction, Position } from "./gameobject";
 
 export class Bullet extends GameObject {
+
+  update({ keys, objects }: { keys: string[]; objects: GameObject[]; }): false | Bullet {
+    
+    const result = super.update({keys , objects});
+    
+    // if(this.position.x > )
+    
+    return result ;
+  }
+
   constructor({
     position,
     id,

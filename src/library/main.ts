@@ -1,4 +1,4 @@
-import { Direction } from "../gameobjects/gameobject";
+import GameObject, { Direction } from "../gameobjects/gameobject";
 
 export class Tick {
 
@@ -152,4 +152,10 @@ export function generateColor(length = 3) {
   }
 
   return str;
+}
+
+export function generateUniqueID (ids:{id:number , object:GameObject}[]) {
+  
+  return 0 ;
+
 }

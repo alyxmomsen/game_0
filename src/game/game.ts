@@ -1,36 +1,36 @@
 
+import { Bullet } from "../gameobjects/bullet";
+import { Enemy } from "../gameobjects/enemy";
 import GameObject, { Dimentions } from "../gameobjects/gameobject";
 import { Player } from "../gameobjects/player";
+import { Damage } from "../library/damage";
 import { IDManager } from "../library/id_manager";
 import KeysManager from "../library/keysManager";
-import { Tick, buildField, generateColor } from "../library/main";
+import { Tick, buildField, generateColor, generateUniqueID } from "../library/main";
 import { Weapon } from "../library/weapon";
 
 export default class Game {
   // hero: GameObject = null;
-  field: { dimentions: Dimentions };
-
-  enemies: GameObject[] = [];
-  gameObjects: GameObject[] = [];
-  bullets: GameObject[] = [];
+  keysManager: KeysManager = null; // Объект менеджера ключей клавиш
   
-  player: Player; // объект игрока
-
+  field: { dimentions: Dimentions };
   weapons: Weapon[];
 
+  toCreate:(Enemy|Bullet)[] ;
   
-  keysManager: KeysManager = null; // Объект менеджера ключей клавиш
+  
+  player: Player; // объект игрока
+  enemies: Enemy[] = [];
+  gameObjects: GameObject[] = [];
+  bullets: Bullet[] = [];
 
-  IDManager: IDManager;
-
+  // IDManager: IDManager;
+  
   /* ======== html ========== */
 
   infcDisplay: HTMLElement = null;
 
   /* ======================== */
-
-  
-    
 
   update() {
     /* Game управляет действиями Player (bdw, возможно они названны иначе, но это "пока" )
@@ -41,32 +41,45 @@ export default class Game {
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
-    this.player.update({keys , objects:[]});
 
-    this.bullets ;
+    this.toCreate.forEach(objectToCreate => {
+      
+      if(objectToCreate instanceof Bullet) {
 
-    
+        this.bullets.push(objectToCreate);
 
-    
+      } else if (objectToCreate instanceof Enemy) {
 
-    
+        this.enemies.push(objectToCreate);
+      }
 
-    
-    this.player.update({ keys, objects: [] });
 
-    // const diedEnemies: GameObject[] = [];
+    });
+
+    const toCreate = this.player.update({keys , objects:[]});
+    if(toCreate !== false) {
+      this.toCreate.push(toCreate) ;
+      
+    }
 
     this.enemies.forEach((enemy, i) => {
       enemy.update({
         keys,
-        objects: [/* ...this.bullets */],
+        objects: [],
       });
     });
-
+    
+    this.bullets.forEach(bullet => {
+      bullet.update({
+        keys,
+        objects: [...this.enemies] ,
+      });
+    }) ;
+    
     // delete diedEnemies[0];
   }
 
-  renderGameObject({ elem, field }: { elem: GameObject; field: HTMLElement }) {
+  renderGameObject({ elem, field }: { elem:GameObject|Enemy|Player; field: HTMLElement }) {
     if (
       !elem.isDied &&
       field &&
@@ -113,10 +126,19 @@ export default class Game {
     this.field = { dimentions: fieldDimentions };
 
     this.player = new Player({
-      id:Date.now() , position:{x:0 , y:0} , weapons:[]
+      id:0 , position:{x:6 , y:6} , weapons:[new Weapon({damage:new Damage({damageClass:'phisical' , value:5}) , fireRate:50})]
     }) ;
-    this.bullets = [] ;
-    this.enemies = [] ;
+
+    for (let i=0 ; i<10 ; i++) {
+      this.enemies.push(new Enemy({
+        id:0 , position:{x:6 , y:6} , weapons:[]
+      })) ;
+    }
+
+    this.toCreate = [] ;
+
+    
+    /* ============================= */
     
     this.infcDisplay = infcDisplay;
 

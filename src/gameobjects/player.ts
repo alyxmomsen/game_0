@@ -17,7 +17,7 @@ export class Player extends GameObject {
   }) {
     super({
       id,
-      kind: "player",
+      kind: "player" ,
       walkTickValue: 100,
       color: "green",
       position,
@@ -25,7 +25,6 @@ export class Player extends GameObject {
       weapons,
       direction: { x: 1, y: 0 },
       health: 99,
-      
     });
   }
 }
