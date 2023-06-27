@@ -7,9 +7,8 @@ body {
   height: 100%;
   background-color: red;
   display: flex;
-  justify-content: center ;
+  justify-content: center;
   align-content: center;
-  
 }
 
 .game-field {
@@ -35,9 +34,9 @@ body {
 }
 
 .game-object-element {
-  display: flex ;
-  justify-content: center ;
-  align-items: center ;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 div#stats-display {

@@ -37,7 +37,7 @@ export class Player extends GameObject {
     super({
       id,
       kind: "player",
-      walkTickValue: 100,
+      walkTickValue: 50,
       color: "green",
       position,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),

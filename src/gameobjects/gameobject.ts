@@ -13,7 +13,6 @@ export type GameObjectType =
   | "player"
   | "damage-entity";
 
-// export type Direction = "up" | "right" | "down" | "left";
 export type Direction = { x: 0 | 1 | -1; y: 0 | 1 | -1 };
 
 export type Position = {
@@ -23,7 +22,6 @@ export type Position = {
 
 export type GameObjectConstructor = {
   id: number;
-  // attackDirection:Direction ;s
   kind: GameObjectType;
   walkTickValue: number;
   color: string;
@@ -32,7 +30,6 @@ export type GameObjectConstructor = {
   direction: Direction;
   health: number;
   weapons: Weapon[];
-  // bang_interval:number ;
 };
 
 export type Dimentions = {
@@ -63,47 +60,38 @@ export default class GameObject {
   main_html_element: HTMLElement;
   /* ----------------------- */
 
-
-  setAttackDirection (keys:string[]) {
-
-    const up = keys.includes('ArrowUp');
-    const down = keys.includes('ArrowDown');
-    const left = keys.includes('ArrowLeft');
-    const right = keys.includes('ArrowRight');
+  setAttackDirection(keys: string[]) {
+    const up = keys.includes("ArrowUp");
+    const down = keys.includes("ArrowDown");
+    const left = keys.includes("ArrowLeft");
+    const right = keys.includes("ArrowRight");
 
     // const direction:Direction = {x:0 , y:0} ;
 
     // здесь есть баг, - если одновременно зажать две клавиши , то объект атакует сам себя
 
-    if(up || down || left || right) {
-
-      if(up && !down) {
-        this.attack.direction.y = -1 ;
+    if (up || down || left || right) {
+      if (up && !down) {
+        this.attack.direction.y = -1;
       } else if (!up && down) {
-        this.attack.direction.y = 1 ;
-      } else  {
-        this.attack.direction.y = 0 ;
-      }
-
-      if(left && !right) {
-        this.attack.direction.x = -1 ;
-      } else if (!left && right) {
-        this.attack.direction.x = 1 ;
+        this.attack.direction.y = 1;
       } else {
-        this.attack.direction.x = 0 ;
+        this.attack.direction.y = 0;
       }
 
+      if (left && !right) {
+        this.attack.direction.x = -1;
+      } else if (!left && right) {
+        this.attack.direction.x = 1;
+      } else {
+        this.attack.direction.x = 0;
+      }
 
       //временный дебаг, который иногда не срабатывает
-      if(this.attack.direction.x === 0 && this.attack.direction.y === 0) {
-
-        this.attack.direction.x = 1 ;
+      if (this.attack.direction.x === 0 && this.attack.direction.y === 0) {
+        this.attack.direction.x = 1;
       }
-
     }
-    
-    // this.attack.direction = direction ;
-
   }
 
   // атака на указаный объект
@@ -151,7 +139,6 @@ export default class GameObject {
 
     if (this.damaged.length) {
       for (const damage of this.damaged) {
-
         this.getDamage(damage.value);
       }
     }
@@ -167,18 +154,17 @@ export default class GameObject {
           if (/* this.attack.ticker.tick() */ true) {
             console.log("collision");
             this.attackTo(object);
-            
-            if(this instanceof Bullet) {
-              this.isDied = true ;
+
+            if (this instanceof Bullet) {
+              this.isDied = true;
               this.main_html_element.remove();
             }
-
           }
         }
       }
     }
 
-    // check if this died
+    /* ======== check if this died ========*/
 
     if (this.health <= 0) {
       this.isDied = true;
@@ -194,12 +180,12 @@ export default class GameObject {
       this.isDied = true;
     }
 
+    /* =================================== */
 
-    const up = keys.includes('ArrowUp');
-    const down = keys.includes('ArrowDown');
-    const left = keys.includes('ArrowLeft');
-    const right = keys.includes('ArrowRight');
-
+    const up = keys.includes("ArrowUp");
+    const down = keys.includes("ArrowDown");
+    const left = keys.includes("ArrowLeft");
+    const right = keys.includes("ArrowRight");
 
     return (up || down || left || right) &&
       this.attack.ticker?.tick() &&
@@ -208,22 +194,24 @@ export default class GameObject {
           direction: this.attack.direction,
           health: 1,
           id: 0,
-          ownDamage: new Damage(this.attack.currentWeapon.damage) ,
-          position: { x: this.position.x /* + this.attack.direction.x */ , y: this.position.y /* + this.attack.direction.y */  },
+          ownDamage: new Damage(this.attack.currentWeapon.damage),
+          position: {
+            x: this.position.x + this.attack.direction.x,
+            y: this.position.y + this.attack.direction.y,
+          },
         })
       : false;
   }
 
   render() {
-
+    
     this.UI.update({
       title: this.id.toString(),
       health: this.health.toString(),
       armor: this.armor.health.toString(),
     });
 
-    this.main_html_element.innerText = this.health.toString() ;
-
+    this.main_html_element.innerText = this.health.toString();
   }
 
   constructor({
@@ -235,6 +223,7 @@ export default class GameObject {
     direction,
     health,
     weapons,
+    color,
   }: GameObjectConstructor) {
     this.movement = new Movement(walkTickValue, direction);
     this.position = position;
@@ -252,6 +241,8 @@ export default class GameObject {
 
     /* ----------- display --------------------------*/
 
+    this.color = color;
+
     this.main_html_element = document.createElement("div");
     this.main_html_element.className = "object-body";
     this.main_html_element.style.backgroundColor = this.color;
@@ -262,6 +253,6 @@ export default class GameObject {
       armor: this.armor.health.toString(),
     });
 
-    console.log("object done: ", this);
+    // console.log("object done: ", this);
   }
 }

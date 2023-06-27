@@ -9,8 +9,8 @@ export class Attack {
   status: boolean;
   speed: number;
   ticker: Tick;
-  
-  direction:Direction ;
+
+  direction: Direction;
 
   weapons: Weapon[];
   currentWeapon: Weapon;
@@ -38,7 +38,7 @@ export class Attack {
     // this.speed = this.ticker.speed;
     this.ownDamage = ownDamage;
     this.weapons = weapons; // получение арсенала
-    this.direction = {x:1 , y:0} ;
+    this.direction = { x: 1, y: 0 };
     this.setCurrentWeapon();
   }
 }

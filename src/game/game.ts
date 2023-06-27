@@ -4,11 +4,12 @@ import GameObject, { Dimentions } from "../gameobjects/gameobject";
 import { Player } from "../gameobjects/player";
 import { Damage } from "../library/damage";
 import KeysManager from "../library/keysManager";
-import { buildField } from "../library/main";
+import { Tick, buildField } from "../library/main";
 import { Weapon } from "../library/weapon";
 
 export default class Game {
-  // hero: GameObject = null;
+  creatorEnemyTicker: Tick;
+
   keysManager: KeysManager = null; // Объект менеджера ключей клавиш
 
   field: { dimentions: Dimentions };
@@ -29,10 +30,40 @@ export default class Game {
 
   /* ======================== */
 
-  update() {
+  createEnemyRandomly() {
+    // beta beta beta beta !!!!!!!
 
-    
-    
+    if ( !this.creatorEnemyTicker) {
+      this.creatorEnemyTicker = new Tick(Math.floor(Math.random() * 1000));
+    }
+
+    if (this.creatorEnemyTicker.tick() ) {
+
+
+      // console.log(this.enemies , 'this.enemies.length');
+
+      if (this.enemies.length < 5) {
+
+        this.toCreate.push(
+          new Enemy({
+            id: 0,
+            position: {
+              x: Math.floor(Math.random() * this.field.dimentions.width),
+              y: Math.floor(Math.random() * this.field.dimentions.height),
+            },
+            weapons: [],
+          })
+        );
+      }
+
+
+
+    }
+
+    this.creatorEnemyTicker.setSpeed(Math.floor(Math.random() * 5000));
+  }
+
+  update() {
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
@@ -45,6 +76,8 @@ export default class Game {
         this.enemies.push(objectToCreate);
       }
     });
+
+    this.toCreate = [] ;
 
     /* ========================================= */
     const toCreate = this.player.update({
@@ -65,19 +98,34 @@ export default class Game {
       });
     });
 
-    this.enemies = this.enemies.filter( enemy  => !enemy.isDied);
+    this.enemies = this.enemies.filter((enemy) => !enemy.isDied);
 
     this.bullets.forEach((bullet) => {
       bullet.update({
         keys,
-        objects: [...this.enemies , this.player],
+        objects: [...this.enemies, this.player],
         fieldDimentions: this.field.dimentions,
       });
     });
 
     this.bullets = this.bullets.filter((elem) => !elem.isDied);
 
-    
+
+    /* ================================== */
+
+    this.createEnemyRandomly();
+
+    if(!this.creatorEnemyTicker) {
+      this.creatorEnemyTicker =  new Tick(1000);
+    }
+
+    if(this.creatorEnemyTicker?.tick()) {
+      console.log(this.enemies.length , this.bullets.length) ;
+      
+    }
+
+    /* ================================ */
+
   }
 
   renderGameObject({
@@ -102,7 +150,7 @@ export default class Game {
       elem.render();
     } else {
       elem.main_html_element.style.display = "none";
-      
+
       elem.render();
     }
   }
@@ -130,7 +178,7 @@ export default class Game {
   }: {
     root: HTMLElement;
     UI: HTMLElement;
-    fieldDimentions: { width: number; height: number };
+    fieldDimentions:Dimentions ;
   }) {
     this.keysManager = new KeysManager();
     this.field = { dimentions: fieldDimentions };
@@ -146,15 +194,15 @@ export default class Game {
       ],
     });
 
-    for (let i = 0; i < 10; i++) {
-      this.enemies.push(
-        new Enemy({
-          id: 0,
-          position: { x: 6, y: 6 },
-          weapons: [],
-        })
-      );
-    }
+    // for (let i = 0; i < 1; i++) {
+    //   this.enemies.push(
+    //     new Enemy({
+    //       id: 0,
+    //       position: { x: Math.floor(Math.random() * this.field.dimentions.width), y: Math.floor(Math.random() * this.field.dimentions.height) },
+    //       weapons: [],
+    //     })
+    //   );
+    // }
 
     this.toCreate = [];
 

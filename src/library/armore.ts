@@ -7,6 +7,6 @@ export class Armor {
   constructor({ health, dempher }: { health: number; dempher: number }) {
     this.health = health;
     this.dempher = dempher;
-    console.log("armore is plugged");
+    // console.log("armore is plugged");
   }
 }
