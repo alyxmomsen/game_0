@@ -1,11 +1,20 @@
 export type DamageClass = "phisical" | "magic";
 
 export class Damage {
-  class: DamageClass;
+  damageClass: DamageClass;
   value: number;
 
-  constructor(damageClass: DamageClass, value: number = 0) {
-    this.class = damageClass;
+  constructor({
+    damageClass,
+    value,
+  }: {
+    damageClass: DamageClass;
+    value: number;
+  }) {
+    this.damageClass = damageClass;
     this.value = value;
   }
 }
+
+const a = [1, 3, 4, 5];
+a.includes(1);

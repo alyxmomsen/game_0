@@ -8,6 +8,7 @@ import {
   generateMovementDirection,
 } from "../library/main";
 import { Movement } from "../library/movement";
+import { Weapon } from "../library/weapon";
 import { Player } from "./player";
 import { heroActions, moveHero } from "./player_keys_checker";
 
@@ -32,9 +33,12 @@ export type GameObjectConstructor = {
   walkTickValue: number;
   color: string;
   position: Position;
-  damage: Damage;
+  ownDamage: Damage;
   direction: Direction;
   health: number;
+
+  weapons: Weapon[];
+  // bang_interval:number ;
 };
 
 export type Dimentions = {
@@ -80,7 +84,8 @@ export default class GameObject {
   infc_display: {
     title: HTMLElement;
     health: HTMLElement;
-    id: HTMLElement;
+    // id: HTMLElement;
+    armor: HTMLElement;
     mainHTMLElement: HTMLElement;
   };
   main_html_element: HTMLElement;
@@ -88,9 +93,16 @@ export default class GameObject {
 
   // атака на указаный объект
   attackTo(object: GameObject) {
-    object.damaged.push(
-      new Damage(this.attack.damage.class, this.attack.damage.value)
-    );
+    object.damaged.push(new Damage(this.attack.ownDamage));
+  }
+
+  getDamage(damage: number) {
+    if (this.armor.health > 0) {
+      this.armor.health -= (damage / 100) * this.armor.dempher;
+      this.health -= (damage / 100) * (100 - this.armor.dempher);
+    } else {
+      this.health -= damage;
+    }
   }
 
   checkColissionWith({ x, y }: Position) {
@@ -105,12 +117,12 @@ export default class GameObject {
 
     if (x !== 0) {
       if (this.kind === "player") {
-        console.log(x, y, x > 0 ? "right" : "left");
+        // console.log(x, y, x > 0 ? "right" : "left");
       }
       this.movement.direction = { x, y };
     } else if (y !== 0) {
       if (this.kind === "player") {
-        console.log(x, y, y > 0 ? "down" : "up");
+        // console.log(x, y, y > 0 ? "down" : "up");
       }
       this.movement.direction = { x, y };
     }
@@ -148,7 +160,6 @@ export default class GameObject {
       if (object !== this && !this.isDied) {
         if (this.checkColissionWith(object.position)) {
           if (/* this.attack.ticker.tick() */ true) {
-
             this.attackTo(object);
           }
         }
@@ -160,12 +171,27 @@ export default class GameObject {
     (() => {
       if (this.damaged.length) {
         for (const damage of this.damaged) {
-          this.health -= damage.value;
+          // this.health -= damage.value;
+          this.getDamage(damage.value);
         }
       }
 
       this.damaged = [];
     })();
+
+    // проверка коллизий
+
+    for (const object of objects) {
+      // если объект не является сам собой и если объект не "умер"
+      if (object !== this && !this.isDied) {
+        if (this.checkColissionWith(object.position)) {
+          if (/* this.attack.ticker.tick() */ true) {
+            console.log("collision");
+            this.attackTo(object);
+          }
+        }
+      }
+    }
 
     // check if this died
 
@@ -184,7 +210,8 @@ export default class GameObject {
 
   render() {
     this.infc_display.health.innerText = `${this.health}`;
-    this.infc_display.id.innerText = `${this.id}`;
+    // this.infc_display.id.innerText = `${this.id}`;
+    this.infc_display.armor.innerText = `${this.armor.health}`;
     this.infc_display.mainHTMLElement.style.backgroundColor =
       this.backgroundColor;
   }
@@ -195,16 +222,18 @@ export default class GameObject {
     backgroundColor,
     kind,
     walkTickValue,
-    damage,
+    ownDamage,
     direction,
     health,
+
+    weapons,
   }: GameObjectConstructor) {
+    const bang_speed = 100;
+
     this.movement = new Movement(walkTickValue, direction);
     this.position = position;
-    this.attack = new Attack(damage, new Tick(150));
-
-    this.armor = new Armor("light");
-
+    this.attack = new Attack(ownDamage, new Tick(bang_speed), weapons);
+    this.armor = new Armor({ health: 101, dempher: 80 });
     this.damaged = [];
     this.isDied = false;
     this.kind = kind;
@@ -223,6 +252,7 @@ export default class GameObject {
     this.infc_display = buildGameObjectStatsHTMLElement({
       objectTitle: this.kind,
       newId: this.id,
+      armor: this.armor.health,
     });
 
     console.log("object done: ", this);

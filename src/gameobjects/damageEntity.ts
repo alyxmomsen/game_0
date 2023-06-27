@@ -6,10 +6,12 @@ export class DamageEntity extends GameObject {
   constructor({
     id,
     position,
+    bang_interval,
   }: {
     id: number;
     armorKind: ArmorClass;
     position: Position;
+    bang_interval: number;
   }) {
     super({
       id, //
@@ -18,9 +20,12 @@ export class DamageEntity extends GameObject {
       walkTickValue: 20,
       color: "white",
       position,
-      damage: new Damage("phisical", 100),
+      ownDamage: new Damage({ damageClass: "phisical", value: 50 }),
       direction: { x: 1, y: 0 },
       health: 10,
+
+      weapons: [],
+      // bang_interval ,
     });
   }
 }

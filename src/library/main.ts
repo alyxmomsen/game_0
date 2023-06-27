@@ -32,7 +32,7 @@ export class Tick {
   }
 }
 
-export function calculateMovementDirection(keys: string[]):Direction {
+export function calculateMovementDirection(keys: string[]): Direction {
   let w = keys.includes("w");
   let s = keys.includes("s");
   let a = keys.includes("a");
@@ -66,9 +66,11 @@ export function generateMovementDirection(): { x: 0 | 1 | -1; y: -1 | 1 | 0 } {
 export function buildGameObjectStatsHTMLElement({
   objectTitle,
   newId,
+  armor,
 }: {
   objectTitle: string;
   newId: number;
+  armor: number;
 }) {
   const mainHTMLElement = document.createElement("div");
   mainHTMLElement.className = "object-stats";
@@ -84,13 +86,18 @@ export function buildGameObjectStatsHTMLElement({
   id.className = "object-stat id";
   id.innerText = newId.toLocaleString();
 
-  mainHTMLElement.append(title, health, id);
+  const armore = document.createElement("div");
+  armore.className = "object-stat armor";
+  armore.innerText = `${armor}`;
+
+  mainHTMLElement.append(title, health, armore);
 
   const obj = {
     title,
     health,
-    id,
+    // id,
     mainHTMLElement,
+    armor: armore,
   };
 
   // console.log('obj' , obj);

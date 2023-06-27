@@ -1,5 +1,5 @@
 // import GameObject, { Enemy } from "../gameobjects/gameobject";
-import { ids } from "webpack";
+// import { ids } from "webpack";
 import { Bullet } from "../gameobjects/bullet";
 import { Enemy } from "../gameobjects/enemy";
 import GameObject, {
@@ -16,6 +16,7 @@ import { generatePostion } from "../library/generatePosition";
 import { IDManager } from "../library/id_manager";
 import KeysManager from "../library/keysManager";
 import { Tick, buildField, generateColor } from "../library/main";
+import { Weapon } from "../library/weapon";
 
 export default class Game {
   // hero: GameObject = null;
@@ -26,6 +27,8 @@ export default class Game {
   bullets: GameObject[] = [];
   // объект игрока
   player: Player;
+
+  weapons: Weapon[];
 
   // Объект менеджера ключей клавиш
   keysManager: KeysManager = null;
@@ -41,10 +44,10 @@ export default class Game {
   createGameObject({
     kind = "game_object",
     fieldDimentions,
-    damage,
+    ownDamage,
   }: {
     kind: GameObjectType;
-    damage: Damage;
+    ownDamage: Damage;
     fieldDimentions: { width: number; height: number };
   }) {
     // объект автоматического выбора класса
@@ -54,12 +57,14 @@ export default class Game {
         return new Enemy({
           id: this.IDManager.genID(),
           position: generatePostion(fieldDimentions),
+          weapons: [],
         });
       },
       player: () => {
         return new Player({
           id: this.IDManager.genID(),
           position: generatePostion(fieldDimentions),
+          weapons: [],
         });
       },
       game_object: () => {
@@ -70,9 +75,10 @@ export default class Game {
           backgroundColor: "grey",
           walkTickValue: 10,
           color: "grey",
-          damage,
+          ownDamage,
           direction: { x: 1, y: 0 },
           health: 100,
+          weapons: [],
         });
       },
       "damage-entity": () => {
@@ -83,7 +89,8 @@ export default class Game {
           backgroundColor: "white",
           walkTickValue: 1,
           color: "white",
-          damage,
+          ownDamage,
+          weapons: [],
           direction: { x: 1, y: 0 },
           health: 100,
         });
@@ -99,6 +106,9 @@ export default class Game {
 
     так же Player, как и другие объекты могут генерировать состояния такие как голод , усталость и т. д. */
 
+    // получение ключей нажатых клавиш
+    const keys = this.keysManager.getPressedKeys();
+
     /* generation objects */
 
     if (this.player.attack.status) {
@@ -110,17 +120,16 @@ export default class Game {
           },
           id: this.IDManager.genID(),
           direction: this.player.movement.direction,
-          damage: new Damage("phisical", 10),
+
+          // damage: new Damage(this.player.attack.ownDamage),
           health: 1,
+          ownDamage: this.player.attack.weapons[0].damage, // hard set
         })
       );
       this.player.attack.reset();
     }
 
     /* ================== */
-
-    // получение ключей нажатых клавиш
-    const keys = this.keysManager.getPressedKeys();
 
     this.bullets.forEach((elem) => {
       elem.update({
@@ -132,7 +141,7 @@ export default class Game {
     // обновление объектов
     this.player.update({ keys, objects: [] });
 
-    const diedEnemies: GameObject[] = [];
+    // const diedEnemies: GameObject[] = [];
 
     this.enemies.forEach((enemy, i) => {
       enemy.update({
@@ -141,11 +150,10 @@ export default class Game {
       });
     });
 
-    delete diedEnemies[0];
+    // delete diedEnemies[0];
   }
 
   renderGameObject({ elem, field }: { elem: GameObject; field: HTMLElement }) {
-    
     if (
       !elem.isDied &&
       field &&
@@ -203,51 +211,32 @@ export default class Game {
     this.player = new Player({
       id: this.IDManager.genID(),
       position: generatePostion(this.field.dimentions),
+      weapons: [
+        new Weapon({
+          damage: new Damage({ damageClass: "phisical", value: 20 }),
+        }),
+      ],
     });
 
-    this.gameObjects.push(
-      this.createGameObject({
-        kind: "game_object",
-        fieldDimentions: this.field.dimentions,
-        damage: new Damage("phisical", 0),
-      })
-    );
-    this.gameObjects.push(
-      this.createGameObject({
-        kind: "game_object",
-        fieldDimentions: this.field.dimentions,
-        damage: new Damage("phisical", 0),
-      })
-    );
-    this.gameObjects.push(
-      this.createGameObject({
-        kind: "game_object",
-        fieldDimentions: this.field.dimentions,
-        damage: new Damage("phisical", 0),
-      })
-    );
+    for (let i = 0; i < 5; i++) {
+      this.gameObjects.push(
+        this.createGameObject({
+          kind: "game_object",
+          fieldDimentions: this.field.dimentions,
+          ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
+        })
+      );
+    }
 
-    this.enemies.push(
-      this.createGameObject({
-        kind: "enemy",
-        fieldDimentions: this.field.dimentions,
-        damage: new Damage("phisical", 100),
-      })
-    );
-    this.enemies.push(
-      this.createGameObject({
-        kind: "enemy",
-        fieldDimentions: this.field.dimentions,
-        damage: new Damage("phisical", 100),
-      })
-    );
-    this.enemies.push(
-      this.createGameObject({
-        kind: "enemy",
-        fieldDimentions: this.field.dimentions,
-        damage: new Damage("phisical", 100),
-      })
-    );
+    for (let i = 0; i < 10; i++) {
+      this.enemies.push(
+        this.createGameObject({
+          kind: "enemy",
+          fieldDimentions: this.field.dimentions,
+          ownDamage: new Damage({ damageClass: "phisical", value: 100 }),
+        })
+      );
+    }
 
     //////////////////////////////////////////////
 
