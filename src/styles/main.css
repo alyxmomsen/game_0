@@ -7,8 +7,13 @@ body {
   height: 100%;
   background-color: red;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-content: center;
+  align-items: center;
+}
+
+.object-body > div {
+  font-size: 10px;
 }
 
 .game-field {
