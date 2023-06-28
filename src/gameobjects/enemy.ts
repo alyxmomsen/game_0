@@ -39,7 +39,7 @@ export class Enemy extends GameObject {
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,
       direction: { x: 1, y: 0 },
-      health: 66,
+      health: Math.floor(Math.random() * 295) + 5,
     });
   }
 }

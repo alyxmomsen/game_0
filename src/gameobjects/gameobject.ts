@@ -1,6 +1,7 @@
 import { Armor, ArmorClass } from "../library/armore";
 import { Attack, AttackClass } from "../library/attack";
 import { Damage } from "../library/damage";
+import { HTML_unit } from "../library/html_unit";
 
 import { Movement } from "../library/movement";
 import { GameObjectUI_HTML } from "../library/objecthtml";
@@ -56,6 +57,7 @@ export default class GameObject {
   /* -------- html --------- */
 
   UI: GameObjectUI_HTML;
+  HTLM_untit:HTML_unit ;
 
   main_html_element: HTMLElement;
   /* ----------------------- */
@@ -212,6 +214,7 @@ export default class GameObject {
     });
 
     this.main_html_element.innerText = this.health.toString();
+    this.HTLM_untit.reRender({health:this.health.toString() , armor:this.armor.health.toString()});
   }
 
   constructor({
@@ -252,6 +255,8 @@ export default class GameObject {
       health: this.health.toString(),
       armor: this.armor.health.toString(),
     });
+
+    this.HTLM_untit = new HTML_unit({health:this.health.toString() , armor:this.armor.health.toString()});
 
     // console.log("object done: ", this);
   }
