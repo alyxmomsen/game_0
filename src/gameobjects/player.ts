@@ -43,7 +43,7 @@ export class Player extends GameObject {
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons,
       direction: { x: 1, y: 0 },
-      health: 99,
+      health: 666,
     });
   }
 }

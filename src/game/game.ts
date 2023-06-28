@@ -33,17 +33,14 @@ export default class Game {
   createEnemyRandomly() {
     // beta beta beta beta !!!!!!!
 
-    if ( !this.creatorEnemyTicker) {
+    if (!this.creatorEnemyTicker) {
       this.creatorEnemyTicker = new Tick(Math.floor(Math.random() * 1000));
     }
 
-    if (this.creatorEnemyTicker.tick() ) {
-
-
+    if (this.creatorEnemyTicker.tick()) {
       // console.log(this.enemies , 'this.enemies.length');
 
       if (this.enemies.length < 5) {
-
         this.toCreate.push(
           new Enemy({
             id: 0,
@@ -55,9 +52,6 @@ export default class Game {
           })
         );
       }
-
-
-
     }
 
     this.creatorEnemyTicker.setSpeed(Math.floor(Math.random() * 5000));
@@ -77,7 +71,7 @@ export default class Game {
       }
     });
 
-    this.toCreate = [] ;
+    this.toCreate = [];
 
     /* ========================================= */
     const toCreate = this.player.update({
@@ -110,22 +104,19 @@ export default class Game {
 
     this.bullets = this.bullets.filter((elem) => !elem.isDied);
 
-
     /* ================================== */
 
     this.createEnemyRandomly();
 
-    if(!this.creatorEnemyTicker) {
-      this.creatorEnemyTicker =  new Tick(1000);
+    if (!this.creatorEnemyTicker) {
+      this.creatorEnemyTicker = new Tick(1000);
     }
 
-    if(this.creatorEnemyTicker?.tick()) {
-      console.log(this.enemies.length , this.bullets.length) ;
-      
+    if (this.creatorEnemyTicker?.tick()) {
+      console.log(this.enemies.length, this.bullets.length);
     }
 
     /* ================================ */
-
   }
 
   renderGameObject({
@@ -138,18 +129,18 @@ export default class Game {
     if (
       !elem.isDied &&
       field &&
-      elem.main_html_element &&
+      elem.HTLM_untit &&
       field.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
         elem.position.x /* если html нода с такими координатами существет */
       ] !== undefined
     ) {
       field.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
         elem.position.x
-      ].appendChild(elem.main_html_element);
-      elem.main_html_element.style.display = "block";
+      ].appendChild(elem.HTLM_untit.body);
+      elem.HTLM_untit.body.style.display = "block";
       elem.render();
     } else {
-      elem.main_html_element.style.display = "none";
+      elem.HTLM_untit.body.style.display = "none";
 
       elem.render();
     }
@@ -178,7 +169,7 @@ export default class Game {
   }: {
     root: HTMLElement;
     UI: HTMLElement;
-    fieldDimentions:Dimentions ;
+    fieldDimentions: Dimentions;
   }) {
     this.keysManager = new KeysManager();
     this.field = { dimentions: fieldDimentions };
@@ -188,7 +179,7 @@ export default class Game {
       position: { x: 6, y: 6 },
       weapons: [
         new Weapon({
-          damage: new Damage({ damageClass: "phisical", value: 200 }),
+          damage: new Damage({ damageClass: "phisical", value: 50 }),
           fireRate: 100,
         }),
       ],

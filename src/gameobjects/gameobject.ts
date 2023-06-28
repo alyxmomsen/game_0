@@ -57,9 +57,10 @@ export default class GameObject {
   /* -------- html --------- */
 
   UI: GameObjectUI_HTML;
-  HTLM_untit:HTML_unit ;
 
-  main_html_element: HTMLElement;
+
+  HTLM_untit: HTML_unit;
+
   /* ----------------------- */
 
   setAttackDirection(keys: string[]) {
@@ -104,8 +105,8 @@ export default class GameObject {
 
   getDamage(damage: number) {
     if (this.armor.health > 0) {
-      this.armor.health -= (damage / 100) * this.armor.dempher;
-      this.health -= (damage / 100) * (100 - this.armor.dempher);
+      this.armor.health -= (damage / 100) * this.armor.dempher ;
+      this.health -= (damage / 100) * (100 - this.armor.dempher) ;
     } else {
       this.health -= damage;
     }
@@ -159,7 +160,7 @@ export default class GameObject {
 
             if (this instanceof Bullet) {
               this.isDied = true;
-              this.main_html_element.remove();
+              this.HTLM_untit.body.remove();
             }
           }
         }
@@ -170,7 +171,7 @@ export default class GameObject {
 
     if (this.health <= 0) {
       this.isDied = true;
-      this.main_html_element.remove();
+      this.HTLM_untit.body.remove();
     }
 
     if (
@@ -206,15 +207,18 @@ export default class GameObject {
   }
 
   render() {
-    
     this.UI.update({
       title: this.id.toString(),
       health: this.health.toString(),
       armor: this.armor.health.toString(),
     });
 
-    this.main_html_element.innerText = this.health.toString();
-    this.HTLM_untit.reRender({health:this.health.toString() , armor:this.armor.health.toString()});
+
+    this.HTLM_untit.reRender({
+      health: this.health.toString(),
+      armor: this.armor.health.toString(),
+    });
+
   }
 
   constructor({
@@ -233,7 +237,7 @@ export default class GameObject {
 
     this.attack = new Attack(ownDamage, weapons);
 
-    this.armor = new Armor({ health: 101, dempher: 80 });
+    this.armor = new Armor({ health: Math.floor(Math.random() * 1000), dempher: Math.floor(Math.random() * 99 ) + 1 });
     this.damaged = [];
     this.isDied = false;
     this.kind = kind;
@@ -246,18 +250,18 @@ export default class GameObject {
 
     this.color = color;
 
-    this.main_html_element = document.createElement("div");
-    this.main_html_element.className = "object-body";
-    this.main_html_element.style.backgroundColor = this.color;
-
     this.UI = new GameObjectUI_HTML({
       title: this.id.toString(),
       health: this.health.toString(),
       armor: this.armor.health.toString(),
     });
 
-    this.HTLM_untit = new HTML_unit({health:this.health.toString() , armor:this.armor.health.toString()});
 
-    // console.log("object done: ", this);
+    this.HTLM_untit = new HTML_unit({
+      health: this.health.toString(),
+      armor: this.armor.health.toString(),
+      color: this.color.toString(),
+    });
+
   }
 }
