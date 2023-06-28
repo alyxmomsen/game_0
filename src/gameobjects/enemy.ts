@@ -5,6 +5,7 @@ import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import GameObject, { Dimentions, Position } from "./gameobject";
 
+// частный случай GameObject
 export class Enemy extends GameObject {
   update({
     keys,
@@ -35,13 +36,18 @@ export class Enemy extends GameObject {
       color: "yellow",
       id,
       kind: "enemy",
-      position,
       walkStepRate: Math.floor(Math.random() * 990) + 10,
+      walkStepsLimit: 0,
+      walkStepRateFadeDown: false,
+      position,
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,
       direction: { x: 1, y: 0 },
       health: Math.floor(Math.random() * 995) + 5,
-      armor: new Armor({ health: Math.floor(Math.random() * 10000), dempher: Math.floor(Math.random() * 99 ) + 1 }) ,
+      armor: new Armor({
+        health: Math.floor(Math.random() * 10000),
+        dempher: Math.floor(Math.random() * 99) + 1,
+      }),
     });
   }
 }

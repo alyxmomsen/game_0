@@ -1,4 +1,3 @@
-
 export class HTML_unit {
   body: HTMLElement;
   health: HTMLElement;
@@ -28,4 +27,3 @@ export class HTML_unit {
     this.body.style.backgroundColor = color;
   }
 }
-

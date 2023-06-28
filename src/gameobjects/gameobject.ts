@@ -25,13 +25,15 @@ export type GameObjectConstructor = {
   id: number;
   kind: GameObjectType;
   walkStepRate: number;
+  walkStepsLimit: number;
   color: string;
   position: Position;
   ownDamage: Damage;
   direction: Direction;
   health: number;
   weapons: Weapon[];
-  armor:Armor ;
+  armor: Armor;
+  walkStepRateFadeDown: boolean;
 };
 
 export type Dimentions = {
@@ -41,7 +43,7 @@ export type Dimentions = {
 
 export default class GameObject {
   id: number;
-  dateOfCreated:number ;
+  dateOfCreated: number;
   color: string;
   kind: GameObjectType;
   dimentions: Dimentions;
@@ -59,7 +61,6 @@ export default class GameObject {
   /* -------- html --------- */
 
   UI: GameObjectUI_HTML;
-
 
   HTLM_untit: HTML_unit;
 
@@ -99,14 +100,11 @@ export default class GameObject {
     }
   }
 
+  setWalkStepRate(value: number) {
+    value < 1 ? (value = 1) : (value = value);
 
-  setWalkStepRate (value:number) {
-
-    value < 1 ? value = 1 : value = value ;
-
-    this.movement.stepRate = value ;
-    this.movement.ticker.setSpeed(this.movement.stepRate) ;
-
+    this.movement.stepRate = value;
+    this.movement.ticker.setSpeed(this.movement.stepRate);
   }
 
   // атака на указаный объект
@@ -117,8 +115,8 @@ export default class GameObject {
 
   getDamage(damage: number) {
     if (this.armor.health > 0) {
-      this.armor.health -= (damage / 100) * this.armor.dempher ;
-      this.health -= (damage / 100) * (100 - this.armor.dempher) ;
+      this.armor.health -= Math.floor((damage / 100) * this.armor.dempher);
+      this.health -= Math.floor((damage / 100) * (100 - this.armor.dempher));
     } else {
       this.health -= damage;
     }
@@ -140,7 +138,7 @@ export default class GameObject {
       this.movement.direction = { x, y };
     }
 
-    this.movement.counterOfSteps += 1 ;
+    this.movement.counterOfSteps += 1; // счетчик сделаных шагов. связан. используется
   }
 
   update({
@@ -216,6 +214,8 @@ export default class GameObject {
             x: this.position.x + this.attack.direction.x,
             y: this.position.y + this.attack.direction.y,
           },
+          walkStepRate: this.attack.currentWeapon.stepRate,
+          walkStepRateFadeDown: this.attack.currentWeapon.stepRateFadeDown,
         })
       : false;
   }
@@ -227,12 +227,10 @@ export default class GameObject {
       armor: this.armor.health.toString(),
     });
 
-
     this.HTLM_untit.reRender({
       health: this.health.toString(),
       armor: this.armor.health.toString(),
     });
-
   }
 
   constructor({
@@ -240,21 +238,27 @@ export default class GameObject {
     position,
     kind,
     walkStepRate,
+    walkStepsLimit,
+    walkStepRateFadeDown,
     ownDamage,
     direction,
     health,
     weapons,
     color,
-    armor ,
+    armor,
   }: GameObjectConstructor) {
+    this.movement = new Movement({
+      stepRate: walkStepRate,
+      direction,
+      walkStepsLimit,
+      walkStepFadeDown: walkStepRateFadeDown,
+    });
 
-
-    this.movement = new Movement(walkStepRate, direction);
     this.position = position;
 
     this.attack = new Attack(ownDamage, weapons);
 
-    this.armor = armor ;
+    this.armor = armor;
     this.damaged = [];
     this.isDied = false;
     this.kind = kind;
@@ -273,7 +277,6 @@ export default class GameObject {
       armor: this.armor.health.toString(),
     });
 
-
     this.HTLM_untit = new HTML_unit({
       health: this.health.toString(),
       armor: this.armor.health.toString(),
@@ -281,6 +284,5 @@ export default class GameObject {
     });
 
     this.dateOfCreated = Date.now();
-
   }
 }

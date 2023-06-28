@@ -6,24 +6,26 @@ import { Weapon } from "./weapon";
 export type AttackClass = "phisical" | "magic";
 
 export class Attack {
-  status: boolean;
-  speed: number;
-  ticker: Tick;
+  status: boolean; // доработать ???
+  ticker: Tick; // интервал между выстрелами
 
-  direction: Direction;
+  direction: Direction; // стартовый вектор начала движения Bullet
 
-  weapons: Weapon[];
-  currentWeapon: Weapon;
-  ownDamage: Damage;
+  weapons: Weapon[]; // арсенал (пресеты, другими словами)
+  currentWeapon: Weapon; // в данный момент выбранный пресет
+  ownDamage: Damage; // урон наносимый самим объектом, не путать с уроном Weapon
 
+  // доработать ???
   setTrueStatus() {
     this.status = true;
   }
 
+  // доработать ???
   reset() {
     this.status = false;
   }
 
+  // доработать. пока что выберает первое оружие (пресет настроек) из массива пресетов
   setCurrentWeapon() {
     if (this.weapons.length) {
       this.currentWeapon = this.weapons[0];

@@ -10,10 +10,14 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .object-body > div {
   font-size: 10px;
+  text-align: center;
 }
 
 .game-field {

@@ -33,13 +33,18 @@ export class DamageEntity extends GameObject {
       id, //
       kind: "damage-entity",
       walkStepRate: 20,
+      walkStepsLimit: 0,
       color: "white",
       position,
       ownDamage: new Damage({ damageClass: "phisical", value: 50 }),
       direction: { x: 1, y: 0 },
       health: 10,
       weapons: [],
-      armor: new Armor({ health: Math.floor(Math.random() * 10000), dempher: Math.floor(Math.random() * 99 ) + 1 }) ,
+      armor: new Armor({
+        health: Math.floor(Math.random() * 10000),
+        dempher: Math.floor(Math.random() * 99) + 1,
+      }),
+      walkStepRateFadeDown: false,
     });
   }
 }

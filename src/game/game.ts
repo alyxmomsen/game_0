@@ -15,7 +15,7 @@ export default class Game {
   field: { dimentions: Dimentions };
   weapons: Weapon[];
 
-  toCreate: (Enemy | Bullet)[];
+  toCreateObjects: (Enemy | Bullet)[];
 
   player: Player; // объект игрока
   enemies: Enemy[] = [];
@@ -24,9 +24,11 @@ export default class Game {
 
   // IDManager: IDManager;
 
-  /* ======== html ========== */
+  /* ======== html| / UI  ========== */
 
   UI: HTMLElement;
+
+  playerCard:'' ;
 
   /* ======================== */
 
@@ -41,7 +43,7 @@ export default class Game {
       // console.log(this.enemies , 'this.enemies.length');
 
       if (this.enemies.length < 5) {
-        this.toCreate.push(
+        this.toCreateObjects.push(
           new Enemy({
             id: 0,
             position: {
@@ -63,7 +65,7 @@ export default class Game {
 
     /* ========================================= */
 
-    this.toCreate.forEach((objectToCreate) => {
+    this.toCreateObjects.forEach((objectToCreate) => {
       if (objectToCreate instanceof Bullet) {
         this.bullets.push(objectToCreate);
       } else if (objectToCreate instanceof Enemy) {
@@ -71,17 +73,19 @@ export default class Game {
       }
     });
 
-    this.toCreate = [];
+    this.toCreateObjects = [];
 
     /* ========================================= */
-    const toCreate = this.player.update({
+
+    // возвращает объект Bullet
+    const objectToCreate = this.player.update({
       keys,
       objects: [],
       fieldDimentions: this.field.dimentions,
     });
 
-    if (toCreate !== false) {
-      this.toCreate.push(toCreate);
+    if (objectToCreate !== false) {
+      this.toCreateObjects.push(objectToCreate);
     }
 
     this.enemies.forEach((enemy) => {
@@ -167,20 +171,26 @@ export default class Game {
     fieldDimentions,
     UI,
   }: {
-    root: HTMLElement;
-    UI: HTMLElement;
-    fieldDimentions: Dimentions;
+    root: HTMLElement; // для рендеринга игрового поля
+    UI: HTMLElement; // для рендеринга статистики
+    fieldDimentions: Dimentions; // размеры поля
   }) {
-    this.keysManager = new KeysManager();
+    this.keysManager = new KeysManager(); // управленец нажатыми клавишами
     this.field = { dimentions: fieldDimentions };
 
+    this.toCreateObjects = []; // массив объектов (пока что Bullet) подлежащие добавлению в массив объектов для дальнейшей итерации в игр/м. цикле
+
+    // создаем игрока
     this.player = new Player({
       id: 0,
       position: { x: 6, y: 6 },
+      // даем игроку арсенал
       weapons: [
         new Weapon({
           damage: new Damage({ damageClass: "phisical", value: 50 }),
-          fireRate: 100,
+          fireRate: 100, // интервал между выстрелами
+          stepRate: 1, // скорость полета
+          stepRateFadeDown: false, // будет ли замедляться
         }),
       ],
     });
@@ -195,16 +205,17 @@ export default class Game {
     //   );
     // }
 
-    this.toCreate = [];
-
     /* ============================= */
 
+    //
     this.UI = UI;
 
+    // временно. выводим статистику по врагам
     this.enemies.forEach((enemy) => {
       this.UI.append(enemy.UI.wrapper);
     });
 
+    // создаем игровое поле
     root.append(
       buildField(this.field.dimentions.height, this.field.dimentions.width)
     );

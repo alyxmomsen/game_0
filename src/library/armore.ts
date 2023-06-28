@@ -1,5 +1,6 @@
 export type ArmorClass = "heavy" | "light";
 
+// стата по броне
 export class Armor {
   health: number;
   dempher: number;

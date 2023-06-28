@@ -38,13 +38,18 @@ export class Player extends GameObject {
       id,
       kind: "player",
       walkStepRate: 50,
+      walkStepsLimit: 0,
+      walkStepRateFadeDown: false,
       color: "green",
       position,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons,
       direction: { x: 1, y: 0 },
       health: 666,
-      armor: new Armor({ health: Math.floor(Math.random() * 10000), dempher: Math.floor(Math.random() * 99 ) + 1 }) ,
+      armor: new Armor({
+        health: Math.floor(Math.random() * 10000),
+        dempher: Math.floor(Math.random() * 99) + 1,
+      }),
     });
   }
 }
