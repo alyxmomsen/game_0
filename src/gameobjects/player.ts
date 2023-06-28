@@ -1,4 +1,4 @@
-import { ArmorClass } from "../library/armore";
+import { Armor, ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
 import { Tick, calculateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
@@ -37,13 +37,14 @@ export class Player extends GameObject {
     super({
       id,
       kind: "player",
-      walkTickValue: 50,
+      walkStepRate: 50,
       color: "green",
       position,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons,
       direction: { x: 1, y: 0 },
       health: 666,
+      armor: new Armor({ health: Math.floor(Math.random() * 10000), dempher: Math.floor(Math.random() * 99 ) + 1 }) ,
     });
   }
 }

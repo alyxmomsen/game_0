@@ -1,3 +1,4 @@
+import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
 import { generateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
@@ -35,11 +36,12 @@ export class Enemy extends GameObject {
       id,
       kind: "enemy",
       position,
-      walkTickValue: 1000,
+      walkStepRate: Math.floor(Math.random() * 990) + 10,
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,
       direction: { x: 1, y: 0 },
-      health: Math.floor(Math.random() * 1000) + 5,
+      health: Math.floor(Math.random() * 995) + 5,
+      armor: new Armor({ health: Math.floor(Math.random() * 10000), dempher: Math.floor(Math.random() * 99 ) + 1 }) ,
     });
   }
 }

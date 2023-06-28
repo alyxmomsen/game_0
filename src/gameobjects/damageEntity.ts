@@ -1,4 +1,4 @@
-import { ArmorClass } from "../library/armore";
+import { Armor, ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
 import { Bullet } from "./bullet";
 import GameObject, { Dimentions, Position } from "./gameobject";
@@ -32,13 +32,14 @@ export class DamageEntity extends GameObject {
     super({
       id, //
       kind: "damage-entity",
-      walkTickValue: 20,
+      walkStepRate: 20,
       color: "white",
       position,
       ownDamage: new Damage({ damageClass: "phisical", value: 50 }),
       direction: { x: 1, y: 0 },
       health: 10,
       weapons: [],
+      armor: new Armor({ health: Math.floor(Math.random() * 10000), dempher: Math.floor(Math.random() * 99 ) + 1 }) ,
     });
   }
 }

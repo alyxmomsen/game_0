@@ -2,12 +2,16 @@ import { Direction } from "../gameobjects/gameobject";
 import { Tick } from "./main";
 
 export class Movement {
-  tickInterval: number;
+  stepRate: number;
   direction: Direction;
   ticker: Tick;
+  counterOfSteps:number ;
+  lastMove:number ;
 
-  constructor(tickInterval: number, direction: Direction) {
-    this.ticker = new Tick(tickInterval);
+  constructor(stepRate: number, direction: Direction) {
+    this.stepRate = stepRate ;
+    this.ticker = new Tick(stepRate);
     this.direction = direction;
+    this.counterOfSteps = 0 ;
   }
 }
