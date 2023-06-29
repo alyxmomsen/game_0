@@ -4,7 +4,7 @@ import { Damage } from "../library/damage";
 import { HTML_unit } from "../library/html_unit";
 
 import { Movement } from "../library/movement";
-import { GameObjectUI_HTML } from "../library/objecthtml";
+import { GameObjectHTMLs } from "../library/game-object-htmls";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 
@@ -53,16 +53,17 @@ export default class GameObject {
   armor: Armor;
   isDied: boolean;
   attack: Attack;
-
   movement: Movement;
 
   /* ================================ */
 
   /* -------- html --------- */
 
-  UI: GameObjectUI_HTML;
+  UI: GameObjectHTMLs ;
 
   HTLM_untit: HTML_unit;
+
+
 
   /* ----------------------- */
 
@@ -216,15 +217,17 @@ export default class GameObject {
           },
           walkStepRate: this.attack.currentWeapon.stepRate,
           walkStepRateFadeDown: this.attack.currentWeapon.stepRateFadeDown,
+          walkStepsLimit: 3 ,
         })
       : false;
   }
 
   render() {
-    this.UI.update({
+    this.UI.render({
       title: this.id.toString(),
       health: this.health.toString(),
       armor: this.armor.health.toString(),
+      damage: this.attack.currentWeapon?.damage?.value?.toString() ,
     });
 
     this.HTLM_untit.reRender({
@@ -271,10 +274,11 @@ export default class GameObject {
 
     this.color = color;
 
-    this.UI = new GameObjectUI_HTML({
-      title: this.id.toString(),
-      health: this.health.toString(),
-      armor: this.armor.health.toString(),
+    this.UI = new GameObjectHTMLs({
+      title:{value:this.id.toString() , caption:'ID'} ,
+      health:{value:this.health.toString() , caption:'HEalth'} ,
+      armor:{value:this.armor.health.toString() , caption:'armor'} ,
+      damage:{value:this.attack.currentWeapon?.damage.value.toString() , caption:'damage'} ,
     });
 
     this.HTLM_untit = new HTML_unit({

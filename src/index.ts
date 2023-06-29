@@ -4,12 +4,14 @@ import "./styles/main.css";
 
 (function () {
   const root = document.querySelector<HTMLElement>(".root");
-  const UI = document.querySelector<HTMLElement>("#stats-display");
+  const gameFieldHTMLContainer = document.querySelector<HTMLElement>('#game-field');
+  const playerCardHTMLContainer = document.querySelector<HTMLElement>("#player-stats");
 
   const fieldDimentions = { width: 40, height: 20 };
-  const theGame = new Game({ root, UI, fieldDimentions });
+  const theGame = new Game({ gameFieldHTMLContainer , playerCardHTMLContainer , fieldDimentions });
 
   const mainLoop = function () {
+    
     theGame.update();
     theGame.render(root);
 

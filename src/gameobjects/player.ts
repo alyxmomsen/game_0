@@ -25,6 +25,15 @@ export class Player extends GameObject {
     return super.update({ keys, objects, fieldDimentions });
   }
 
+  render(): void {
+    
+    super.render();
+
+
+
+
+  }
+
   constructor({
     id,
     position,
@@ -51,5 +60,8 @@ export class Player extends GameObject {
         dempher: Math.floor(Math.random() * 99) + 1,
       }),
     });
+
+    
+
   }
 }

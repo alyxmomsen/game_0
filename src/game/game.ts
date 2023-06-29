@@ -3,6 +3,7 @@ import { Enemy } from "../gameobjects/enemy";
 import GameObject, { Dimentions } from "../gameobjects/gameobject";
 import { Player } from "../gameobjects/player";
 import { Damage } from "../library/damage";
+import { GameObjectHTMLs } from "../library/game-object-htmls";
 import KeysManager from "../library/keysManager";
 import { Tick, buildField } from "../library/main";
 import { Weapon } from "../library/weapon";
@@ -26,9 +27,12 @@ export default class Game {
 
   /* ======== html| / UI  ========== */
 
-  UI: HTMLElement;
-
-  playerCard:'' ;
+  // UI_gameField: HTMLElement ;
+  UI: {
+    playerCardHTMLContainer: HTMLElement ;
+    gameFieldHTMLContainer:HTMLElement ;
+  } ;
+  // UI_playerCard:HTMLElement ;
 
   /* ======================== */
 
@@ -125,56 +129,58 @@ export default class Game {
 
   renderGameObject({
     elem,
-    field,
   }: {
     elem: GameObject | Enemy | Player;
-    field: HTMLElement;
   }) {
     if (
       !elem.isDied &&
-      field &&
+      this.UI.gameFieldHTMLContainer &&
       elem.HTLM_untit &&
-      field.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
+      this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
         elem.position.x /* если html нода с такими координатами существет */
       ] !== undefined
     ) {
-      field.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
+      this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
         elem.position.x
       ].appendChild(elem.HTLM_untit.body);
-      elem.HTLM_untit.body.style.display = "block";
       elem.render();
+      elem.HTLM_untit.body.style.display = "block";
     } else {
+      elem.render();
       elem.HTLM_untit.body.style.display = "none";
 
-      elem.render();
     }
   }
 
   render(field: HTMLElement = null) {
     this.bullets.forEach((elem) => {
-      this.renderGameObject({ elem, field });
-    });
+      this.renderGameObject({ elem });
 
-    this.renderGameObject({ elem: this.player, field });
+    });
+    this.renderGameObject({ elem: this.player });
 
     this.gameObjects.forEach((elem) => {
-      this.renderGameObject({ elem, field });
+      this.renderGameObject({ elem });
     });
 
     this.enemies.forEach((elem) => {
-      this.renderGameObject({ elem, field });
+      this.renderGameObject({ elem });
     });
+
   }
 
   constructor({
-    root,
     fieldDimentions,
-    UI,
+    playerCardHTMLContainer ,
+    gameFieldHTMLContainer ,
   }: {
-    root: HTMLElement; // для рендеринга игрового поля
-    UI: HTMLElement; // для рендеринга статистики
+    gameFieldHTMLContainer:HTMLElement ; // для рендеринга игрового поля
+    playerCardHTMLContainer: HTMLElement ; // для рендеринга статистики Player
     fieldDimentions: Dimentions; // размеры поля
   }) {
+
+    
+
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
     this.field = { dimentions: fieldDimentions };
 
@@ -191,6 +197,7 @@ export default class Game {
           fireRate: 100, // интервал между выстрелами
           stepRate: 1, // скорость полета
           stepRateFadeDown: false, // будет ли замедляться
+          stepsLimit:0 , // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
         }),
       ],
     });
@@ -208,16 +215,14 @@ export default class Game {
     /* ============================= */
 
     //
-    this.UI = UI;
+    this.UI = {
+      playerCardHTMLContainer ,
+      gameFieldHTMLContainer ,
+    }
 
-    // временно. выводим статистику по врагам
-    this.enemies.forEach((enemy) => {
-      this.UI.append(enemy.UI.wrapper);
-    });
+    this.UI.playerCardHTMLContainer.append(this.player.UI.armor.HTML , this.player.UI.health.HTML);
 
     // создаем игровое поле
-    root.append(
-      buildField(this.field.dimentions.height, this.field.dimentions.width)
-    );
+    this.UI.gameFieldHTMLContainer.append(buildField(this.field.dimentions.height, this.field.dimentions.width));
   }
 }
