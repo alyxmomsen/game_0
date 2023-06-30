@@ -1,55 +1,85 @@
-export class GameObjectHTMLs {
-  wrapper: HTMLElement;
+type UI_stat = {
+  linkHTML: {
+    value: HTMLElement;
+    caption: HTMLElement;
+    wrapper: HTMLElement;
+  };
+  data: {
+    caption: string;
+    value: string;
+  };
+};
 
-  title:{HTML:HTMLElement , caption:string} ;
-  health: {HTML:HTMLElement , caption:string} ;
-  armor: {HTML:HTMLElement , caption:string} ;
-  damage:{HTML:HTMLElement , caption:string} ;
+export class GameObjectHTMLs {
+  health: UI_stat;
+  damage: UI_stat;
+  armor: UI_stat;
+  armor_effeciency: UI_stat ;
 
   render({
-    title,
     health,
+    damage,
     armor,
-    damage ,
+    armor_effeciency ,
   }: {
-    title: string;
     health: string;
+    damage: string;
     armor: string;
-    damage: string ;
+    armor_effeciency: string ;
   }) {
-    this.title.HTML.innerText = title;
-    this.health.HTML.innerText = health;
-    this.armor.HTML.innerText = armor;
-    this.damage.HTML.innerText = damage ;
+    this.health.linkHTML.value.innerText = health;
+    this.damage.linkHTML.value.innerText = damage;
+    this.armor.linkHTML.value.innerText = armor;
+    this.armor_effeciency.linkHTML.value.innerText = armor_effeciency;
   }
 
   constructor({
-    title,
     health,
+    damage,
     armor,
-    damage ,
+    armor_effeciency,
   }: {
-    title:{value:string , caption:string} ;
-    health: {value:string , caption:string};
-    armor: {value:string , caption:string};
-    damage: {value:string , caption:string} ;
+    health: string;
+    damage: string;
+    armor: string;
+    armor_effeciency: string;
   }) {
-    
-    const wrap = (val:string , cap:string) => {
-      const div1 = document.createElement('div');
-      div1.innerText = val ;
-      const div2 = document.createElement('div');
-      div2.innerText = cap ;
-      const wrapper = document.createElement('div');
-      wrapper.className = 'wrapper' ;
-      wrapper.append(div1 , div2);
-      return wrapper ;
-    }
-    
-    this.title = {HTML:wrap(title.value , title.caption) , caption:title.caption} ;
-    this.armor = {HTML:wrap(armor.value , armor.caption) , caption:armor.caption} ;
-    this.damage = {HTML:wrap(damage.value , damage.caption) , caption:damage.caption} ;
-    this.health = {HTML:wrap(health.value , health.caption) , caption:health.caption} ;
+    const setStat = ({
+      caption,
+      value,
+    }: {
+      caption: string;
+      value: string;
+    }) => {
+      const prop: UI_stat = {
+        linkHTML: {
+          value: document.createElement("div"),
+          caption: document.createElement("div"),
+          wrapper: document.createElement("div"),
 
+        },
+        data: {
+          value: value,
+          caption: caption,
+        },
+      };
+
+      prop.linkHTML.value.innerText = value;
+      prop.linkHTML.value.className = "player-a-stat value";
+
+      prop.linkHTML.caption.innerText = caption;
+      prop.linkHTML.caption.className = "player-a-stat caption";
+
+      prop.linkHTML.wrapper.className = "player-stat-wrapper";
+      prop.linkHTML.wrapper.append(prop.linkHTML.caption, prop.linkHTML.value);
+
+      return prop;
+    };
+
+    this.health = setStat({ value: health, caption: "HEalTH" });
+    this.armor = setStat({ value: armor, caption: "ARMor" });
+    this.damage = setStat({ value: damage, caption: "DAmAGE" });
+    this.armor_effeciency = setStat({ value: armor_effeciency, caption: "armor eff" });
+    
   }
 }

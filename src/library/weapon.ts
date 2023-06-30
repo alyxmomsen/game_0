@@ -7,25 +7,25 @@ export class Weapon {
   fireRate: number; // интервал между выстрелами
   stepRate: number; // интервал между шагами
   stepRateFadeDown: boolean; // будет ли объект аттаки замедлятся, после выстрела
-  stepsLimit:number ;
+  stepsLimit: number;
 
   constructor({
     damage,
     fireRate,
     stepRate,
     stepRateFadeDown,
-    stepsLimit , 
+    stepsLimit,
   }: {
     damage: Damage;
     fireRate: number;
     stepRate: number;
     stepRateFadeDown: boolean;
-    stepsLimit:number ;
+    stepsLimit: number;
   }) {
     this.damage = damage;
     this.fireRate = fireRate;
     this.stepRate = stepRate;
     this.stepRateFadeDown = stepRateFadeDown;
-    this.stepsLimit = stepsLimit ;
+    this.stepsLimit = stepsLimit;
   }
 }

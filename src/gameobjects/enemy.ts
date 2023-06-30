@@ -20,6 +20,8 @@ export class Enemy extends GameObject {
       this.move(generateMovementDirection());
     }
 
+    // this.setAttackDirection(false);
+
     return super.update({ keys, objects, fieldDimentions });
   }
 

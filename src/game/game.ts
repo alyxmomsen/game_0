@@ -29,9 +29,9 @@ export default class Game {
 
   // UI_gameField: HTMLElement ;
   UI: {
-    playerCardHTMLContainer: HTMLElement ;
-    gameFieldHTMLContainer:HTMLElement ;
-  } ;
+    playerCardHTMLContainer: HTMLElement;
+    gameFieldHTMLContainer: HTMLElement;
+  };
   // UI_playerCard:HTMLElement ;
 
   /* ======================== */
@@ -81,7 +81,7 @@ export default class Game {
 
     /* ========================================= */
 
-    // возвращает объект Bullet
+    //GameObject.update возвращает объект Bullet
     const objectToCreate = this.player.update({
       keys,
       objects: [],
@@ -127,35 +127,30 @@ export default class Game {
     /* ================================ */
   }
 
-  renderGameObject({
-    elem,
-  }: {
-    elem: GameObject | Enemy | Player;
-  }) {
+  renderGameObject({ elem }: { elem: GameObject | Enemy | Player }) {
     if (
       !elem.isDied &&
       this.UI.gameFieldHTMLContainer &&
       elem.HTLM_untit &&
-      this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
+      this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[elem.position.y]
+        ?.childNodes[
         elem.position.x /* если html нода с такими координатами существет */
       ] !== undefined
     ) {
-      this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[elem.position.y]?.childNodes[
-        elem.position.x
-      ].appendChild(elem.HTLM_untit.body);
+      this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[
+        elem.position.y
+      ]?.childNodes[elem.position.x].appendChild(elem.HTLM_untit.body);
       elem.render();
       elem.HTLM_untit.body.style.display = "block";
     } else {
       elem.render();
       elem.HTLM_untit.body.style.display = "none";
-
     }
   }
 
   render(field: HTMLElement = null) {
     this.bullets.forEach((elem) => {
       this.renderGameObject({ elem });
-
     });
     this.renderGameObject({ elem: this.player });
 
@@ -166,21 +161,17 @@ export default class Game {
     this.enemies.forEach((elem) => {
       this.renderGameObject({ elem });
     });
-
   }
 
   constructor({
     fieldDimentions,
-    playerCardHTMLContainer ,
-    gameFieldHTMLContainer ,
+    playerCardHTMLContainer,
+    gameFieldHTMLContainer,
   }: {
-    gameFieldHTMLContainer:HTMLElement ; // для рендеринга игрового поля
-    playerCardHTMLContainer: HTMLElement ; // для рендеринга статистики Player
+    gameFieldHTMLContainer: HTMLElement; // для рендеринга игрового поля
+    playerCardHTMLContainer: HTMLElement; // для рендеринга статистики Player
     fieldDimentions: Dimentions; // размеры поля
   }) {
-
-    
-
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
     this.field = { dimentions: fieldDimentions };
 
@@ -197,7 +188,7 @@ export default class Game {
           fireRate: 100, // интервал между выстрелами
           stepRate: 1, // скорость полета
           stepRateFadeDown: false, // будет ли замедляться
-          stepsLimit:0 , // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
+          stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
         }),
       ],
     });
@@ -216,13 +207,20 @@ export default class Game {
 
     //
     this.UI = {
-      playerCardHTMLContainer ,
-      gameFieldHTMLContainer ,
-    }
+      playerCardHTMLContainer,
+      gameFieldHTMLContainer,
+    };
 
-    this.UI.playerCardHTMLContainer.append(this.player.UI.armor.HTML , this.player.UI.health.HTML);
+    this.UI.playerCardHTMLContainer.append(
+      this.player.UI.health.linkHTML.wrapper,
+      this.player.UI.damage.linkHTML.wrapper,
+      this.player.UI.armor.linkHTML.wrapper , 
+      this.player.UI.armor_effeciency.linkHTML.wrapper
+    );
 
     // создаем игровое поле
-    this.UI.gameFieldHTMLContainer.append(buildField(this.field.dimentions.height, this.field.dimentions.width));
+    this.UI.gameFieldHTMLContainer.append(
+      buildField(this.field.dimentions.height, this.field.dimentions.width)
+    );
   }
 }

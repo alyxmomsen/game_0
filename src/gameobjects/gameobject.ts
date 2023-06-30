@@ -59,19 +59,20 @@ export default class GameObject {
 
   /* -------- html --------- */
 
-  UI: GameObjectHTMLs ;
+  UI: GameObjectHTMLs;
 
   HTLM_untit: HTML_unit;
-
-
 
   /* ----------------------- */
 
   setAttackDirection(keys: string[]) {
+
     const up = keys.includes("ArrowUp");
     const down = keys.includes("ArrowDown");
     const left = keys.includes("ArrowLeft");
     const right = keys.includes("ArrowRight");
+
+
 
     // const direction:Direction = {x:0 , y:0} ;
 
@@ -198,14 +199,14 @@ export default class GameObject {
 
     /* =================================== */
 
-    const up = keys.includes("ArrowUp");
-    const down = keys.includes("ArrowDown");
-    const left = keys.includes("ArrowLeft");
-    const right = keys.includes("ArrowRight");
+    const up = keys.includes("ArrowUp") ;
+    const down = keys.includes("ArrowDown") ;
+    const left = keys.includes("ArrowLeft") ;
+    const right = keys.includes("ArrowRight") ;
 
     return (up || down || left || right) &&
-      this.attack.ticker?.tick() &&
-      this.kind === "player"
+      this.attack.ticker?.tick() //&&
+      // this.kind === "player"
       ? new Bullet({
           direction: this.attack.direction,
           health: 1,
@@ -217,17 +218,17 @@ export default class GameObject {
           },
           walkStepRate: this.attack.currentWeapon.stepRate,
           walkStepRateFadeDown: this.attack.currentWeapon.stepRateFadeDown,
-          walkStepsLimit: 3 ,
+          walkStepsLimit: this.attack.currentWeapon ? this.attack.currentWeapon.stepsLimit : 0,
         })
       : false;
   }
 
   render() {
     this.UI.render({
-      title: this.id.toString(),
       health: this.health.toString(),
+      damage: this.attack.currentWeapon?.damage.value.toString(),
       armor: this.armor.health.toString(),
-      damage: this.attack.currentWeapon?.damage?.value?.toString() ,
+      armor_effeciency: this.armor.dempher.toString() ,
     });
 
     this.HTLM_untit.reRender({
@@ -275,10 +276,10 @@ export default class GameObject {
     this.color = color;
 
     this.UI = new GameObjectHTMLs({
-      title:{value:this.id.toString() , caption:'ID'} ,
-      health:{value:this.health.toString() , caption:'HEalth'} ,
-      armor:{value:this.armor.health.toString() , caption:'armor'} ,
-      damage:{value:this.attack.currentWeapon?.damage.value.toString() , caption:'damage'} ,
+      health: this.health.toString() ,
+      damage: this.attack.currentWeapon?.damage.value.toString() ,
+      armor: this.armor.health.toString() ,
+      armor_effeciency:this.armor.dempher.toString() ,
     });
 
     this.HTLM_untit = new HTML_unit({

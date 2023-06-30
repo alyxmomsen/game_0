@@ -47,7 +47,7 @@ export class Bullet extends GameObject {
     health,
     walkStepRate,
     walkStepRateFadeDown,
-    walkStepsLimit ,
+    walkStepsLimit,
   }: {
     position: Position;
     id: number;
@@ -56,7 +56,7 @@ export class Bullet extends GameObject {
     ownDamage: Damage;
     walkStepRate: number;
     walkStepRateFadeDown: boolean;
-    walkStepsLimit:number ;
+    walkStepsLimit: number;
   }) {
     super({
       ownDamage,

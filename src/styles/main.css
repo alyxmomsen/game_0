@@ -37,8 +37,6 @@ body {
   text-align: center;
 }
 
-
-
 .game-field-row {
   width: 100%;
   height: 28px;
@@ -61,6 +59,24 @@ body {
 
 div#stats-display {
   display: flex;
+}
+
+div#player-stats {
+  padding: 9px;
+  color: wheat;
+}
+
+.player-stat-wrapper {
+  display: flex;
+  gap: 9px;
+}
+
+.player-a-stat.caption {
+  color: gray;
+}
+
+.player-a-stat.value {
+  color: wheat;
 }
 
 .object-stats {
