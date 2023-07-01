@@ -34,7 +34,15 @@ export class Bullet extends GameObject {
       }
     }
 
-    const result = super.update({ keys, objects, fieldDimentions }); // возвращает объект Bullet
+    /*======== option ============  */
+    const option = () => {
+
+      this.isDied = true ;
+
+    }
+    /* ========================== */
+
+    const result = super.update({ keys, objects, fieldDimentions , option }); // возвращает объект Bullet
 
     return result;
   }

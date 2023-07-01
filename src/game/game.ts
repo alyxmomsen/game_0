@@ -179,7 +179,7 @@ export default class Game {
         new Weapon({
           damage: new Damage({ damageClass: "phisical", value: 50 }),
           fireRate: 100, // интервал между выстрелами
-          stepRate: 100, // скорость полета
+          stepRate: 5, // скорость полета
           stepRateFadeDown: false, // будет ли замедляться
           stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
         }),

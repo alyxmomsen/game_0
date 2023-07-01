@@ -122,6 +122,7 @@ export default class GameObject {
   }
 
   checkColissionWith(subjectPostion: Position) {
+
     if (
       this.movement.nextPosition.x === subjectPostion.x &&
       this.movement.nextPosition.y === subjectPostion.y
@@ -129,6 +130,20 @@ export default class GameObject {
       return true;
     } else {
       return false;
+    }
+  }
+
+  checkCollissionWithFieldLimits ({width , height}:{width:number , height:number}) {
+    if (
+      this.movement.nextPosition.x >= width ||
+      this.movement.nextPosition.x < 0 ||
+      this.movement.nextPosition.y >= height ||
+      this.movement.nextPosition.y < 0
+    ) {
+      return true ;
+    }
+    else {
+      return false ;
     }
   }
 
@@ -156,10 +171,12 @@ export default class GameObject {
     keys,
     objects,
     fieldDimentions,
+    option
   }: {
     keys: string[];
     objects: GameObject[];
     fieldDimentions: Dimentions;
+    option:() => void
   }): Bullet | false {
     // получение урона
 
@@ -188,17 +205,28 @@ export default class GameObject {
 
           this.attackTo(object);
 
-          if (this instanceof Bullet) {
-          }
+          
 
           isCollision = true;
         }
       }
     }
 
+
+    if(this.checkCollissionWithFieldLimits({...fieldDimentions})) {
+      isCollision = true ;
+    }
+
+
     if (!isCollision) {
       this.updatePosition();
     } else {
+
+      /*======== optional ======== */
+      // функция из наследника
+      option();
+      /* ========================= */
+
       this.movement.nextPosition.x = this.position.x;
       this.movement.nextPosition.y = this.position.y;
     }
@@ -207,16 +235,13 @@ export default class GameObject {
 
     if (this.health <= 0) {
       this.isDied = true;
-      this.HTLM_untit.body.remove();
+      
     }
 
-    if (
-      this.position.x > fieldDimentions.width ||
-      this.position.x < -1 ||
-      this.position.y > fieldDimentions.height ||
-      this.position.y < -1
-    ) {
-      this.isDied = true;
+    
+
+    if(this.isDied === true) {
+      this.HTLM_untit.body.remove();
     }
 
     /* =================================== */
@@ -229,7 +254,7 @@ export default class GameObject {
     return (up || down || left || right) && this.attack.ticker?.tick()
       ? new Bullet({
           direction: this.attack.direction,
-          health: 1,
+          health: 100,
           id: 0,
           ownDamage: new Damage(this.attack.currentWeapon.damage),
           position: {

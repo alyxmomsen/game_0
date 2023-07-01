@@ -17,7 +17,7 @@ export class DamageEntity extends GameObject {
       this.updateNextPosition(this.movement.direction);
     }
 
-    return super.update({ keys, objects, fieldDimentions });
+    return super.update({ keys, objects, fieldDimentions , option:() => {} });
   }
 
   constructor({

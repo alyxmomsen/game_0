@@ -22,7 +22,7 @@ export class Enemy extends GameObject {
 
     // this.setAttackDirection(false);
 
-    return super.update({ keys, objects, fieldDimentions });
+    return super.update({ keys, objects, fieldDimentions , option:()=>{} });
   }
 
   constructor({
