@@ -16,7 +16,7 @@ export class Player extends GameObject {
     objects: GameObject[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
-    if (!this.isDied && this.movement.ticker.tick()) {
+    if (!this.isDied && this.movement.getTick()) {
       this.updateNextPosition(calculateMovementDirection(keys));
     }
 

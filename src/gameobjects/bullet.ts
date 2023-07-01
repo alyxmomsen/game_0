@@ -4,6 +4,18 @@ import { randomNumberFromTo } from "../library/randomnumber";
 import GameObject, { Dimentions, Direction, Position } from "./gameobject";
 
 export class Bullet extends GameObject {
+
+  setStepRate(value:number) { /// не работает 
+
+    if(value < 1) {
+      value = 1 ;
+    }
+
+    this.movement.setStepRate(value);
+    this.attack.ownDamage.value /= value ;
+
+  }
+  
   update({
     keys,
     objects,
@@ -13,7 +25,7 @@ export class Bullet extends GameObject {
     objects: GameObject[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
-    if (!this.isDied && this.movement.ticker.tick()) {
+    if (!this.isDied && this.movement.getTick()) {
       /*   
         если 'this.movement.walkStepsLimit === 0' , то выполняется Условие 
         если 'this.movement.walkStepsLimit > 0' , то проверяется "this.movement.counterOfSteps < this.movement.walkStepsLimit"
@@ -29,7 +41,7 @@ export class Bullet extends GameObject {
         this.updateNextPosition(this.movement.direction);
 
         if (this.movement.walkStepFadeDown) {
-          this.setWalkStepRate(Math.floor(this.movement.stepRate * 2)); // уменьшаем скорость стэп-рейта на значение
+          this.setWalkStepRate(Math.floor(this.movement.getStepRate() * 2)); // уменьшаем скорость стэп-рейта на значение
         }
       }
     }
@@ -37,7 +49,21 @@ export class Bullet extends GameObject {
     /*======== option ============  */
     const option = () => {
 
-      this.isDied = true ;
+      // this.movement.direction = {x:0 , y:0} ;
+      this.movement.setStepRate(this.movement.getStepRate() * 1.5); // увеличиваем задержку между шагами
+      // this.setStepRate(this.movement.getStepRate() * 1.5); //  не работает
+      if(this.movement.getStepRate() > 1000) { // умираем , если слишком медленный
+        this.isDied = true ; 
+      }
+
+
+      if(this.movement.direction.x !== 0) { 
+        this.movement.direction.x *= -1 ; // меняем направление движение на противоположное
+      }
+
+      if(this.movement.direction.y !== 0) {
+        this.movement.direction.y *= -1 ; // меняем направление движение на противоположное
+      }
 
     }
     /* ========================== */

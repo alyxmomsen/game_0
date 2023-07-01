@@ -2,14 +2,22 @@ import { Direction, Position } from "../gameobjects/gameobject";
 import { Tick } from "./main";
 
 export class Movement {
-  stepRate: number;
+  private stepRate: number;
   direction: Direction;
-  ticker: Tick;
+  private ticker: Tick;
   counterOfSteps: number;
   lastMove: number;
   walkStepsLimit: number;
   walkStepFadeDown: boolean;
   nextPosition: Position;
+
+  getStepRate () { return this.stepRate }
+  setStepRate (value:number) { 
+    this.ticker.setSpeed(Math.floor(value));
+    this.stepRate = value 
+  }
+
+  getTick () { return this.ticker.tick() }
 
   constructor({
     stepRate,

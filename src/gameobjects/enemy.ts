@@ -16,7 +16,7 @@ export class Enemy extends GameObject {
     objects: GameObject[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
-    if (!this.isDied && this.movement.ticker.tick()) {
+    if (!this.isDied && this.movement.getTick()) {
       // this.updateNextPosition(generateMovementDirection());
     }
 
@@ -45,10 +45,10 @@ export class Enemy extends GameObject {
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,
       direction: { x: 1, y: 0 },
-      health: Math.floor(Math.random() * 995) + 5,
+      health: /* Math.floor(Math.random() * 995) + 5 */1000,
       armor: new Armor({
-        health: Math.floor(Math.random() * 10000),
-        dempher: Math.floor(Math.random() * 99) + 1,
+        health: /* Math.floor(Math.random() * 10000) */1000,
+        dempher: /* Math.floor(Math.random() * 99) + 1 */50 ,
       }),
     });
   }

@@ -52,7 +52,7 @@ export default class GameObject {
   private health: number;
   private armor: Armor;
   isDied: boolean;
-  private attack: Attack;
+  protected attack: Attack;
   movement: Movement;
 
   /* ================================ */
@@ -102,8 +102,8 @@ export default class GameObject {
   setWalkStepRate(value: number) {
     value < 1 ? (value = 1) : (value = value);
 
-    this.movement.stepRate = value;
-    this.movement.ticker.setSpeed(this.movement.stepRate);
+    this.movement.setStepRate(value);
+    // this.movement.ticker.setSpeed(this.movement.getStepRate());
   }
 
   // атака на указаный объект
@@ -122,7 +122,7 @@ export default class GameObject {
   }
 
   // проверка на коллизию nextposition с переданными координатами
-  checkColissionWith(subjectPostion: Position) {
+  checkNextPositionColissionWith(subjectPostion: Position) {
 
     if (
       this.movement.nextPosition.x === subjectPostion.x &&
@@ -181,7 +181,7 @@ export default class GameObject {
     option:() => void
   }): Bullet | false {
 
-    
+
 
     // получение урона
     if (this.damaged.length) {
@@ -196,30 +196,41 @@ export default class GameObject {
 
     let isCollision = false;
     for (const object of objects) {
-      // если объект не является сам собой и если объект не "умер"
+      
 
-      if (object !== this && !this.isDied) {
-        if (this.checkColissionWith(object.position)) {
+      if (object !== this && !this.isDied) { // если объект не является сам собой и если объект не "умер"
+        if (this.checkNextPositionColissionWith(object.position)) { 
 
-          this.attackTo(object);
-          isCollision = true;
+          this.attackTo(object); // object.damaged.push
+          isCollision = true; // регестрируем коллизию
+
+          
+          
         }
       }
     }
 
     if(this.checkCollissionWithFieldLimits({...fieldDimentions})) {
       isCollision = true ;
+      
+      if(this.kind === 'damage-entity') { // костыль
+        
+        this.isDied = true ;
+      }
+      
     }
 
     if (!isCollision) {
-      this.updatePosition();
-    } else {
+
+      this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
+
+    } else { // если на следующем шаге есть коллизия
 
       /*======== optional ======== */
       // функция из наследника
-      option();
+      option(); 
       /* ========================= */
-
+      // снимаем проверки с других координат отличных от this.position
       this.movement.nextPosition.x = this.position.x;
       this.movement.nextPosition.y = this.position.y;
     }
@@ -227,8 +238,9 @@ export default class GameObject {
     /* ======== check if this died ========*/
 
     if (this.health <= 0) {
-      this.isDied = true;
       
+      
+      this.isDied = true;
     }
 
     if(this.isDied === true) {

@@ -16,6 +16,10 @@ export class Attack {
   currentWeapon: Weapon; // в данный момент выбранный пресет
   ownDamage: Damage; // урон наносимый самим объектом, не путать с уроном Weapon
 
+  getTick () {
+    // this.ticker.tic
+  }
+
   // доработать ???
   setTrueStatus() {
     this.status = true;

@@ -94,7 +94,7 @@ export default class Game {
     this.enemies.forEach((enemy) => {
       enemy.update({
         keys,
-        objects: [],
+        objects: [...this.bullets],
         fieldDimentions: this.field.dimentions,
       });
     });
@@ -103,7 +103,7 @@ export default class Game {
     this.bullets.forEach((bullet) => {
       bullet.update({
         keys,
-        objects: [...this.enemies, this.player],
+        objects: [...this.enemies, this.player , ...this.bullets],
         fieldDimentions: this.field.dimentions,
       });
     });
@@ -179,7 +179,7 @@ export default class Game {
         new Weapon({
           damage: new Damage({ damageClass: "phisical", value: 50 }),
           fireRate: 100, // интервал между выстрелами
-          stepRate: 5, // скорость полета
+          stepRate: 10, // скорость полета
           stepRateFadeDown: false, // будет ли замедляться
           stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
         }),
