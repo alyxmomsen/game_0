@@ -14,7 +14,7 @@ export class DamageEntity extends GameObject {
     fieldDimentions: Dimentions;
   }): false | Bullet {
     if (!this.isDied && this.movement.ticker.tick()) {
-      this.move(this.movement.direction);
+      this.updateNextPosition(this.movement.direction);
     }
 
     return super.update({ keys, objects, fieldDimentions });

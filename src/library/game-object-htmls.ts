@@ -14,18 +14,18 @@ export class GameObjectHTMLs {
   health: UI_stat;
   damage: UI_stat;
   armor: UI_stat;
-  armor_effeciency: UI_stat ;
+  armor_effeciency: UI_stat;
 
   render({
     health,
     damage,
     armor,
-    armor_effeciency ,
+    armor_effeciency,
   }: {
     health: string;
     damage: string;
     armor: string;
-    armor_effeciency: string ;
+    armor_effeciency: string;
   }) {
     this.health.linkHTML.value.innerText = health;
     this.damage.linkHTML.value.innerText = damage;
@@ -56,7 +56,6 @@ export class GameObjectHTMLs {
           value: document.createElement("div"),
           caption: document.createElement("div"),
           wrapper: document.createElement("div"),
-
         },
         data: {
           value: value,
@@ -79,7 +78,9 @@ export class GameObjectHTMLs {
     this.health = setStat({ value: health, caption: "HEalTH" });
     this.armor = setStat({ value: armor, caption: "ARMor" });
     this.damage = setStat({ value: damage, caption: "DAmAGE" });
-    this.armor_effeciency = setStat({ value: armor_effeciency, caption: "armor eff" });
-    
+    this.armor_effeciency = setStat({
+      value: armor_effeciency,
+      caption: "armor eff",
+    });
   }
 }

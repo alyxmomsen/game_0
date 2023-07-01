@@ -16,7 +16,7 @@ export default class Game {
   field: { dimentions: Dimentions };
   weapons: Weapon[];
 
-  toCreateObjects: (Enemy | Bullet)[];
+  spawnQueue: (Enemy | Bullet)[];
 
   player: Player; // объект игрока
   enemies: Enemy[] = [];
@@ -47,7 +47,7 @@ export default class Game {
       // console.log(this.enemies , 'this.enemies.length');
 
       if (this.enemies.length < 5) {
-        this.toCreateObjects.push(
+        this.spawnQueue.push(
           new Enemy({
             id: 0,
             position: {
@@ -69,27 +69,26 @@ export default class Game {
 
     /* ========================================= */
 
-    this.toCreateObjects.forEach((objectToCreate) => {
-      if (objectToCreate instanceof Bullet) {
-        this.bullets.push(objectToCreate);
-      } else if (objectToCreate instanceof Enemy) {
-        this.enemies.push(objectToCreate);
+    this.spawnQueue.forEach((objectToSpawn) => {
+      if (objectToSpawn instanceof Bullet) {
+        this.bullets.push(objectToSpawn);
+      } else if (objectToSpawn instanceof Enemy) {
+        this.enemies.push(objectToSpawn);
       }
     });
 
-    this.toCreateObjects = [];
+    this.spawnQueue = [];
 
     /* ========================================= */
 
     //GameObject.update возвращает объект Bullet
-    const objectToCreate = this.player.update({
+    const objectToSpawn = this.player.update({
       keys,
-      objects: [],
+      objects: [...this.enemies],
       fieldDimentions: this.field.dimentions,
     });
-
-    if (objectToCreate !== false) {
-      this.toCreateObjects.push(objectToCreate);
+    if (objectToSpawn !== false) {
+      this.spawnQueue.push(objectToSpawn);
     }
 
     this.enemies.forEach((enemy) => {
@@ -99,7 +98,6 @@ export default class Game {
         fieldDimentions: this.field.dimentions,
       });
     });
-
     this.enemies = this.enemies.filter((enemy) => !enemy.isDied);
 
     this.bullets.forEach((bullet) => {
@@ -109,7 +107,6 @@ export default class Game {
         fieldDimentions: this.field.dimentions,
       });
     });
-
     this.bullets = this.bullets.filter((elem) => !elem.isDied);
 
     /* ================================== */
@@ -118,10 +115,6 @@ export default class Game {
 
     if (!this.creatorEnemyTicker) {
       this.creatorEnemyTicker = new Tick(1000);
-    }
-
-    if (this.creatorEnemyTicker?.tick()) {
-      console.log(this.enemies.length, this.bullets.length);
     }
 
     /* ================================ */
@@ -175,7 +168,7 @@ export default class Game {
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
     this.field = { dimentions: fieldDimentions };
 
-    this.toCreateObjects = []; // массив объектов (пока что Bullet) подлежащие добавлению в массив объектов для дальнейшей итерации в игр/м. цикле
+    this.spawnQueue = []; // массив объектов (пока что Bullet) подлежащие добавлению в массив объектов для дальнейшей итерации в игр/м. цикле
 
     // создаем игрока
     this.player = new Player({
@@ -186,7 +179,7 @@ export default class Game {
         new Weapon({
           damage: new Damage({ damageClass: "phisical", value: 50 }),
           fireRate: 100, // интервал между выстрелами
-          stepRate: 1, // скорость полета
+          stepRate: 100, // скорость полета
           stepRateFadeDown: false, // будет ли замедляться
           stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
         }),
@@ -214,7 +207,7 @@ export default class Game {
     this.UI.playerCardHTMLContainer.append(
       this.player.UI.health.linkHTML.wrapper,
       this.player.UI.damage.linkHTML.wrapper,
-      this.player.UI.armor.linkHTML.wrapper , 
+      this.player.UI.armor.linkHTML.wrapper,
       this.player.UI.armor_effeciency.linkHTML.wrapper
     );
 

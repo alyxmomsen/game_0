@@ -17,15 +17,13 @@ export class Player extends GameObject {
     fieldDimentions: Dimentions;
   }): false | Bullet {
     if (!this.isDied && this.movement.ticker.tick()) {
-      this.move(calculateMovementDirection(keys));
+      this.updateNextPosition(calculateMovementDirection(keys));
     }
 
     this.setAttackDirection(keys);
-
+    // alert();
     return super.update({ keys, objects, fieldDimentions });
   }
-
-  
 
   render(): void {
     super.render();
@@ -43,7 +41,7 @@ export class Player extends GameObject {
     super({
       id,
       kind: "player",
-      walkStepRate: 50,
+      walkStepRate: 100,
       walkStepsLimit: 0,
       walkStepRateFadeDown: false,
       color: "green",

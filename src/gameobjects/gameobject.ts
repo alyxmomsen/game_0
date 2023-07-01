@@ -66,13 +66,10 @@ export default class GameObject {
   /* ----------------------- */
 
   setAttackDirection(keys: string[]) {
-
     const up = keys.includes("ArrowUp");
     const down = keys.includes("ArrowDown");
     const left = keys.includes("ArrowLeft");
     const right = keys.includes("ArrowRight");
-
-
 
     // const direction:Direction = {x:0 , y:0} ;
 
@@ -124,14 +121,21 @@ export default class GameObject {
     }
   }
 
-  checkColissionWith({ x, y }: Position) {
-    return this.position.x === x && this.position.y === y ? true : false;
+  checkColissionWith(subjectPostion: Position) {
+    if (
+      this.movement.nextPosition.x === subjectPostion.x &&
+      this.movement.nextPosition.y === subjectPostion.y
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  move({ x, y }: { x: 1 | -1 | 0; y: 1 | -1 | 0 }) {
+  updateNextPosition({ x, y }: { x: 1 | -1 | 0; y: 1 | -1 | 0 }) {
     if (x !== 0 || y !== 0) {
-      this.position.y += y;
-      this.position.x += x;
+      this.movement.nextPosition.y = this.position.y + y;
+      this.movement.nextPosition.x = this.position.x + x;
     }
 
     if (x !== 0) {
@@ -141,6 +145,11 @@ export default class GameObject {
     }
 
     this.movement.counterOfSteps += 1; // счетчик сделаных шагов. связан. используется
+  }
+
+  updatePosition() {
+    this.position.x = this.movement.nextPosition.x;
+    this.position.y = this.movement.nextPosition.y;
   }
 
   update({
@@ -164,21 +173,34 @@ export default class GameObject {
 
     // проверка коллизий
 
+    // if(this.kind === 'player') {
+    //   console.log(`${this.movement.nextPosition.x} ${this.movement.nextPosition.y}`);
+    // }
+
+    let isCollision = false;
+
     for (const object of objects) {
       // если объект не является сам собой и если объект не "умер"
+
       if (object !== this && !this.isDied) {
         if (this.checkColissionWith(object.position)) {
-          if (/* this.attack.ticker.tick() */ true) {
-            console.log("collision");
-            this.attackTo(object);
+          console.log("collision");
 
-            if (this instanceof Bullet) {
-              this.isDied = true;
-              this.HTLM_untit.body.remove();
-            }
+          this.attackTo(object);
+
+          if (this instanceof Bullet) {
           }
+
+          isCollision = true;
         }
       }
+    }
+
+    if (!isCollision) {
+      this.updatePosition();
+    } else {
+      this.movement.nextPosition.x = this.position.x;
+      this.movement.nextPosition.y = this.position.y;
     }
 
     /* ======== check if this died ========*/
@@ -199,14 +221,12 @@ export default class GameObject {
 
     /* =================================== */
 
-    const up = keys.includes("ArrowUp") ;
-    const down = keys.includes("ArrowDown") ;
-    const left = keys.includes("ArrowLeft") ;
-    const right = keys.includes("ArrowRight") ;
+    const up = keys.includes("ArrowUp");
+    const down = keys.includes("ArrowDown");
+    const left = keys.includes("ArrowLeft");
+    const right = keys.includes("ArrowRight");
 
-    return (up || down || left || right) &&
-      this.attack.ticker?.tick() //&&
-      // this.kind === "player"
+    return (up || down || left || right) && this.attack.ticker?.tick()
       ? new Bullet({
           direction: this.attack.direction,
           health: 1,
@@ -218,7 +238,9 @@ export default class GameObject {
           },
           walkStepRate: this.attack.currentWeapon.stepRate,
           walkStepRateFadeDown: this.attack.currentWeapon.stepRateFadeDown,
-          walkStepsLimit: this.attack.currentWeapon ? this.attack.currentWeapon.stepsLimit : 0,
+          walkStepsLimit: this.attack.currentWeapon
+            ? this.attack.currentWeapon.stepsLimit
+            : 0,
         })
       : false;
   }
@@ -228,7 +250,7 @@ export default class GameObject {
       health: this.health.toString(),
       damage: this.attack.currentWeapon?.damage.value.toString(),
       armor: this.armor.health.toString(),
-      armor_effeciency: this.armor.dempher.toString() ,
+      armor_effeciency: this.armor.dempher.toString(),
     });
 
     this.HTLM_untit.reRender({
@@ -256,12 +278,11 @@ export default class GameObject {
       direction,
       walkStepsLimit,
       walkStepFadeDown: walkStepRateFadeDown,
+      nextPosition: { ...position },
     });
 
-    this.position = position;
-
+    this.position = { ...position };
     this.attack = new Attack(ownDamage, weapons);
-
     this.armor = armor;
     this.damaged = [];
     this.isDied = false;
@@ -276,10 +297,10 @@ export default class GameObject {
     this.color = color;
 
     this.UI = new GameObjectHTMLs({
-      health: this.health.toString() ,
-      damage: this.attack.currentWeapon?.damage.value.toString() ,
-      armor: this.armor.health.toString() ,
-      armor_effeciency:this.armor.dempher.toString() ,
+      health: this.health.toString(),
+      damage: this.attack.currentWeapon?.damage.value.toString(),
+      armor: this.armor.health.toString(),
+      armor_effeciency: this.armor.dempher.toString(),
     });
 
     this.HTLM_untit = new HTML_unit({

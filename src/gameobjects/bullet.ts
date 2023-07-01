@@ -26,7 +26,7 @@ export class Bullet extends GameObject {
         !this.movement.walkStepsLimit ||
         this.movement.counterOfSteps < this.movement.walkStepsLimit
       ) {
-        this.move(this.movement.direction);
+        this.updateNextPosition(this.movement.direction);
 
         if (this.movement.walkStepFadeDown) {
           this.setWalkStepRate(Math.floor(this.movement.stepRate * 2)); // уменьшаем скорость стэп-рейта на значение

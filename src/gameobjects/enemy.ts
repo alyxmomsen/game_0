@@ -17,7 +17,7 @@ export class Enemy extends GameObject {
     fieldDimentions: Dimentions;
   }): false | Bullet {
     if (!this.isDied && this.movement.ticker.tick()) {
-      this.move(generateMovementDirection());
+      // this.updateNextPosition(generateMovementDirection());
     }
 
     // this.setAttackDirection(false);
