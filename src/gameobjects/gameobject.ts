@@ -42,17 +42,17 @@ export type Dimentions = {
 };
 
 export default class GameObject {
-  id: number;
-  dateOfCreated: number;
-  color: string;
-  kind: GameObjectType;
-  dimentions: Dimentions;
+  private id: number;
+  private dateOfCreated: number;
+  private color: string;
+  private kind: GameObjectType;
+  private dimentions: Dimentions;
   position: { x: number; y: number } | null = null;
-  damaged: Damage[]; // в данный момент получаемыe уроны
-  health: number;
-  armor: Armor;
+  private damaged: Damage[]; // в данный момент получаемыe уроны
+  private health: number;
+  private armor: Armor;
   isDied: boolean;
-  attack: Attack;
+  private attack: Attack;
   movement: Movement;
 
   /* ================================ */
@@ -121,6 +121,7 @@ export default class GameObject {
     }
   }
 
+  // проверка на коллизию nextposition с переданными координатами
   checkColissionWith(subjectPostion: Position) {
 
     if (
@@ -133,7 +134,8 @@ export default class GameObject {
     }
   }
 
-  checkCollissionWithFieldLimits ({width , height}:{width:number , height:number}) {
+  // проверка на коллизию со стенами
+  checkCollissionWithFieldLimits ({width , height}:{width:number , height:number}):boolean {
     if (
       this.movement.nextPosition.x >= width ||
       this.movement.nextPosition.x < 0 ||
@@ -178,8 +180,10 @@ export default class GameObject {
     fieldDimentions: Dimentions;
     option:() => void
   }): Bullet | false {
-    // получение урона
 
+    
+
+    // получение урона
     if (this.damaged.length) {
       for (const damage of this.damaged) {
         this.getDamage(damage.value);
@@ -190,33 +194,22 @@ export default class GameObject {
 
     // проверка коллизий
 
-    // if(this.kind === 'player') {
-    //   console.log(`${this.movement.nextPosition.x} ${this.movement.nextPosition.y}`);
-    // }
-
     let isCollision = false;
-
     for (const object of objects) {
       // если объект не является сам собой и если объект не "умер"
 
       if (object !== this && !this.isDied) {
         if (this.checkColissionWith(object.position)) {
-          console.log("collision");
 
           this.attackTo(object);
-
-          
-
           isCollision = true;
         }
       }
     }
 
-
     if(this.checkCollissionWithFieldLimits({...fieldDimentions})) {
       isCollision = true ;
     }
-
 
     if (!isCollision) {
       this.updatePosition();
@@ -237,8 +230,6 @@ export default class GameObject {
       this.isDied = true;
       
     }
-
-    
 
     if(this.isDied === true) {
       this.HTLM_untit.body.remove();

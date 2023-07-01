@@ -6,12 +6,13 @@ import { Weapon } from "./weapon";
 export type AttackClass = "phisical" | "magic";
 
 export class Attack {
-  status: boolean; // доработать ???
+  
+  private status: boolean; // доработать ???
   ticker: Tick; // интервал между выстрелами
 
   direction: Direction; // стартовый вектор начала движения Bullet
 
-  weapons: Weapon[]; // арсенал (пресеты, другими словами)
+  private weapons: Weapon[]; // арсенал (пресеты, другими словами)
   currentWeapon: Weapon; // в данный момент выбранный пресет
   ownDamage: Damage; // урон наносимый самим объектом, не путать с уроном Weapon
 
