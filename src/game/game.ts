@@ -15,6 +15,8 @@ export default class Game {
 
   creatorEnemyTicker: Tick;
 
+  
+
   keysManager: KeysManager = null; // Объект менеджера ключей клавиш
 
   field: {
@@ -32,7 +34,7 @@ export default class Game {
   enemies: Enemy[] = [];
   gameObjects: GameObject[] = [];
   bullets: Bullet[] = [];
-
+  
   // IDManager: IDManager;
 
   /* ======== html| / UI  ========== */
@@ -239,5 +241,7 @@ export default class Game {
     this.UI.gameFieldHTMLContainer.append(
       buildField(this.field.dimentions.height, this.field.dimentions.width)
     );
+
+    
   }
 }

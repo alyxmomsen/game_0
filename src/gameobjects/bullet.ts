@@ -29,9 +29,14 @@ export class Bullet extends GameObject {
         this.updateNextPosition(this.movement.direction);
 
         if (this.movement.walkStepFadeDown) {
-          this.setWalkStepRate(Math.floor(this.movement.getStepRate() * 1.1)); // уменьшаем скорость стэп-рейта на значение
+          this.movement.setStepRate(this.movement.getStepRate() * 1.9); // уменьшаем скорость стэп-рейта на значение
         }
       }
+    }
+
+    if (this.movement.getStepRate() > 1000) {
+      // умираем , если слишком медленный
+      this.isDied = true;
     }
 
     /*======== option ============  */ // опция для родителя
@@ -39,10 +44,7 @@ export class Bullet extends GameObject {
       // this.movement.direction = {x:0 , y:0} ;
       this.movement.setStepRate(this.movement.getStepRate() * 60); // увеличиваем задержку между шагами
       // this.setStepRate(this.movement.getStepRate() * 1.5); //  не работает
-      if (this.movement.getStepRate() > 1000) {
-        // умираем , если слишком медленный
-        this.isDied = true;
-      }
+      
 
       const axisDirections:[1,0,-1] = [1 , 0 , -1]
 

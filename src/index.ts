@@ -1,5 +1,6 @@
 // import Game from "./game/game";
 import Game from "./game/game";
+import { Bullet } from "./gameobjects/bullet";
 import "./styles/main.css";
 
 (function () {
@@ -28,4 +29,7 @@ import "./styles/main.css";
   };
 
   window.requestAnimationFrame(mainLoop);
+
+
+  
 })();
