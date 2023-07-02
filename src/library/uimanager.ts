@@ -28,4 +28,7 @@ export class UIManager  {
         ctx.fillStyle = '#000000'
         ctx.fillRect(0 , 0 , 100 , 100);
     }
+
+
+    ///
 }
