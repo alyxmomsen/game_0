@@ -147,7 +147,7 @@ export default class Game {
 
   render(field: HTMLElement = null) {
 
-    this.UIManager.draw();
+    // this.UIManager.draw(this.player.position.x , this.player.position.y);
 
 
     this.bullets.forEach((elem) => {
@@ -176,7 +176,7 @@ export default class Game {
     canvas:HTMLCanvasElement ;
   }) {
 
-    this.UIManager = new UIManager ({canvas}) ;
+    // this.UIManager = new UIManager ({canvas , w:fieldDimentions.width , h:fieldDimentions.height}) ;
 
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
     this.field = { dimentions: fieldDimentions };

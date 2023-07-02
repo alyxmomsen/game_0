@@ -3,9 +3,13 @@
 export class UIManager  {
 
     canvas:HTMLCanvasElement ;
+    ctx:CanvasRenderingContext2D ;
 
-    draw () {
-
+    draw (x:number ,y:number) {
+        this.ctx.fillStyle = 'black' ;
+        this.ctx.fillRect(0 , 0 , this.canvas.width , this.canvas.height) ;
+        this.ctx.fillStyle = 'blue' ;
+        this.ctx.fillRect(x * 50 , y * 50 , 50 , 50) ;
     }
 
     update () {
@@ -16,10 +20,12 @@ export class UIManager  {
 
     }
 
-    constructor ({canvas}:{canvas:HTMLCanvasElement}) {
+    constructor ({canvas , w , h}:{canvas:HTMLCanvasElement , w:number , h:number}) {
+        
+        this.canvas = canvas ;
 
-        canvas.width = 800 * 2 ;
-        canvas.height = 600 * 2 ;
+        canvas.width = w * 100 ;
+        canvas.height = h * 100 ;
 
         canvas.style.width = '800px' ;
         canvas.style.height = '600px' ;
@@ -27,8 +33,12 @@ export class UIManager  {
         const ctx = canvas.getContext('2d') ;
         ctx.fillStyle = '#000000'
         ctx.fillRect(0 , 0 , 100 , 100);
+
+        this.ctx = ctx ;
+
+        console.log(canvas.width);
+        console.log(canvas.height);
+        
     }
 
-
-    ///
 }
