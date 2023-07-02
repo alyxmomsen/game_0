@@ -1,11 +1,21 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
-import GameObject from "./gameobject";
+import { Bullet } from "./bullet";
+import GameObject, { Dimentions, Position } from "./gameobject";
 
 export class SupplyBox extends GameObject {
+  supply: "damage-Up";
+  update({ fieldDimentions }: { fieldDimentions: Dimentions }): false | Bullet {
+    return super.update({
+      fieldDimentions,
+      keys: [],
+      objects: [],
+      option: () => {},
+      optionToGameobjectIterator: (gameObject: SupplyBox | null) => {},
+    });
+  }
 
-
-  constructor() {
+  constructor({ position }: { position: Position }) {
     super({
       id: 0,
       kind: "supply-box",
@@ -13,7 +23,7 @@ export class SupplyBox extends GameObject {
       walkStepsLimit: 0,
       walkStepRateFadeDown: false,
       color: "orange",
-      position: { x: 0, y: 0 },
+      position,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons: [],
       direction: { x: 1, y: 0 },

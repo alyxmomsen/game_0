@@ -1,6 +1,14 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
-import GameObject, { Dimentions, Direction, Position } from "./gameobject";
+import { Enemy } from "./enemy";
+import GameObject, {
+  Dimentions,
+  Direction,
+  GameObjectType,
+  Position,
+} from "./gameobject";
+import { Player } from "./player";
+import { SupplyBox } from "./supply-box";
 
 export class Bullet extends GameObject {
   update({
@@ -9,7 +17,7 @@ export class Bullet extends GameObject {
     fieldDimentions,
   }: {
     keys: string[];
-    objects: GameObject[];
+    objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
     if (!this.isDied && this.movement.getTick()) {
@@ -62,7 +70,13 @@ export class Bullet extends GameObject {
     };
     /* ========================== */
 
-    const result = super.update({ keys, objects, fieldDimentions, option }); // возвращает объект Bullet
+    const result = super.update({
+      keys,
+      objects,
+      fieldDimentions,
+      option,
+      optionToGameobjectIterator: (gameObject: SupplyBox | null) => {},
+    }); // возвращает объект Bullet
 
     return result;
   }

@@ -3,17 +3,29 @@ import { Damage } from "../library/damage";
 import { TickController, calculateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
-import GameObject, { Dimentions, Position } from "./gameobject";
+import { Enemy } from "./enemy";
+import GameObject, { Dimentions, GameObjectType, Position } from "./gameobject";
+import { SupplyBox } from "./supply-box";
 // import { heroActions, moveHero } from "./player_keys_checker";
 
 export class Player extends GameObject {
+  optionToGameObjectIterator(
+    gameObject: GameObject | SupplyBox | Player | Enemy | Bullet | null
+  ) {
+    // здесь исправить
+    if (gameObject instanceof SupplyBox) {
+      this.attack.currentWeapon.damage.value = 10000; // значение для тест
+      gameObject.isDied = true;
+    }
+  }
+
   update({
     keys,
     objects,
     fieldDimentions,
   }: {
     keys: string[];
-    objects: GameObject[];
+    objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
     if (!this.isDied && this.movement.getTick()) {
@@ -22,7 +34,13 @@ export class Player extends GameObject {
 
     this.setAttackDirection(keys);
     // alert();
-    return super.update({ keys, objects, fieldDimentions, option: () => {} });
+    return super.update({
+      keys,
+      objects,
+      fieldDimentions,
+      option: () => {},
+      optionToGameobjectIterator: this.optionToGameObjectIterator,
+    });
   }
 
   render(): void {

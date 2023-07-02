@@ -15,7 +15,7 @@ export default class Game {
 
   creatorEnemyTicker: TickController;
 
-  supplyCreatingTicker: TickController;
+  supplyBoxCreatingTicker: TickController;
 
   // gameObjectsPull
 
@@ -30,12 +30,13 @@ export default class Game {
   };
   weapons: Weapon[];
 
-  spawnQueue: (Enemy | Bullet | SupplyBox )[];
+  spawnQueue: (Enemy | Bullet | SupplyBox)[];
 
   player: Player; // объект игрока
   enemies: Enemy[] = [];
   gameObjects: GameObject[] = [];
   bullets: Bullet[] = [];
+  supplyBoxes: SupplyBox[];
 
   // IDManager: IDManager;
 
@@ -79,14 +80,13 @@ export default class Game {
     this.creatorEnemyTicker.setTickInterval(Math.floor(Math.random() * 5000));
   }
 
-  sortSpawnQueue () {
+  sortSpawnQueue() {
     this.spawnQueue.forEach((objectToSpawn) => {
       if (objectToSpawn instanceof Bullet) {
         this.bullets.push(objectToSpawn);
       } else if (objectToSpawn instanceof Enemy) {
         this.enemies.push(objectToSpawn);
       } else if (objectToSpawn instanceof SupplyBox) {
-        
       }
     });
   }
@@ -97,7 +97,6 @@ export default class Game {
 
     /* ========================================= */
 
-
     this.sortSpawnQueue();
 
     this.spawnQueue = [];
@@ -107,7 +106,7 @@ export default class Game {
     //GameObject.update возвращает объект Bullet
     const objectToSpawn = this.player.update({
       keys,
-      objects: [...this.enemies],
+      objects: [...this.enemies, ...this.supplyBoxes],
       fieldDimentions: this.field.dimentions,
     });
     if (objectToSpawn !== false) {
@@ -132,6 +131,13 @@ export default class Game {
     });
     this.bullets = this.bullets.filter((elem) => !elem.isDied);
 
+    this.supplyBoxes.forEach((supBox) => {
+      supBox.update({
+        fieldDimentions: this.field.dimentions,
+      });
+    });
+    this.supplyBoxes = this.supplyBoxes.filter((elem) => !elem.isDied);
+
     /* ================================== */
 
     this.createEnemyRandomly();
@@ -141,9 +147,24 @@ export default class Game {
     }
 
     /* ================================ */
+
+    if (this.supplyBoxCreatingTicker.tick()) {
+      this.supplyBoxes.push(
+        new SupplyBox({
+          position: {
+            x: Math.floor(Math.random() * this.field.dimentions.width),
+            y: Math.floor(Math.random() * this.field.dimentions.height),
+          },
+        })
+      );
+    }
   }
 
-  renderGameObject({ elem }: { elem: GameObject | Enemy | Player }) {
+  renderGameObject({
+    elem,
+  }: {
+    elem: GameObject | Enemy | Player | SupplyBox;
+  }) {
     if (
       !elem.isDied &&
       this.UI.gameFieldHTMLContainer &&
@@ -179,6 +200,10 @@ export default class Game {
     this.enemies.forEach((elem) => {
       this.renderGameObject({ elem });
     });
+
+    this.supplyBoxes.forEach((elem) => {
+      this.renderGameObject({ elem });
+    });
   }
 
   constructor({
@@ -194,7 +219,8 @@ export default class Game {
     canvas: HTMLCanvasElement;
     gameCell: Dimentions;
   }) {
-    this.supplyCreatingTicker = new TickController(100);
+    this.supplyBoxCreatingTicker = new TickController(10000);
+    this.supplyBoxes = [];
 
     // this.UIManager = new UIManager ({canvas , w:fieldDimentions.width , h:fieldDimentions.height}) ;
 

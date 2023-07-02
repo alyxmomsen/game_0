@@ -3,7 +3,8 @@ import { Damage } from "../library/damage";
 import { generateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
-import GameObject, { Dimentions, Position } from "./gameobject";
+import GameObject, { Dimentions, GameObjectType, Position } from "./gameobject";
+import { SupplyBox } from "./supply-box";
 
 // частный случай GameObject
 export class Enemy extends GameObject {
@@ -13,7 +14,7 @@ export class Enemy extends GameObject {
     fieldDimentions,
   }: {
     keys: string[];
-    objects: GameObject[];
+    objects: (GameObject | Enemy | SupplyBox)[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
     if (!this.isDied && this.movement.getTick()) {
@@ -22,7 +23,13 @@ export class Enemy extends GameObject {
 
     // this.setAttackDirection(false);
 
-    return super.update({ keys, objects, fieldDimentions, option: () => {} });
+    return super.update({
+      keys,
+      objects,
+      fieldDimentions,
+      option: () => {},
+      optionToGameobjectIterator: (gameObject: SupplyBox | null) => {},
+    });
   }
 
   constructor({

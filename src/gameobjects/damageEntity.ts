@@ -1,7 +1,10 @@
 import { Armor, ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
 import { Bullet } from "./bullet";
-import GameObject, { Dimentions, Position } from "./gameobject";
+import { Enemy } from "./enemy";
+import GameObject, { Dimentions, GameObjectType, Position } from "./gameobject";
+import { Player } from "./player";
+import { SupplyBox } from "./supply-box";
 
 export class DamageEntity extends GameObject {
   update({
@@ -10,14 +13,20 @@ export class DamageEntity extends GameObject {
     fieldDimentions,
   }: {
     keys: string[];
-    objects: GameObject[];
+    objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
     if (!this.isDied && this.movement.getTick()) {
       this.updateNextPosition(this.movement.direction);
     }
 
-    return super.update({ keys, objects, fieldDimentions, option: () => {} });
+    return super.update({
+      keys,
+      objects,
+      fieldDimentions,
+      option: () => {},
+      optionToGameobjectIterator: (gameObject: SupplyBox | null) => {},
+    });
   }
 
   constructor({

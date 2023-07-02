@@ -7,6 +7,9 @@ import { Movement } from "../library/movement";
 import { GameObjectHTMLs } from "../library/game-object-htmls";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
+import { SupplyBox } from "./supply-box";
+import { Player } from "./player";
+import { Enemy } from "./enemy";
 
 export type GameObjectType =
   | "game_object"
@@ -188,11 +191,15 @@ export default class GameObject {
     objects,
     fieldDimentions,
     option,
+    optionToGameobjectIterator,
   }: {
     keys: string[];
-    objects: GameObject[];
+    objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
     option: () => void;
+    optionToGameobjectIterator: (
+      gameObject: GameObject | SupplyBox | Player | Enemy | Bullet | null
+    ) => void;
   }): Bullet | false {
     // получение урона
     if (this.damaged.length) {
@@ -216,10 +223,17 @@ export default class GameObject {
       if (object !== this && !this.isDied) {
         // если объект не является сам собой и если объект не "умер"
         if (this.checkNextPositionColissionWith(object.position)) {
+          // object instanceof SupplyBox ; // не проходит эту проверку
+
+          // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
+          optionToGameobjectIterator.call(this, object); // функция удаляет supply-box из игры и что-нибудь еще ...
+
           this.attackTo(object, {
             damageClass: this.attack.ownDamage.damageClass,
             value: this.calculateOwnDamageBySpeed(),
           }); // object.damaged.push
+
+          
           isCollision = true; // регестрируем коллизию
         }
       }
