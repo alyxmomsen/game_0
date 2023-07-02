@@ -3,7 +3,6 @@ import { Damage } from "../library/damage";
 import GameObject, { Dimentions, Direction, Position } from "./gameobject";
 
 export class Bullet extends GameObject {
-  
   update({
     keys,
     objects,
@@ -44,24 +43,21 @@ export class Bullet extends GameObject {
       // this.movement.direction = {x:0 , y:0} ;
       this.movement.setStepRate(this.movement.getStepRate() * 60); // увеличиваем задержку между шагами
       // this.setStepRate(this.movement.getStepRate() * 1.5); //  не работает
-      
 
-      const axisDirections:[1,0,-1] = [1 , 0 , -1]
+      const axisDirections: [1, 0, -1] = [1, 0, -1];
 
       if (this.movement.direction.x !== 0) {
         this.movement.direction.x *= -1; // меняем направление движение на противоположное
-
-      } 
-      else {
-        this.movement.direction.x = axisDirections[Math.floor(Math.random() * 3)] ;
+      } else {
+        this.movement.direction.x =
+          axisDirections[Math.floor(Math.random() * 3)];
       }
 
       if (this.movement.direction.y !== 0) {
         this.movement.direction.y *= -1; // меняем направление движение на противоположное
-
-      } 
-      else {
-        this.movement.direction.y = axisDirections[Math.floor(Math.random() * 3)] ;
+      } else {
+        this.movement.direction.y =
+          axisDirections[Math.floor(Math.random() * 3)];
       }
     };
     /* ========================== */

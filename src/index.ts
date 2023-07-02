@@ -10,15 +10,15 @@ import "./styles/main.css";
   const playerCardHTMLContainer =
     document.querySelector<HTMLElement>("#player-stats");
 
-    const canvas = document.querySelector('canvas');
+  const canvas = document.querySelector("canvas");
 
   const fieldDimentions = { width: 40, height: 20 };
   const theGame = new Game({
     gameFieldHTMLContainer,
     playerCardHTMLContainer,
     fieldDimentions,
-    canvas ,
-    gameCell:{width:30 , height:30} ,
+    canvas,
+    gameCell: { width: 30, height: 30 },
   });
 
   const mainLoop = function () {
@@ -29,7 +29,4 @@ import "./styles/main.css";
   };
 
   window.requestAnimationFrame(mainLoop);
-
-
-  
 })();

@@ -1,6 +1,6 @@
 import { Direction } from "../gameobjects/gameobject";
 
-export class TickController  {
+export class TickController {
   private lastTickTime: number;
   private tickInterval: number;
 
@@ -85,5 +85,3 @@ export function buildField(maxRows: number, maxCols: number) {
 
   return fieldBorder;
 }
-
-

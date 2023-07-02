@@ -5,28 +5,27 @@ import { Player } from "../gameobjects/player";
 import { Damage } from "../library/damage";
 import { GameObjectHTMLs } from "../library/game-object-htmls";
 import KeysManager from "../library/keysManager";
-import { TickController , buildField } from "../library/main";
+import { TickController, buildField } from "../library/main";
 import { UIManager } from "../library/uimanager";
 import { Weapon } from "../library/weapon";
 
 export default class Game {
+  UIManager: UIManager;
 
-  UIManager:UIManager ;
+  creatorEnemyTicker: TickController;
 
-  creatorEnemyTicker: TickController ;
-
-  supplyCreatingTicker: TickController ;
+  supplyCreatingTicker: TickController;
 
   // gameObjectsPull
 
   keysManager: KeysManager = null; // Объект менеджера ключей клавиш
 
   field: {
-    dimentions: Dimentions ;
+    dimentions: Dimentions;
     gameCell: {
-      width:number ;
-      height:number ;
-    } ;
+      width: number;
+      height: number;
+    };
   };
   weapons: Weapon[];
 
@@ -36,7 +35,7 @@ export default class Game {
   enemies: Enemy[] = [];
   gameObjects: GameObject[] = [];
   bullets: Bullet[] = [];
-  
+
   // IDManager: IDManager;
 
   /* ======== html| / UI  ========== */
@@ -54,7 +53,9 @@ export default class Game {
     // beta beta beta beta !!!!!!!
 
     if (!this.creatorEnemyTicker) {
-      this.creatorEnemyTicker = new TickController (Math.floor(Math.random() * 1000));
+      this.creatorEnemyTicker = new TickController(
+        Math.floor(Math.random() * 1000)
+      );
     }
 
     if (this.creatorEnemyTicker.tick()) {
@@ -128,7 +129,7 @@ export default class Game {
     this.createEnemyRandomly();
 
     if (!this.creatorEnemyTicker) {
-      this.creatorEnemyTicker = new TickController (1000);
+      this.creatorEnemyTicker = new TickController(1000);
     }
 
     /* ================================ */
@@ -156,9 +157,7 @@ export default class Game {
   }
 
   render(field: HTMLElement = null) {
-
     // this.UIManager.draw(this.player.position.x , this.player.position.y);
-
 
     this.bullets.forEach((elem) => {
       this.renderGameObject({ elem });
@@ -178,25 +177,24 @@ export default class Game {
     fieldDimentions,
     playerCardHTMLContainer,
     gameFieldHTMLContainer,
-    canvas ,
-    gameCell ,
+    canvas,
+    gameCell,
   }: {
     gameFieldHTMLContainer: HTMLElement; // для рендеринга игрового поля
     playerCardHTMLContainer: HTMLElement; // для рендеринга статистики Player
     fieldDimentions: Dimentions; // размеры поля
-    canvas:HTMLCanvasElement ;
-    gameCell:Dimentions ;
+    canvas: HTMLCanvasElement;
+    gameCell: Dimentions;
   }) {
-
-    this.supplyCreatingTicker = new TickController (100) ;
+    this.supplyCreatingTicker = new TickController(100);
 
     // this.UIManager = new UIManager ({canvas , w:fieldDimentions.width , h:fieldDimentions.height}) ;
 
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
 
     this.field = {
-      dimentions: fieldDimentions ,
-      gameCell ,
+      dimentions: fieldDimentions,
+      gameCell,
     };
 
     this.spawnQueue = []; // массив объектов (пока что Bullet) подлежащие добавлению в массив объектов для дальнейшей итерации в игр/м. цикле
@@ -246,7 +244,5 @@ export default class Game {
     this.UI.gameFieldHTMLContainer.append(
       buildField(this.field.dimentions.height, this.field.dimentions.width)
     );
-
-    
   }
 }

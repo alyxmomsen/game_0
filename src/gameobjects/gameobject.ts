@@ -12,7 +12,8 @@ export type GameObjectType =
   | "game_object"
   | "enemy"
   | "player"
-  | "damage-entity";
+  | "damage-entity"
+  | "supply-box";
 
 export type Direction = { x: 0 | 1 | -1; y: 0 | 1 | -1 };
 
@@ -66,7 +67,6 @@ export default class GameObject {
   /* ----------------------- */
 
   setAttackDirection(keys: string[]) {
-
     const up = keys.includes("ArrowUp");
     const down = keys.includes("ArrowDown");
     const left = keys.includes("ArrowLeft");
@@ -103,7 +103,7 @@ export default class GameObject {
   }
 
   // 'атака' на указаный объект
-  attackTo(object: GameObject , damage:Damage) {
+  attackTo(object: GameObject, damage: Damage) {
     object.damaged.push(new Damage(damage)); // добавляем объекту атаку в его очередь урона
   }
 
@@ -168,24 +168,20 @@ export default class GameObject {
     this.position.y = this.movement.nextPosition.y;
   }
 
-
   /// beta beta beta
-  calculateOwnDamageBySpeed () {
-    const damage = this.attack.ownDamage.value ;
-    const stepRate = this.movement.getStepRate() ;
-    const calculatedDamageValue = Math.floor(damage / ((stepRate + 1000) / (1000 - stepRate))) ;
-    
-    return calculatedDamageValue ;
+  calculateOwnDamageBySpeed() {
+    const damage = this.attack.ownDamage.value;
+    const stepRate = this.movement.getStepRate();
+    const calculatedDamageValue = Math.floor(
+      damage / ((stepRate + 1000) / (1000 - stepRate))
+    );
+
+    return calculatedDamageValue;
   }
 
-  setOwnDamageValue (value:number) {
+  setOwnDamageValue(value: number) {}
 
-    
-  }
-
-  getOwnDamageValue () {
-
-  }
+  getOwnDamageValue() {}
 
   update({
     keys,
@@ -208,11 +204,11 @@ export default class GameObject {
 
     // this.attack.setOwnDamge(this.calculateOwnDamageBySpeed()); // устанавливаем myOwnDamage в зависимости от скорости движения
 
-    if(this.kind === 'damage-entity') {
-      
-      console.log(`${this.attack.ownDamage.value} ${this.calculateOwnDamageBySpeed()}`);
+    if (this.kind === "damage-entity") {
+      console.log(
+        `${this.attack.ownDamage.value} ${this.calculateOwnDamageBySpeed()}`
+      );
     }
-
 
     // проверка коллизий
     let isCollision = false;
@@ -220,7 +216,10 @@ export default class GameObject {
       if (object !== this && !this.isDied) {
         // если объект не является сам собой и если объект не "умер"
         if (this.checkNextPositionColissionWith(object.position)) {
-          this.attackTo(object , {damageClass:this.attack.ownDamage.damageClass , value:this.calculateOwnDamageBySpeed()}); // object.damaged.push
+          this.attackTo(object, {
+            damageClass: this.attack.ownDamage.damageClass,
+            value: this.calculateOwnDamageBySpeed(),
+          }); // object.damaged.push
           isCollision = true; // регестрируем коллизию
         }
       }

@@ -1,13 +1,13 @@
 import { Direction } from "../gameobjects/gameobject";
 import { Damage } from "./damage";
-import { TickController  } from "./main";
+import { TickController } from "./main";
 import { Weapon } from "./weapon";
 
 export type AttackClass = "phisical" | "magic";
 
 export class Attack {
   private status: boolean; // доработать ???
-  ticker: TickController ; // интервал между выстрелами
+  ticker: TickController; // интервал между выстрелами
 
   direction: Direction; // стартовый вектор начала движения Bullet
 
@@ -19,19 +19,19 @@ export class Attack {
   setCurrentWeapon() {
     if (this.weapons.length) {
       this.currentWeapon = this.weapons[0];
-      this.ticker = new TickController (this.currentWeapon.fireRate);
+      this.ticker = new TickController(this.currentWeapon.fireRate);
     } else {
       this.currentWeapon = null;
       this.ticker = null;
     }
   }
 
-  setOwnDamge (value:number) {
-    this.ownDamage.value = value ;
+  setOwnDamge(value: number) {
+    this.ownDamage.value = value;
   }
 
-  getOwnDamage () {
-    return this.ownDamage.value ;
+  getOwnDamage() {
+    return this.ownDamage.value;
   }
 
   constructor(ownDamage: Damage, weapons: Weapon[]) {
