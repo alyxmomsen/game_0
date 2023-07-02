@@ -4,17 +4,6 @@ import { randomNumberFromTo } from "../library/randomnumber";
 import GameObject, { Dimentions, Direction, Position } from "./gameobject";
 
 export class Bullet extends GameObject {
-
-  setStepRate(value:number) { /// не работает 
-
-    if(value < 1) {
-      value = 1 ;
-    }
-
-    this.movement.setStepRate(value);
-    this.attack.ownDamage.value /= value ;
-
-  }
   
   update({
     keys,
@@ -41,34 +30,32 @@ export class Bullet extends GameObject {
         this.updateNextPosition(this.movement.direction);
 
         if (this.movement.walkStepFadeDown) {
-          this.setWalkStepRate(Math.floor(this.movement.getStepRate() * 2)); // уменьшаем скорость стэп-рейта на значение
+          this.setWalkStepRate(Math.floor(this.movement.getStepRate() * 1.1)); // уменьшаем скорость стэп-рейта на значение
         }
       }
     }
 
     /*======== option ============  */
     const option = () => {
-
       // this.movement.direction = {x:0 , y:0} ;
-      this.movement.setStepRate(this.movement.getStepRate() * 1.5); // увеличиваем задержку между шагами
+      this.movement.setStepRate(this.movement.getStepRate() * 60); // увеличиваем задержку между шагами
       // this.setStepRate(this.movement.getStepRate() * 1.5); //  не работает
-      if(this.movement.getStepRate() > 1000) { // умираем , если слишком медленный
-        this.isDied = true ; 
+      if (this.movement.getStepRate() > 1000) {
+        // умираем , если слишком медленный
+        this.isDied = true;
       }
 
-
-      if(this.movement.direction.x !== 0) { 
-        this.movement.direction.x *= -1 ; // меняем направление движение на противоположное
+      if (this.movement.direction.x !== 0) {
+        this.movement.direction.x *= -1; // меняем направление движение на противоположное
       }
 
-      if(this.movement.direction.y !== 0) {
-        this.movement.direction.y *= -1 ; // меняем направление движение на противоположное
+      if (this.movement.direction.y !== 0) {
+        this.movement.direction.y *= -1; // меняем направление движение на противоположное
       }
-
-    }
+    };
     /* ========================== */
 
-    const result = super.update({ keys, objects, fieldDimentions , option }); // возвращает объект Bullet
+    const result = super.update({ keys, objects, fieldDimentions, option }); // возвращает объект Bullet
 
     return result;
   }

@@ -22,7 +22,7 @@ export class Player extends GameObject {
 
     this.setAttackDirection(keys);
     // alert();
-    return super.update({ keys, objects, fieldDimentions , option:()=>{} });
+    return super.update({ keys, objects, fieldDimentions, option: () => {} });
   }
 
   render(): void {

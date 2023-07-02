@@ -103,7 +103,7 @@ export default class Game {
     this.bullets.forEach((bullet) => {
       bullet.update({
         keys,
-        objects: [...this.enemies, this.player , ...this.bullets],
+        objects: [...this.enemies, this.player],
         fieldDimentions: this.field.dimentions,
       });
     });
@@ -177,10 +177,10 @@ export default class Game {
       // даем игроку арсенал
       weapons: [
         new Weapon({
-          damage: new Damage({ damageClass: "phisical", value: 50 }),
+          damage: new Damage({ damageClass: "phisical", value: 100 }),
           fireRate: 100, // интервал между выстрелами
-          stepRate: 10, // скорость полета
-          stepRateFadeDown: false, // будет ли замедляться
+          stepRate: 1, // скорость полета
+          stepRateFadeDown: true, // будет ли замедляться
           stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
         }),
       ],

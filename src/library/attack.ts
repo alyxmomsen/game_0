@@ -6,7 +6,6 @@ import { Weapon } from "./weapon";
 export type AttackClass = "phisical" | "magic";
 
 export class Attack {
-  
   private status: boolean; // доработать ???
   ticker: Tick; // интервал между выстрелами
 
@@ -25,6 +24,14 @@ export class Attack {
       this.currentWeapon = null;
       this.ticker = null;
     }
+  }
+
+  setOwnDamge (value:number) {
+    this.ownDamage.value = value ;
+  }
+
+  getOwnDamage () {
+    return this.ownDamage.value ;
   }
 
   constructor(ownDamage: Damage, weapons: Weapon[]) {

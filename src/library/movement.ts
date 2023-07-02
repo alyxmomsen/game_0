@@ -11,13 +11,20 @@ export class Movement {
   walkStepFadeDown: boolean;
   nextPosition: Position;
 
-  getStepRate () { return this.stepRate }
-  setStepRate (value:number) { 
-    this.ticker.setSpeed(Math.floor(value));
-    this.stepRate = value 
+  getStepRate() {
+    return this.stepRate;
   }
 
-  getTick () { return this.ticker.tick() }
+  setStepRate(value: number) {
+    value = Math.floor(value); // округляем вниз
+    value = value >= 1 ? value : 1; // проверка на (1 или больше)
+    this.ticker.setSpeed(value); // устанавливаем в тикер целочисленное значение
+    this.stepRate = value; // дублируем
+  }
+
+  getTick() {
+    return this.ticker.tick();
+  } // тик или не тик сейчас...
 
   constructor({
     stepRate,

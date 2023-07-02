@@ -1,9 +1,8 @@
 import GameObject, { Direction } from "../gameobjects/gameobject";
 
 export class Tick {
-
   private lastTick: number;
-  private speed:number;
+  private speed: number;
 
   tick() {
     const now = Date.now();
@@ -15,17 +14,17 @@ export class Tick {
     }
   }
 
-  getSpeed() { return this.speed }
-
-  setSpeed(value:number) { 
-    this.speed = value >= 1 ? value : 1 ; // устанавливаем значение не менее 1
+  getSpeed() {
+    return this.speed;
   }
 
-  constructor(speed:number) {
+  setSpeed(value: number) {
+    this.speed = value >= 1 ? value : 1; // устанавливаем значение не менее 1
+  }
 
-    this.lastTick = 0 ;
+  constructor(speed: number) {
+    this.lastTick = 0;
     this.speed = speed < 1 ? 1 : speed; // Значение не менее 1;
-
   }
 }
 
