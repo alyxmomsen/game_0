@@ -1,14 +1,12 @@
 import GameObject, { Direction } from "../gameobjects/gameobject";
 
 export class Tick {
-  lastTick: number;
 
-  // currentTick ;
-  speed = 0;
+  private lastTick: number;
+  private speed:number;
 
   tick() {
     const now = Date.now();
-
     if (now - this.lastTick > this.speed) {
       this.lastTick = now;
       return true;
@@ -17,22 +15,17 @@ export class Tick {
     }
   }
 
-  setSpeed(value: number = 0) {
-    if (value >= 0) {
-      this.speed = value;
-    } else {
-      this.speed = 0;
-    }
+  getSpeed() { return this.speed }
+
+  setSpeed(value:number) { 
+    this.speed = value >= 1 ? value : 1 ; // устанавливаем значение не менее 1
   }
 
-  constructor(speed = 0) {
-    this.lastTick = 0;
+  constructor(speed:number) {
 
-    if (speed < 0) {
-      speed = 0;
-    }
-    this.speed = speed;
-    this.lastTick = Date.now();
+    this.lastTick = 0 ;
+    this.speed = speed < 1 ? 1 : speed; // Значение не менее 1;
+
   }
 }
 
