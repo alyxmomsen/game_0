@@ -44,12 +44,22 @@ export class Bullet extends GameObject {
         this.isDied = true;
       }
 
+      const axisDirections:[1,0,-1] = [1 , 0 , -1]
+
       if (this.movement.direction.x !== 0) {
         this.movement.direction.x *= -1; // меняем направление движение на противоположное
+
+      } 
+      else {
+        this.movement.direction.x = axisDirections[Math.floor(Math.random() * 3)] ;
       }
 
       if (this.movement.direction.y !== 0) {
         this.movement.direction.y *= -1; // меняем направление движение на противоположное
+
+      } 
+      else {
+        this.movement.direction.y = axisDirections[Math.floor(Math.random() * 3)] ;
       }
     };
     /* ========================== */
