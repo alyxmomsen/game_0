@@ -2,6 +2,7 @@ import { Bullet } from "../gameobjects/bullet";
 import { Enemy } from "../gameobjects/enemy";
 import GameObject, { Dimentions } from "../gameobjects/gameobject";
 import { Player } from "../gameobjects/player";
+import { SupplyBox } from "../gameobjects/supply-box";
 import { Damage } from "../library/damage";
 import { GameObjectHTMLs } from "../library/game-object-htmls";
 import KeysManager from "../library/keysManager";
@@ -29,7 +30,7 @@ export default class Game {
   };
   weapons: Weapon[];
 
-  spawnQueue: (Enemy | Bullet)[];
+  spawnQueue: (Enemy | Bullet | SupplyBox )[];
 
   player: Player; // объект игрока
   enemies: Enemy[] = [];
@@ -78,19 +79,26 @@ export default class Game {
     this.creatorEnemyTicker.setTickInterval(Math.floor(Math.random() * 5000));
   }
 
+  sortSpawnQueue () {
+    this.spawnQueue.forEach((objectToSpawn) => {
+      if (objectToSpawn instanceof Bullet) {
+        this.bullets.push(objectToSpawn);
+      } else if (objectToSpawn instanceof Enemy) {
+        this.enemies.push(objectToSpawn);
+      } else if (objectToSpawn instanceof SupplyBox) {
+        
+      }
+    });
+  }
+
   update() {
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
     /* ========================================= */
 
-    this.spawnQueue.forEach((objectToSpawn) => {
-      if (objectToSpawn instanceof Bullet) {
-        this.bullets.push(objectToSpawn);
-      } else if (objectToSpawn instanceof Enemy) {
-        this.enemies.push(objectToSpawn);
-      }
-    });
+
+    this.sortSpawnQueue();
 
     this.spawnQueue = [];
 

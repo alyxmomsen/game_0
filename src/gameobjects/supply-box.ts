@@ -2,9 +2,9 @@ import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
 import GameObject from "./gameobject";
 
-export class Supply extends GameObject {
+export class SupplyBox extends GameObject {
 
-  
+
   constructor() {
     super({
       id: 0,
