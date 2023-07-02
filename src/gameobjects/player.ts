@@ -1,6 +1,6 @@
 import { Armor, ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
-import { Tick, calculateMovementDirection } from "../library/main";
+import { TickController , calculateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import GameObject, { Dimentions, Position } from "./gameobject";

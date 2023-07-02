@@ -1,10 +1,10 @@
 import { Direction, Position } from "../gameobjects/gameobject";
-import { Tick } from "./main";
+import { TickController  } from "./main";
 
 export class Movement {
   private stepRate: number;
   direction: Direction;
-  private ticker: Tick;
+  private ticker: TickController ;
   counterOfSteps: number;
   lastMove: number;
   walkStepsLimit: number;
@@ -18,7 +18,7 @@ export class Movement {
   setStepRate(value: number) {
     value = Math.floor(value); // округляем вниз
     value = value >= 1 ? value : 1; // проверка на (1 или больше)
-    this.ticker.setSpeed(value); // устанавливаем в тикер целочисленное значение
+    this.ticker.setTickInterval(value); // устанавливаем в тикер целочисленное значение
     this.stepRate = value; // дублируем
   }
 
@@ -40,7 +40,7 @@ export class Movement {
     nextPosition: Position;
   }) {
     this.stepRate = stepRate;
-    this.ticker = new Tick(stepRate);
+    this.ticker = new TickController (stepRate);
     this.direction = direction;
     this.counterOfSteps = 0;
     this.walkStepsLimit = walkStepsLimit;

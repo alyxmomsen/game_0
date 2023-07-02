@@ -1,30 +1,30 @@
 import { Direction } from "../gameobjects/gameobject";
 
-export class Tick {
-  private lastTick: number;
-  private speed: number;
+export class TickController  {
+  private lastTickTime: number;
+  private tickInterval: number;
 
   tick() {
     const now = Date.now();
-    if (now - this.lastTick > this.speed) {
-      this.lastTick = now;
+    if (now - this.lastTickTime > this.tickInterval) {
+      this.lastTickTime = now;
       return true;
     } else {
       return false;
     }
   }
 
-  getSpeed() {
-    return this.speed;
+  getTickInterval() {
+    return this.tickInterval;
   }
 
-  setSpeed(value: number) {
-    this.speed = value >= 1 ? value : 1; // устанавливаем значение не менее 1
+  setTickInterval(value: number) {
+    this.tickInterval = value >= 1 ? value : 1; // устанавливаем значение не менее 1
   }
 
-  constructor(speed: number) {
-    this.lastTick = 0;
-    this.speed = speed < 1 ? 1 : speed; // Значение не менее 1;
+  constructor(initialTickInterval: number) {
+    this.lastTickTime = 0;
+    this.tickInterval = initialTickInterval < 1 ? 1 : initialTickInterval; // Значение не менее 1;
   }
 }
 

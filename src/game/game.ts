@@ -5,7 +5,7 @@ import { Player } from "../gameobjects/player";
 import { Damage } from "../library/damage";
 import { GameObjectHTMLs } from "../library/game-object-htmls";
 import KeysManager from "../library/keysManager";
-import { Tick, buildField } from "../library/main";
+import { TickController , buildField } from "../library/main";
 import { UIManager } from "../library/uimanager";
 import { Weapon } from "../library/weapon";
 
@@ -13,9 +13,11 @@ export default class Game {
 
   UIManager:UIManager ;
 
-  creatorEnemyTicker: Tick;
+  creatorEnemyTicker: TickController ;
 
-  
+  supplyCreatingTicker: TickController ;
+
+  // gameObjectsPull
 
   keysManager: KeysManager = null; // Объект менеджера ключей клавиш
 
@@ -52,7 +54,7 @@ export default class Game {
     // beta beta beta beta !!!!!!!
 
     if (!this.creatorEnemyTicker) {
-      this.creatorEnemyTicker = new Tick(Math.floor(Math.random() * 1000));
+      this.creatorEnemyTicker = new TickController (Math.floor(Math.random() * 1000));
     }
 
     if (this.creatorEnemyTicker.tick()) {
@@ -72,7 +74,7 @@ export default class Game {
       }
     }
 
-    this.creatorEnemyTicker.setSpeed(Math.floor(Math.random() * 5000));
+    this.creatorEnemyTicker.setTickInterval(Math.floor(Math.random() * 5000));
   }
 
   update() {
@@ -126,7 +128,7 @@ export default class Game {
     this.createEnemyRandomly();
 
     if (!this.creatorEnemyTicker) {
-      this.creatorEnemyTicker = new Tick(1000);
+      this.creatorEnemyTicker = new TickController (1000);
     }
 
     /* ================================ */
@@ -186,9 +188,12 @@ export default class Game {
     gameCell:Dimentions ;
   }) {
 
+    this.supplyCreatingTicker = new TickController (100) ;
+
     // this.UIManager = new UIManager ({canvas , w:fieldDimentions.width , h:fieldDimentions.height}) ;
 
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
+
     this.field = {
       dimentions: fieldDimentions ,
       gameCell ,
