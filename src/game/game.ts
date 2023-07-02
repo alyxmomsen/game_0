@@ -6,9 +6,13 @@ import { Damage } from "../library/damage";
 import { GameObjectHTMLs } from "../library/game-object-htmls";
 import KeysManager from "../library/keysManager";
 import { Tick, buildField } from "../library/main";
+import { UIManager } from "../library/uimanager";
 import { Weapon } from "../library/weapon";
 
 export default class Game {
+
+  UIManager:UIManager ;
+
   creatorEnemyTicker: Tick;
 
   keysManager: KeysManager = null; // Объект менеджера ключей клавиш
@@ -142,6 +146,10 @@ export default class Game {
   }
 
   render(field: HTMLElement = null) {
+
+    this.UIManager.draw();
+
+
     this.bullets.forEach((elem) => {
       this.renderGameObject({ elem });
     });
@@ -160,11 +168,16 @@ export default class Game {
     fieldDimentions,
     playerCardHTMLContainer,
     gameFieldHTMLContainer,
+    canvas ,
   }: {
     gameFieldHTMLContainer: HTMLElement; // для рендеринга игрового поля
     playerCardHTMLContainer: HTMLElement; // для рендеринга статистики Player
     fieldDimentions: Dimentions; // размеры поля
+    canvas:HTMLCanvasElement ;
   }) {
+
+    this.UIManager = new UIManager ({canvas}) ;
+
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
     this.field = { dimentions: fieldDimentions };
 
