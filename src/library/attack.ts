@@ -16,20 +16,6 @@ export class Attack {
   currentWeapon: Weapon; // в данный момент выбранный пресет
   ownDamage: Damage; // урон наносимый самим объектом, не путать с уроном Weapon
 
-  getTick () {
-    // this.ticker.tic
-  }
-
-  // доработать ???
-  setTrueStatus() {
-    this.status = true;
-  }
-
-  // доработать ???
-  reset() {
-    this.status = false;
-  }
-
   // доработать. пока что выберает первое оружие (пресет настроек) из массива пресетов
   setCurrentWeapon() {
     if (this.weapons.length) {
