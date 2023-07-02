@@ -22,9 +22,9 @@ export class Movement {
     this.stepRate = value; // дублируем
   }
 
-  getTick() {
+  getTick() {// тик или не тик вот в чем вопрос...
     return this.ticker.tick();
-  } // тик или не тик сейчас...
+  } 
 
   constructor({
     stepRate,

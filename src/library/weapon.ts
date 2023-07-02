@@ -9,12 +9,6 @@ export class Weapon {
   stepRateFadeDown: boolean; // будет ли объект аттаки замедлятся, после выстрела
   stepsLimit: number;
 
-  // setDamage(value:number) { this.damage.value = value }
-
-  // getDamage () {
-  //   return this.damage.value ;
-  // }
-
   constructor({
     damage,
     fireRate,

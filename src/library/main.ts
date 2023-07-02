@@ -1,4 +1,4 @@
-import GameObject, { Direction } from "../gameobjects/gameobject";
+import { Direction } from "../gameobjects/gameobject";
 
 export class Tick {
   private lastTick: number;
@@ -59,48 +59,6 @@ export function generateMovementDirection(): { x: 0 | 1 | -1; y: -1 | 1 | 0 } {
   };
 }
 
-export function buildGameObjectStatsHTMLElement({
-  objectTitle,
-  newId,
-  armor,
-}: {
-  objectTitle: string;
-  newId: number;
-  armor: number;
-}) {
-  const mainHTMLElement = document.createElement("div");
-  mainHTMLElement.className = "object-stats";
-
-  const title = document.createElement("div");
-  title.className = "object-stat title";
-  title.innerText = objectTitle;
-
-  const health = document.createElement("div");
-  health.className = "object-stat health";
-
-  const id = document.createElement("div");
-  id.className = "object-stat id";
-  id.innerText = newId.toLocaleString();
-
-  const armore = document.createElement("div");
-  armore.className = "object-stat armor";
-  armore.innerText = `${armor}`;
-
-  mainHTMLElement.append(title, health, armore);
-
-  const obj = {
-    title,
-    health,
-    // id,
-    mainHTMLElement,
-    armor: armore,
-  };
-
-  // console.log('obj' , obj);
-
-  return obj;
-}
-
 export function buildField(maxRows: number, maxCols: number) {
   const cell = document.createElement("div");
   cell.className = "game-cell";
@@ -128,22 +86,4 @@ export function buildField(maxRows: number, maxCols: number) {
   return fieldBorder;
 }
 
-export function generateColor(length = 3) {
-  let str = "#";
 
-  function numberToChar() {
-    const arr = ["a"];
-
-    return "";
-  }
-
-  for (let i = 0; i < length; i++) {
-    str += `${Math.floor(Math.random() * 10)}`;
-  }
-
-  return str;
-}
-
-export function generateUniqueID(ids: { id: number; object: GameObject }[]) {
-  return 0;
-}

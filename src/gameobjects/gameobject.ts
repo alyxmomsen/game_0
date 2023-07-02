@@ -66,6 +66,7 @@ export default class GameObject {
   /* ----------------------- */
 
   setAttackDirection(keys: string[]) {
+
     const up = keys.includes("ArrowUp");
     const down = keys.includes("ArrowDown");
     const left = keys.includes("ArrowLeft");
@@ -99,8 +100,6 @@ export default class GameObject {
 
   setWalkStepRate(value: number) {
     this.movement.setStepRate(value < 1 ? 1 : value);
-
-
   }
 
   // 'атака' на указаный объект

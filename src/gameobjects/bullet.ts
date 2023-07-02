@@ -1,6 +1,5 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
-import { randomNumberFromTo } from "../library/randomnumber";
 import GameObject, { Dimentions, Direction, Position } from "./gameobject";
 
 export class Bullet extends GameObject {
@@ -35,7 +34,7 @@ export class Bullet extends GameObject {
       }
     }
 
-    /*======== option ============  */
+    /*======== option ============  */ // опция для родителя
     const option = () => {
       // this.movement.direction = {x:0 , y:0} ;
       this.movement.setStepRate(this.movement.getStepRate() * 60); // увеличиваем задержку между шагами
