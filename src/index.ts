@@ -17,6 +17,7 @@ import "./styles/main.css";
     playerCardHTMLContainer,
     fieldDimentions,
     canvas ,
+    gameCell:{width:30 , height:30} ,
   });
 
   const mainLoop = function () {

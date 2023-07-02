@@ -17,7 +17,13 @@ export default class Game {
 
   keysManager: KeysManager = null; // Объект менеджера ключей клавиш
 
-  field: { dimentions: Dimentions };
+  field: {
+    dimentions: Dimentions ;
+    gameCell: {
+      width:number ;
+      height:number ;
+    } ;
+  };
   weapons: Weapon[];
 
   spawnQueue: (Enemy | Bullet)[];
@@ -169,17 +175,22 @@ export default class Game {
     playerCardHTMLContainer,
     gameFieldHTMLContainer,
     canvas ,
+    gameCell ,
   }: {
     gameFieldHTMLContainer: HTMLElement; // для рендеринга игрового поля
     playerCardHTMLContainer: HTMLElement; // для рендеринга статистики Player
     fieldDimentions: Dimentions; // размеры поля
     canvas:HTMLCanvasElement ;
+    gameCell:Dimentions ;
   }) {
 
     // this.UIManager = new UIManager ({canvas , w:fieldDimentions.width , h:fieldDimentions.height}) ;
 
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
-    this.field = { dimentions: fieldDimentions };
+    this.field = {
+      dimentions: fieldDimentions ,
+      gameCell ,
+    };
 
     this.spawnQueue = []; // массив объектов (пока что Bullet) подлежащие добавлению в массив объектов для дальнейшей итерации в игр/м. цикле
 
