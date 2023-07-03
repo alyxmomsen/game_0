@@ -12,6 +12,10 @@ export class GameObject_part_2 extends GameObject_part_1 {
     return { ...this.dimentions };
   }
 
+  getColor() {
+    return this.color;
+  }
+
   setAttackDirection(keys: string[]) {
     const up = keys.includes("ArrowUp");
     const down = keys.includes("ArrowDown");

@@ -1,22 +1,12 @@
-import { Armor } from "../library/armore";
 import { Attack } from "../library/attack";
 import { Damage } from "../library/damage";
-import { HTML_unit } from "../library/html_unit";
-
 import { Movement } from "../library/movement";
-import { GameObjectHTMLs } from "../library/game-object-htmls";
-import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import { SupplyBox } from "./supply-box";
 import { Player } from "./player";
 import { Enemy } from "./enemy";
-import {
-  Dimentions,
-  GameObjectConstructor,
-  GameObjectKinds,
-  Position,
-} from "../library/types";
-import { GameObject_part_2 } from "./gameobject-part-2";
+import { Dimentions, GameObjectConstructor } from "../library/types";
+
 import { GameObject_Part_3 } from "./gameobject-part-3";
 
 export default abstract class GameObject extends GameObject_Part_3 {
@@ -103,10 +93,6 @@ export default abstract class GameObject extends GameObject_Part_3 {
       this.isDied = true;
     }
 
-    if (this.isDied === true) {
-      this.HTLM_untit.body.remove();
-    }
-
     /* =================================== */
 
     const up = keys.includes("ArrowUp");
@@ -167,24 +153,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
     this.id = id;
     this.health = health;
 
-    /* ================= test zone ================= */
-
-    /* ----------- display --------------------------*/
-
     this.color = color;
-
-    this.UI = new GameObjectHTMLs({
-      health: this.health.toString(),
-      damage: this.attack.currentWeapon?.damage.value.toString(),
-      armor: this.armor.health.toString(),
-      armor_effeciency: this.armor.dempher.toString(),
-    });
-
-    this.HTLM_untit = new HTML_unit({
-      health: this.health.toString(),
-      armor: this.armor.health.toString(),
-      color: this.color.toString(),
-    });
 
     this.dateOfCreated = Date.now();
   }

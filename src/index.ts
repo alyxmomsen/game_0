@@ -14,8 +14,8 @@ import "./styles/main.css";
 
   const gameFieldResolution = { width: 40, height: 20 };
   const theGame = new Game({
-    gameFieldHTMLContainer,
-    playerCardHTMLContainer,
+    // gameFieldHTMLContainer,
+    // playerCardHTMLContainer,
     fieldResolution: gameFieldResolution,
     canvas,
     gameCellDimentions: { width: 50, height: 50 },

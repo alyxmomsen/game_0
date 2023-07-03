@@ -6,11 +6,19 @@ export class UIManager {
 
   gameCellDimentions: Dimentions;
 
-  draw(x: number, y: number, w: number, h: number) {
+  draw(x: number, y: number, w: number, h: number, color: string = "blue") {
+    this.ctx.fillStyle = color;
+    this.ctx.fillRect(
+      x * this.gameCellDimentions.width,
+      y * this.gameCellDimentions.height,
+      w,
+      h
+    );
+  }
+
+  clearCanvas() {
     this.ctx.fillStyle = "black";
-    this.ctx.fillRect(0 , 0, this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = "blue";
-    this.ctx.fillRect(x * this.gameCellDimentions.width, y * this.gameCellDimentions.height , w, h);
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
   update() {}
@@ -21,12 +29,12 @@ export class UIManager {
     canvas,
     canvasWidth,
     canvasHeight,
-    gameCellDimentions ,
+    gameCellDimentions,
   }: {
     canvas: HTMLCanvasElement;
     canvasWidth: number;
     canvasHeight: number;
-    gameCellDimentions:Dimentions ;
+    gameCellDimentions: Dimentions;
   }) {
     this.canvas = canvas;
     canvas.width = canvasWidth;
@@ -39,8 +47,7 @@ export class UIManager {
 
     this.ctx = ctx;
 
-
-    this.gameCellDimentions = {...gameCellDimentions}
+    this.gameCellDimentions = { ...gameCellDimentions };
 
     console.log(canvas.width);
     console.log(canvas.height);

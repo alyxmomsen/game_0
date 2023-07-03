@@ -54,7 +54,7 @@ export class Enemy extends GameObject {
     weapons: Weapon[];
   }) {
     super({
-      color: "yellow",
+      color: "#2e3628",
       id,
       kind: "enemy",
       walkStepRate: Math.floor(Math.random() * 990) + 10,

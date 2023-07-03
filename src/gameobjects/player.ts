@@ -1,13 +1,12 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
-import { TickController, calculateMovementDirection } from "../library/main";
+import { calculateMovementDirection } from "../library/main";
 import { Dimentions, Position } from "../library/types";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
 import { SupplyBox } from "./supply-box";
-// import { heroActions, moveHero } from "./player_keys_checker";
 
 export class Player extends GameObject {
   ifCollisionIs_For(
@@ -44,16 +43,12 @@ export class Player extends GameObject {
     }
 
     this.setAttackDirection(keys);
-    // alert();
+
     return super.update({
       keys,
       objects,
       fieldDimentions,
     });
-  }
-
-  render(): void {
-    super.render();
   }
 
   constructor({

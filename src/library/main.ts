@@ -58,30 +58,3 @@ export function generateMovementDirection(): { x: 0 | 1 | -1; y: -1 | 1 | 0 } {
     y: y === 1 || y === 0 || y === -1 ? y : 0,
   };
 }
-
-export function buildField(maxRows: number, maxCols: number) {
-  const cell = document.createElement("div");
-  cell.className = "game-cell";
-  const fieldBorder = document.createElement("div");
-  fieldBorder.className = "game-field";
-  const gameFieldRow = document.createElement("div");
-  gameFieldRow.className = "game-field-row";
-  let newRow = null;
-  let newCell = null;
-  for (let i = 0; i < maxRows; i++) {
-    newRow = document.createElement("div");
-    newRow.className = "game-field-row";
-    fieldBorder.append(newRow);
-
-    for (let j = 0; j < maxCols; j++) {
-      newCell = document.createElement("div");
-      newCell.className = "game-cell";
-
-      if (true) {
-      }
-      newRow.append(newCell);
-    }
-  }
-
-  return fieldBorder;
-}

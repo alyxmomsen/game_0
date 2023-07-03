@@ -6,7 +6,7 @@ import { SupplyBox } from "../gameobjects/supply-box";
 import { Damage } from "../library/damage";
 import { GameObjectHTMLs } from "../library/game-object-htmls";
 import KeysManager from "../library/keysManager";
-import { TickController, buildField } from "../library/main";
+import { TickController } from "../library/main";
 import { Dimentions } from "../library/types";
 import { UIManager } from "../library/uimanager";
 import { Weapon } from "../library/weapon";
@@ -46,7 +46,7 @@ export default class Game {
   // UI_gameField: HTMLElement ;
   UI: {
     playerCardHTMLContainer: HTMLElement;
-    gameFieldHTMLContainer: HTMLElement;
+    // gameFieldHTMLContainer: HTMLElement;
   };
   // UI_playerCard:HTMLElement ;
 
@@ -161,66 +161,101 @@ export default class Game {
     }
   }
 
-  renderGameObject({
-    elem,
-  }: {
-    elem: GameObject | Enemy | Player | SupplyBox;
-  }) {
-    if (
-      !elem.isDied &&
-      this.UI.gameFieldHTMLContainer &&
-      elem.HTLM_untit &&
-      this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[elem.position.y]
-        ?.childNodes[
-        elem.position.x /* если html нода с такими координатами существет */
-      ] !== undefined
-    ) {
-      this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[
-        elem.position.y
-      ]?.childNodes[elem.position.x].appendChild(elem.HTLM_untit.body);
-      elem.render();
-      elem.HTLM_untit.body.style.display = "block";
-    } else {
-      elem.render();
-      elem.HTLM_untit.body.style.display = "none";
-    }
-  }
+  // renderGameObject({
+  //   elem,
+  // }: {
+  //   elem: GameObject | Enemy | Player | SupplyBox;
+  // }) {
+  //   if (
+  //     !elem.isDied &&
+  //     this.UI.gameFieldHTMLContainer &&
+  //     elem.HTLM_untit &&
+  //     this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[elem.position.y]
+  //       ?.childNodes[
+  //       elem.position.x /* если html нода с такими координатами существет */
+  //     ] !== undefined
+  //   ) {
+  //     this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[
+  //       elem.position.y
+  //     ]?.childNodes[elem.position.x].appendChild(elem.HTLM_untit.body);
+  //     elem.render();
+  //     elem.HTLM_untit.body.style.display = "block";
+  //   } else {
+  //     elem.render();
+  //     elem.HTLM_untit.body.style.display = "none";
+  //   }
+  // }
 
   render(field: HTMLElement = null) {
+    this.UIManager.clearCanvas();
+
     this.UIManager.draw(
       this.player.position.x,
       this.player.position.y,
       this.player.getDimentions().width,
-      this.player.getDimentions().height
+      this.player.getDimentions().height,
+      this.player.getColor()
     );
 
     this.bullets.forEach((elem) => {
-      this.renderGameObject({ elem });
+      // this.renderGameObject({ elem });
+
+      this.UIManager.draw(
+        elem.position.x,
+        elem.position.y,
+        elem.getDimentions().width,
+        elem.getDimentions().height,
+        elem.getColor()
+      );
     });
-    this.renderGameObject({ elem: this.player });
+
+    // this.renderGameObject({ elem: this.player });
 
     this.gameObjects.forEach((elem) => {
-      this.renderGameObject({ elem });
+      // this.renderGameObject({ elem });
+
+      this.UIManager.draw(
+        elem.position.x,
+        elem.position.y,
+        elem.getDimentions().width,
+        elem.getDimentions().height,
+        elem.getColor()
+      );
     });
 
     this.enemies.forEach((elem) => {
-      this.renderGameObject({ elem });
+      // this.renderGameObject({ elem });
+
+      this.UIManager.draw(
+        elem.position.x,
+        elem.position.y,
+        elem.getDimentions().width,
+        elem.getDimentions().height,
+        elem.getColor()
+      );
     });
 
     this.supplyBoxes.forEach((elem) => {
-      this.renderGameObject({ elem });
+      this.UIManager.draw(
+        elem.position.x,
+        elem.position.y,
+        elem.getDimentions().width,
+        elem.getDimentions().height,
+        elem.getColor()
+      );
+      // this.renderGameObject({ elem });
     });
   }
 
   constructor({
     fieldResolution,
-    playerCardHTMLContainer,
-    gameFieldHTMLContainer,
+    // playerCardHTMLContainer,
+    // gameFieldHTMLContainer,
     canvas,
     gameCellDimentions,
   }: {
-    gameFieldHTMLContainer: HTMLElement; // для рендеринга игрового поля
-    playerCardHTMLContainer: HTMLElement; // для рендеринга статистики Player
+    // gameFieldHTMLContainer: HTMLElement; // для рендеринга игрового поля
+    // playerCardHTMLContainer: HTMLElement; // для рендеринга статистики Player
     fieldResolution: Dimentions; // размеры поля
     canvas: HTMLCanvasElement;
     gameCellDimentions: Dimentions;
@@ -234,7 +269,7 @@ export default class Game {
 
     this.field = {
       resolution: fieldResolution,
-      gameCellDimentions ,
+      gameCellDimentions,
     };
 
     this.spawnQueue = []; // массив объектов (пока что Bullet) подлежащие добавлению в массив объектов для дальнейшей итерации в игр/м. цикле
@@ -268,22 +303,22 @@ export default class Game {
     /* ============================= */
 
     //
-    this.UI = {
-      playerCardHTMLContainer,
-      gameFieldHTMLContainer,
-    };
+    // this.UI = {
+    // playerCardHTMLContainer,
+    // gameFieldHTMLContainer,
+    // };
 
-    this.UI.playerCardHTMLContainer.append(
-      this.player.UI.health.linkHTML.wrapper,
-      this.player.UI.damage.linkHTML.wrapper,
-      this.player.UI.armor.linkHTML.wrapper,
-      this.player.UI.armor_effeciency.linkHTML.wrapper
-    );
+    // this.UI.playerCardHTMLContainer.append(
+    //   this.player.UI.health.linkHTML.wrapper,
+    //   this.player.UI.damage.linkHTML.wrapper,
+    //   this.player.UI.armor.linkHTML.wrapper,
+    //   this.player.UI.armor_effeciency.linkHTML.wrapper
+    // );
 
     // создаем игровое поле
-    this.UI.gameFieldHTMLContainer.append(
-      buildField(this.field.resolution.height, this.field.resolution.width)
-    );
+    // this.UI.gameFieldHTMLContainer.append(
+    //   buildField(this.field.resolution.height, this.field.resolution.width)
+    // );
 
     // ui manager
 
@@ -291,7 +326,7 @@ export default class Game {
       canvas,
       canvasHeight: 600 * 2,
       canvasWidth: 800 * 2,
-      gameCellDimentions ,
+      gameCellDimentions,
     });
   }
 }
