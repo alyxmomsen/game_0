@@ -16,9 +16,10 @@ import {
   GameObjectKinds,
   Position,
 } from "../library/types";
-import { GameObjectSttersGetters } from "./gameobject-part-2";
+import { GameObject_part_2 } from "./gameobject-part-2";
+import { GameObject_Part_3 } from "./gameobject-part-3";
 
-export default abstract class GameObject extends GameObjectSttersGetters {
+export default abstract class GameObject extends GameObject_Part_3 {
 
   /* ====================== options ====================== */
 
@@ -131,20 +132,6 @@ export default abstract class GameObject extends GameObjectSttersGetters {
             : 0,
         })
       : false;
-  }
-
-  render() {
-    this.UI.render({
-      health: this.health.toString(),
-      damage: this.attack.currentWeapon?.damage.value.toString(),
-      armor: this.armor.health.toString(),
-      armor_effeciency: this.armor.dempher.toString(),
-    });
-
-    this.HTLM_untit.reRender({
-      health: this.health.toString(),
-      armor: this.armor.health.toString(),
-    });
   }
 
   constructor({
