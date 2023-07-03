@@ -37,14 +37,13 @@ export type GameObjectConstructor = {
   health: number;
   weapons: Weapon[];
   armor: Armor;
-  walkStepRateFadeDown: boolean;
+  shouldFadeDownStepRate: boolean;
 };
 
 export type Dimentions = {
   width: number;
   height: number;
 };
-
 
 export default abstract class GameObject {
   private id: number;
@@ -103,11 +102,14 @@ export default abstract class GameObject {
   }
 
   setWalkStepRate(value: number) {
-    this.movement.setStepRate(value < 1 ? 1 : value);
+    this.movement.setTickInterval(value < 1 ? 1 : value);
   }
 
   // 'атака' на указаный объект
-  attackTo(object: GameObject, damage: Damage) {
+  attackTo(
+    object: Bullet | GameObject | Enemy | Player | SupplyBox,
+    damage: Damage
+  ) {
     object.damaged.push(new Damage(damage)); // добавляем объекту атаку в его очередь урона
   }
 
@@ -152,7 +154,7 @@ export default abstract class GameObject {
     }
   }
 
-  updateNextPosition({ x, y }: { x: 1 | -1 | 0; y: 1 | -1 | 0 }) {
+  calculateNextPosition({ x, y }: { x: 1 | -1 | 0; y: 1 | -1 | 0 }) {
     if (x !== 0 || y !== 0) {
       this.movement.nextPosition.y = this.position.y + y;
       this.movement.nextPosition.x = this.position.x + x;
@@ -175,7 +177,7 @@ export default abstract class GameObject {
   /// beta beta beta
   calculateOwnDamageBySpeed() {
     const damage = this.attack.ownDamage.value;
-    const stepRate = this.movement.getStepRate();
+    const stepRate = this.movement.getTickInterval();
     const calculatedDamageValue = Math.floor(
       damage / ((stepRate + 1000) / (1000 - stepRate))
     );
@@ -187,14 +189,19 @@ export default abstract class GameObject {
 
   getOwnDamageValue() {}
 
-
   /* ====================== options ====================== */
-  
-  abstract isCollision_For (object:GameObject|Enemy|Player|Bullet|SupplyBox|null) : void ;
 
-  abstract isNotCollision_Totally (object:GameObject|Enemy|Player|Bullet|SupplyBox|null) : void
+  abstract ifCollisionIs_For(
+    object: GameObject | Enemy | Player | Bullet | SupplyBox | null
+  ): boolean;
 
-  abstract isCollision_Totally (object:GameObject|Enemy|Player|Bullet|SupplyBox|null) : void
+  abstract totallyIfCollisionIsNot(
+    object: GameObject | Enemy | Player | Bullet | SupplyBox | null
+  ): void;
+
+  abstract totallyIfCollisionIs(
+    object: GameObject | Enemy | Player | Bullet | SupplyBox | null
+  ): void;
 
   /* ===================================================== */
 
@@ -206,7 +213,6 @@ export default abstract class GameObject {
     keys: string[];
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-    
   }): Bullet | false {
     // получение урона
     if (this.damaged.length) {
@@ -235,9 +241,7 @@ export default abstract class GameObject {
 
           // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
 
-          this.isCollision_For (object);
-
-          isCollision = true; // регестрируем коллизию
+          isCollision = this.ifCollisionIs_For(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
         }
       }
     }
@@ -247,16 +251,16 @@ export default abstract class GameObject {
       isCollision = true;
       if (this.kind === "damage-entity") {
         // костыль
-
         this.isDied = true;
       }
     }
 
     if (!isCollision) {
       this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
+      this.totallyIfCollisionIsNot(null);
     } else {
+      this.totallyIfCollisionIs(null);
       // если на следующем шаге есть коллизия
-      this.isNotCollision_Totally(null);
       // снимаем проверки с других координат отличных от this.position
       this.movement.nextPosition.x = this.position.x;
       this.movement.nextPosition.y = this.position.y;
@@ -318,7 +322,7 @@ export default abstract class GameObject {
     kind,
     walkStepRate,
     walkStepsLimit,
-    walkStepRateFadeDown,
+    shouldFadeDownStepRate,
     ownDamage,
     direction,
     health,
@@ -329,8 +333,8 @@ export default abstract class GameObject {
     this.movement = new Movement({
       stepRate: walkStepRate,
       direction,
-      walkStepsLimit,
-      walkStepFadeDown: walkStepRateFadeDown,
+      maxWalkSteps: walkStepsLimit,
+      shouldFadeDownStepRate,
       nextPosition: { ...position },
     });
 

@@ -2,18 +2,28 @@ import { Armor, ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
-import GameObject, { Dimentions, GameObjectKinds, Position } from "./gameobject";
+import GameObject, {
+  Dimentions,
+  GameObjectKinds,
+  Position,
+} from "./gameobject";
 import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 export class DamageEntity extends GameObject {
+  ifCollisionIs_For(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): boolean {
+    return true;
+  }
 
+  totallyIfCollisionIsNot(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): void {}
 
-  isCollision_For(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
-
-  isNotCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
-
-  isCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+  totallyIfCollisionIs(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): void {}
 
   update({
     keys,
@@ -25,7 +35,7 @@ export class DamageEntity extends GameObject {
     fieldDimentions: Dimentions;
   }): false | Bullet {
     if (!this.isDied && this.movement.getTick()) {
-      this.updateNextPosition(this.movement.direction);
+      this.calculateNextPosition(this.movement.direction);
     }
 
     return super.update({
@@ -59,7 +69,7 @@ export class DamageEntity extends GameObject {
         health: Math.floor(Math.random() * 10000),
         dempher: Math.floor(Math.random() * 99) + 1,
       }),
-      walkStepRateFadeDown: false,
+      shouldFadeDownStepRate: false,
     });
   }
 }

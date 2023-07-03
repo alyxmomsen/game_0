@@ -7,15 +7,15 @@ export class Movement {
   private ticker: TickController;
   counterOfSteps: number;
   lastMove: number;
-  walkStepsLimit: number;
-  walkStepFadeDown: boolean;
+  maxWalkSteps: number;
+  shouldFadeDownStepRate: boolean;
   nextPosition: Position;
 
-  getStepRate() {
+  getTickInterval() {
     return this.stepRate;
   }
 
-  setStepRate(value: number) {
+  setTickInterval(value: number) {
     value = Math.floor(value); // округляем вниз
     value = value >= 1 ? value : 1; // проверка на (1 или больше)
     this.ticker.setTickInterval(value); // устанавливаем в тикер целочисленное значение
@@ -30,22 +30,22 @@ export class Movement {
   constructor({
     stepRate,
     direction,
-    walkStepsLimit,
-    walkStepFadeDown,
+    maxWalkSteps,
+    shouldFadeDownStepRate,
     nextPosition,
   }: {
     stepRate: number;
     direction: Direction;
-    walkStepsLimit: number;
-    walkStepFadeDown: boolean;
+    maxWalkSteps: number;
+    shouldFadeDownStepRate: boolean;
     nextPosition: Position;
   }) {
     this.stepRate = stepRate;
     this.ticker = new TickController(stepRate);
     this.direction = direction;
     this.counterOfSteps = 0;
-    this.walkStepsLimit = walkStepsLimit;
-    this.walkStepFadeDown = walkStepFadeDown;
+    this.maxWalkSteps = maxWalkSteps;
+    this.shouldFadeDownStepRate = shouldFadeDownStepRate;
     this.nextPosition = nextPosition;
   }
 }

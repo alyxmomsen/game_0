@@ -6,12 +6,21 @@ import GameObject, { Dimentions, Position } from "./gameobject";
 import { Player } from "./player";
 
 export class SupplyBox extends GameObject {
+  // content:'health'|'armore' ;
 
-  isCollision_For(object: Player | GameObject | Enemy | Bullet | SupplyBox): void { }
+  ifCollisionIs_For(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): boolean {
+    return true;
+  }
 
-  isNotCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void { }
+  totallyIfCollisionIsNot(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): void {}
 
-  isCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void { }
+  totallyIfCollisionIs(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): void {}
 
   update({ fieldDimentions }: { fieldDimentions: Dimentions }): false | Bullet {
     return super.update({
@@ -27,7 +36,7 @@ export class SupplyBox extends GameObject {
       kind: "supply-box",
       walkStepRate: 100,
       walkStepsLimit: 0,
-      walkStepRateFadeDown: false,
+      shouldFadeDownStepRate: false,
       color: "orange",
       position,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),

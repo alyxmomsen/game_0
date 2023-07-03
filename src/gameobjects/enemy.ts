@@ -3,18 +3,29 @@ import { Damage } from "../library/damage";
 import { generateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
-import GameObject, { Dimentions, GameObjectKinds, Position } from "./gameobject";
+import GameObject, {
+  Dimentions,
+  GameObjectKinds,
+  Position,
+} from "./gameobject";
 import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 // частный случай GameObject
 export class Enemy extends GameObject {
+  ifCollisionIs_For(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): boolean {
+    return true;
+  }
 
-  isCollision_For(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+  totallyIfCollisionIsNot(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): void {}
 
-  isNotCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
-
-  isCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+  totallyIfCollisionIs(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): void {}
 
   update({
     keys,
@@ -33,7 +44,6 @@ export class Enemy extends GameObject {
       keys,
       objects,
       fieldDimentions,
-
     });
   }
 
@@ -52,7 +62,7 @@ export class Enemy extends GameObject {
       kind: "enemy",
       walkStepRate: Math.floor(Math.random() * 990) + 10,
       walkStepsLimit: 0,
-      walkStepRateFadeDown: false,
+      shouldFadeDownStepRate: false,
       position,
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,

@@ -4,17 +4,34 @@ import { TickController, calculateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
-import GameObject, { Dimentions, GameObjectKinds, Position } from "./gameobject";
+import GameObject, {
+  Dimentions,
+  GameObjectKinds,
+  Position,
+} from "./gameobject";
 import { SupplyBox } from "./supply-box";
 // import { heroActions, moveHero } from "./player_keys_checker";
 
 export class Player extends GameObject {
-  
-  isCollision_For(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+  ifCollisionIs_For(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): boolean {
+    if (object instanceof SupplyBox) {
+      object.isDied = true;
 
-  isNotCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+      return false;
+    } else {
+      return true;
+    }
+  }
 
-  isCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+  totallyIfCollisionIsNot(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): void {}
+
+  totallyIfCollisionIs(
+    object: Player | GameObject | Enemy | Bullet | SupplyBox
+  ): void {}
 
   update({
     keys,
@@ -26,7 +43,7 @@ export class Player extends GameObject {
     fieldDimentions: Dimentions;
   }): false | Bullet {
     if (!this.isDied && this.movement.getTick()) {
-      this.updateNextPosition(calculateMovementDirection(keys));
+      this.calculateNextPosition(calculateMovementDirection(keys));
     }
 
     this.setAttackDirection(keys);
@@ -56,7 +73,7 @@ export class Player extends GameObject {
       kind: "player",
       walkStepRate: 100,
       walkStepsLimit: 0,
-      walkStepRateFadeDown: false,
+      shouldFadeDownStepRate: false,
       color: "green",
       position,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
