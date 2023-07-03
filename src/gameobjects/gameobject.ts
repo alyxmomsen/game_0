@@ -157,6 +157,8 @@ export default abstract class GameObject extends GameObject_Part_3 {
       nextPosition: { ...position },
     });
 
+    this.dimentions = {width:50 , height:50} ;
+
     this.position = { ...position };
     this.attack = new Attack(ownDamage, weapons);
     this.armor = armor;

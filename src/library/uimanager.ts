@@ -1,6 +1,10 @@
+import { Dimentions } from "./types";
+
 export class UIManager {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+
+  gameCellDimentions:Dimentions ;
 
   draw(x: number, y: number) {
     this.ctx.fillStyle = "black";
@@ -15,16 +19,16 @@ export class UIManager {
 
   constructor({
     canvas,
-    w,
-    h,
+    canvasWidth: w,
+    canvasHeight: h,
   }: {
     canvas: HTMLCanvasElement;
-    w: number;
-    h: number;
+    canvasWidth: number;
+    canvasHeight: number;
   }) {
     this.canvas = canvas;
 
-    canvas.width = w * 100;
+    canvas.width = w;
     canvas.height = h * 100;
 
     canvas.style.width = "800px";

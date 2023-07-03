@@ -23,8 +23,8 @@ export default class Game {
   keysManager: KeysManager = null; // Объект менеджера ключей клавиш
 
   field: {
-    dimentions: Dimentions;
-    gameCell: {
+    resolution: Dimentions;
+    gameCellDimention: {
       width: number;
       height: number;
     };
@@ -69,8 +69,8 @@ export default class Game {
           new Enemy({
             id: 0,
             position: {
-              x: Math.floor(Math.random() * this.field.dimentions.width),
-              y: Math.floor(Math.random() * this.field.dimentions.height),
+              x: Math.floor(Math.random() * this.field.resolution.width),
+              y: Math.floor(Math.random() * this.field.resolution.height),
             },
             weapons: [],
           })
@@ -108,7 +108,7 @@ export default class Game {
     const objectToSpawn = this.player.update({
       keys,
       objects: [...this.enemies, ...this.supplyBoxes],
-      fieldDimentions: this.field.dimentions,
+      fieldDimentions: this.field.resolution,
     });
     if (objectToSpawn !== false) {
       this.spawnQueue.push(objectToSpawn);
@@ -118,7 +118,7 @@ export default class Game {
       enemy.update({
         keys,
         objects: [...this.bullets],
-        fieldDimentions: this.field.dimentions,
+        fieldDimentions: this.field.resolution,
       });
     });
     this.enemies = this.enemies.filter((enemy) => !enemy.isDied);
@@ -127,14 +127,14 @@ export default class Game {
       bullet.update({
         keys,
         objects: [...this.enemies, this.player],
-        fieldDimentions: this.field.dimentions,
+        fieldDimentions: this.field.resolution,
       });
     });
     this.bullets = this.bullets.filter((elem) => !elem.isDied);
 
     this.supplyBoxes.forEach((supBox) => {
       supBox.update({
-        fieldDimentions: this.field.dimentions,
+        fieldDimentions: this.field.resolution,
       });
     });
     this.supplyBoxes = this.supplyBoxes.filter((elem) => !elem.isDied);
@@ -153,8 +153,8 @@ export default class Game {
       this.supplyBoxes.push(
         new SupplyBox({
           position: {
-            x: Math.floor(Math.random() * this.field.dimentions.width),
-            y: Math.floor(Math.random() * this.field.dimentions.height),
+            x: Math.floor(Math.random() * this.field.resolution.width),
+            y: Math.floor(Math.random() * this.field.resolution.height),
           },
         })
       );
@@ -208,17 +208,17 @@ export default class Game {
   }
 
   constructor({
-    fieldDimentions,
+    fieldResolution ,
     playerCardHTMLContainer,
     gameFieldHTMLContainer,
     canvas,
-    gameCell,
+    gameCellDimention,
   }: {
     gameFieldHTMLContainer: HTMLElement; // для рендеринга игрового поля
     playerCardHTMLContainer: HTMLElement; // для рендеринга статистики Player
-    fieldDimentions: Dimentions; // размеры поля
+    fieldResolution: Dimentions; // размеры поля
     canvas: HTMLCanvasElement;
-    gameCell: Dimentions;
+    gameCellDimention: Dimentions;
   }) {
     this.supplyBoxCreatingTicker = new TickController(10000);
     this.supplyBoxes = [];
@@ -228,8 +228,8 @@ export default class Game {
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
 
     this.field = {
-      dimentions: fieldDimentions,
-      gameCell,
+      resolution: fieldResolution,
+      gameCellDimention,
     };
 
     this.spawnQueue = []; // массив объектов (пока что Bullet) подлежащие добавлению в массив объектов для дальнейшей итерации в игр/м. цикле
@@ -277,7 +277,15 @@ export default class Game {
 
     // создаем игровое поле
     this.UI.gameFieldHTMLContainer.append(
-      buildField(this.field.dimentions.height, this.field.dimentions.width)
+      buildField(this.field.resolution.height, this.field.resolution.width)
     );
+
+
+    // ui manager
+
+    this.UIManager = new UIManager ({canvas , canvasHeight:800 * 2 , canvasWidth:600 * 2}) ;
+
+
+
   }
 }

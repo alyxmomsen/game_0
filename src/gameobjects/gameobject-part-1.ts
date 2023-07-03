@@ -13,7 +13,7 @@ export class GameObject_part_1 {
     protected dateOfCreated: number;
     protected color: string;
     protected kind: GameObjectKinds;
-    private dimentions: Dimentions;
+    protected dimentions: Dimentions;
     position: { x: number; y: number } | null = null;
     // protected damaged: Damage[]; // в данный момент получаемыe уроны
     protected health: number;

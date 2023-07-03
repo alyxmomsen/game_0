@@ -12,13 +12,13 @@ import "./styles/main.css";
 
   const canvas = document.querySelector("canvas");
 
-  const fieldDimentions = { width: 40, height: 20 };
+  const gameFieldResolution = { width: 40, height: 20 };
   const theGame = new Game({
     gameFieldHTMLContainer,
     playerCardHTMLContainer,
-    fieldDimentions,
+    fieldResolution: gameFieldResolution,
     canvas,
-    gameCell: { width: 30, height: 30 },
+    gameCellDimention: { width: 50, height: 50 },
   });
 
   const mainLoop = function () {
