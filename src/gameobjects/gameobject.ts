@@ -20,7 +20,6 @@ import { GameObject_part_2 } from "./gameobject-part-2";
 import { GameObject_Part_3 } from "./gameobject-part-3";
 
 export default abstract class GameObject extends GameObject_Part_3 {
-
   /* ====================== options ====================== */
 
   abstract ifCollisionIs_For(
@@ -157,7 +156,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
       nextPosition: { ...position },
     });
 
-    this.dimentions = {width:50 , height:50} ;
+    this.dimentions = { width: 50, height: 50 };
 
     this.position = { ...position };
     this.attack = new Attack(ownDamage, weapons);

@@ -24,7 +24,7 @@ export default class Game {
 
   field: {
     resolution: Dimentions;
-    gameCellDimention: {
+    gameCellDimentions: {
       width: number;
       height: number;
     };
@@ -187,7 +187,12 @@ export default class Game {
   }
 
   render(field: HTMLElement = null) {
-    this.UIManager.draw(this.player.position.x , this.player.position.y , this.player.getDimentions().width , this.player.getDimentions().height);
+    this.UIManager.draw(
+      this.player.position.x,
+      this.player.position.y,
+      this.player.getDimentions().width,
+      this.player.getDimentions().height
+    );
 
     this.bullets.forEach((elem) => {
       this.renderGameObject({ elem });
@@ -208,17 +213,17 @@ export default class Game {
   }
 
   constructor({
-    fieldResolution ,
+    fieldResolution,
     playerCardHTMLContainer,
     gameFieldHTMLContainer,
     canvas,
-    gameCellDimention,
+    gameCellDimentions,
   }: {
     gameFieldHTMLContainer: HTMLElement; // для рендеринга игрового поля
     playerCardHTMLContainer: HTMLElement; // для рендеринга статистики Player
     fieldResolution: Dimentions; // размеры поля
     canvas: HTMLCanvasElement;
-    gameCellDimention: Dimentions;
+    gameCellDimentions: Dimentions;
   }) {
     this.supplyBoxCreatingTicker = new TickController(10000);
     this.supplyBoxes = [];
@@ -229,7 +234,7 @@ export default class Game {
 
     this.field = {
       resolution: fieldResolution,
-      gameCellDimention,
+      gameCellDimentions ,
     };
 
     this.spawnQueue = []; // массив объектов (пока что Bullet) подлежащие добавлению в массив объектов для дальнейшей итерации в игр/м. цикле
@@ -280,12 +285,13 @@ export default class Game {
       buildField(this.field.resolution.height, this.field.resolution.width)
     );
 
-
     // ui manager
 
-    this.UIManager = new UIManager ({canvas , canvasHeight:800 * 2 , canvasWidth:600 * 2}) ;
-
-
-
+    this.UIManager = new UIManager({
+      canvas,
+      canvasHeight: 600 * 2,
+      canvasWidth: 800 * 2,
+      gameCellDimentions ,
+    });
   }
 }

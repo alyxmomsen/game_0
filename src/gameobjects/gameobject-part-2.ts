@@ -8,57 +8,56 @@ import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 export class GameObject_part_2 extends GameObject_part_1 {
+  getDimentions() {
+    return { ...this.dimentions };
+  }
 
-    getDimentions () {
-      return {...this.dimentions} ;
+  setAttackDirection(keys: string[]) {
+    const up = keys.includes("ArrowUp");
+    const down = keys.includes("ArrowDown");
+    const left = keys.includes("ArrowLeft");
+    const right = keys.includes("ArrowRight");
+
+    // здесь есть баг, - если одновременно зажать две клавиши , то объект атакует сам себя
+
+    if (up || down || left || right) {
+      if (up && !down) {
+        this.attack.direction.y = -1;
+      } else if (!up && down) {
+        this.attack.direction.y = 1;
+      } else {
+        this.attack.direction.y = 0;
+      }
+
+      if (left && !right) {
+        this.attack.direction.x = -1;
+      } else if (!left && right) {
+        this.attack.direction.x = 1;
+      } else {
+        this.attack.direction.x = 0;
+      }
+
+      //временный дебаг, который иногда не срабатывает
+      if (this.attack.direction.x === 0 && this.attack.direction.y === 0) {
+        this.attack.direction.x = 1;
+      }
     }
+  }
 
-    setAttackDirection(keys: string[]) {
-        const up = keys.includes("ArrowUp");
-        const down = keys.includes("ArrowDown");
-        const left = keys.includes("ArrowLeft");
-        const right = keys.includes("ArrowRight");
-    
-        // здесь есть баг, - если одновременно зажать две клавиши , то объект атакует сам себя
-    
-        if (up || down || left || right) {
-          if (up && !down) {
-            this.attack.direction.y = -1;
-          } else if (!up && down) {
-            this.attack.direction.y = 1;
-          } else {
-            this.attack.direction.y = 0;
-          }
-    
-          if (left && !right) {
-            this.attack.direction.x = -1;
-          } else if (!left && right) {
-            this.attack.direction.x = 1;
-          } else {
-            this.attack.direction.x = 0;
-          }
-    
-          //временный дебаг, который иногда не срабатывает
-          if (this.attack.direction.x === 0 && this.attack.direction.y === 0) {
-            this.attack.direction.x = 1;
-          }
-        }
-      }
+  setWalkStepRate(value: number) {
+    this.movement.setTickInterval(value < 1 ? 1 : value);
+  }
 
-      setWalkStepRate(value: number) {
-        this.movement.setTickInterval(value < 1 ? 1 : value);
-      }
+  getDamage(damage: number) {
+    if (this.armor.health > 0) {
+      this.armor.health -= Math.floor((damage / 100) * this.armor.dempher);
+      this.health -= Math.floor((damage / 100) * (100 - this.armor.dempher));
+    } else {
+      this.health -= damage;
+    }
+  }
 
-      getDamage(damage: number) {
-        if (this.armor.health > 0) {
-          this.armor.health -= Math.floor((damage / 100) * this.armor.dempher);
-          this.health -= Math.floor((damage / 100) * (100 - this.armor.dempher));
-        } else {
-          this.health -= damage;
-        }
-      }
-
-      setOwnDamageValue(value: number) {}
+  setOwnDamageValue(value: number) {}
 
   getOwnDamageValue() {}
 
@@ -67,14 +66,12 @@ export class GameObject_part_2 extends GameObject_part_1 {
     object: Bullet | GameObject | Enemy | Player | SupplyBox,
     damage: Damage
   ) {
-    object.pushIntoDamaged(new Damage(damage)) ; // добавляем объекту атаку в его очередь урона
+    object.pushIntoDamaged(new Damage(damage)); // добавляем объекту атаку в его очередь урона
   }
 
-  pushIntoDamaged (damage:Damage) {
+  pushIntoDamaged(damage: Damage) {
     this.damaged.push(damage);
   }
-
-  
 
   // проверка на коллизию nextposition с переданными координатами
   checkNextPositionColissionWith(subjectPostion: Position) {

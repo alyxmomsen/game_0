@@ -7,30 +7,27 @@ import { Movement } from "../library/movement";
 import { Dimentions, GameObjectKinds } from "../library/types";
 
 export class GameObject_part_1 {
+  protected damaged: Damage[]; // в данный момент получаемыe уроны
+  protected id: number;
+  protected dateOfCreated: number;
+  protected color: string;
+  protected kind: GameObjectKinds;
+  protected dimentions: Dimentions;
+  position: { x: number; y: number } | null = null;
+  // protected damaged: Damage[]; // в данный момент получаемыe уроны
+  protected health: number;
+  protected armor: Armor;
+  isDied: boolean;
+  protected attack: Attack;
+  movement: Movement;
 
-    protected damaged: Damage[]; // в данный момент получаемыe уроны
-    protected id: number;
-    protected dateOfCreated: number;
-    protected color: string;
-    protected kind: GameObjectKinds;
-    protected dimentions: Dimentions;
-    position: { x: number; y: number } | null = null;
-    // protected damaged: Damage[]; // в данный момент получаемыe уроны
-    protected health: number;
-    protected armor: Armor;
-    isDied: boolean;
-    protected attack: Attack;
-    movement: Movement;
+  /* ================================ */
 
-    /* ================================ */
+  /* -------- html --------- */
 
-    /* -------- html --------- */
+  UI: GameObjectHTMLs;
 
-    UI: GameObjectHTMLs;
-
-    HTLM_untit: HTML_unit;
+  HTLM_untit: HTML_unit;
 
   /* ----------------------- */
-
-
 }
