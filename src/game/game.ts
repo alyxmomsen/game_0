@@ -187,7 +187,7 @@ export default class Game {
   }
 
   render(field: HTMLElement = null) {
-    // this.UIManager.draw(this.player.position.x , this.player.position.y);
+    this.UIManager.draw(this.player.position.x , this.player.position.y , this.player.getDimentions().width , this.player.getDimentions().height);
 
     this.bullets.forEach((elem) => {
       this.renderGameObject({ elem });
