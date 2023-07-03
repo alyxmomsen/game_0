@@ -4,14 +4,13 @@ import { Bullet } from "./bullet";
 import GameObject, { Dimentions, Position } from "./gameobject";
 
 export class SupplyBox extends GameObject {
-  supply: "damage-Up";
   update({ fieldDimentions }: { fieldDimentions: Dimentions }): false | Bullet {
     return super.update({
       fieldDimentions,
       keys: [],
       objects: [],
-      option: () => {},
-      optionToGameobjectIterator: (gameObject: SupplyBox | null) => {},
+      option_1:null ,
+      option_2:null ,
     });
   }
 

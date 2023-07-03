@@ -4,13 +4,36 @@ import { Enemy } from "./enemy";
 import GameObject, {
   Dimentions,
   Direction,
-  GameObjectType,
+  GameObjectKinds,
   Position,
 } from "./gameobject";
 import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 export class Bullet extends GameObject {
+
+  updateFunction_option_2(object: Bullet | GameObject | Enemy | Player | SupplyBox): void {
+    // this.movement.direction = {x:0 , y:0} ;
+    this.movement.setStepRate(this.movement.getStepRate() * 60); // увеличиваем задержку между шагами
+    // this.setStepRate(this.movement.getStepRate() * 1.5); //  не работает
+
+    const axisDirections: [1, 0, -1] = [1, 0, -1];
+
+    if (this.movement.direction.x !== 0) {
+      this.movement.direction.x *= -1; // меняем направление движение на противоположное
+    } else {
+      this.movement.direction.x =
+        axisDirections[Math.floor(Math.random() * 3)];
+    }
+
+    if (this.movement.direction.y !== 0) {
+      this.movement.direction.y *= -1; // меняем направление движение на противоположное
+    } else {
+      this.movement.direction.y =
+        axisDirections[Math.floor(Math.random() * 3)];
+    }
+  }
+
   update({
     keys,
     objects,
@@ -46,36 +69,14 @@ export class Bullet extends GameObject {
       this.isDied = true;
     }
 
-    /*======== option ============  */ // опция для родителя
-    const option = () => {
-      // this.movement.direction = {x:0 , y:0} ;
-      this.movement.setStepRate(this.movement.getStepRate() * 60); // увеличиваем задержку между шагами
-      // this.setStepRate(this.movement.getStepRate() * 1.5); //  не работает
-
-      const axisDirections: [1, 0, -1] = [1, 0, -1];
-
-      if (this.movement.direction.x !== 0) {
-        this.movement.direction.x *= -1; // меняем направление движение на противоположное
-      } else {
-        this.movement.direction.x =
-          axisDirections[Math.floor(Math.random() * 3)];
-      }
-
-      if (this.movement.direction.y !== 0) {
-        this.movement.direction.y *= -1; // меняем направление движение на противоположное
-      } else {
-        this.movement.direction.y =
-          axisDirections[Math.floor(Math.random() * 3)];
-      }
-    };
     /* ========================== */
 
     const result = super.update({
       keys,
       objects,
       fieldDimentions,
-      option,
-      optionToGameobjectIterator: (gameObject: SupplyBox | null) => {},
+      option_1:null,
+      option_2:null ,
     }); // возвращает объект Bullet
 
     return result;

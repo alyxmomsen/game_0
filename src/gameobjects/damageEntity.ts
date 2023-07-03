@@ -2,7 +2,7 @@ import { Armor, ArmorClass } from "../library/armore";
 import { Damage } from "../library/damage";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
-import GameObject, { Dimentions, GameObjectType, Position } from "./gameobject";
+import GameObject, { Dimentions, GameObjectKinds, Position } from "./gameobject";
 import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
@@ -24,8 +24,8 @@ export class DamageEntity extends GameObject {
       keys,
       objects,
       fieldDimentions,
-      option: () => {},
-      optionToGameobjectIterator: (gameObject: SupplyBox | null) => {},
+      option_1:null ,
+      option_2:null ,
     });
   }
 

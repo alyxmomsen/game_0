@@ -4,20 +4,12 @@ import { TickController, calculateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
-import GameObject, { Dimentions, GameObjectType, Position } from "./gameobject";
+import GameObject, { Dimentions, GameObjectKinds, Position } from "./gameobject";
 import { SupplyBox } from "./supply-box";
 // import { heroActions, moveHero } from "./player_keys_checker";
 
 export class Player extends GameObject {
-  optionToGameObjectIterator(
-    gameObject: GameObject | SupplyBox | Player | Enemy | Bullet | null
-  ) {
-    // здесь исправить
-    if (gameObject instanceof SupplyBox) {
-      this.attack.currentWeapon.damage.value = 10000; // значение для тест
-      gameObject.isDied = true;
-    }
-  }
+  
 
   update({
     keys,
@@ -38,8 +30,8 @@ export class Player extends GameObject {
       keys,
       objects,
       fieldDimentions,
-      option: () => {},
-      optionToGameobjectIterator: this.optionToGameObjectIterator,
+      option_1: null,
+      option_2: null ,
     });
   }
 

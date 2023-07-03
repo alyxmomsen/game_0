@@ -11,7 +11,7 @@ import { SupplyBox } from "./supply-box";
 import { Player } from "./player";
 import { Enemy } from "./enemy";
 
-export type GameObjectType =
+export type GameObjectKinds =
   | "game_object"
   | "enemy"
   | "player"
@@ -27,7 +27,7 @@ export type Position = {
 
 export type GameObjectConstructor = {
   id: number;
-  kind: GameObjectType;
+  kind: GameObjectKinds;
   walkStepRate: number;
   walkStepsLimit: number;
   color: string;
@@ -45,11 +45,12 @@ export type Dimentions = {
   height: number;
 };
 
+
 export default class GameObject {
   private id: number;
   private dateOfCreated: number;
   private color: string;
-  private kind: GameObjectType;
+  private kind: GameObjectKinds;
   private dimentions: Dimentions;
   position: { x: number; y: number } | null = null;
   private damaged: Damage[]; // в данный момент получаемыe уроны
@@ -186,20 +187,36 @@ export default class GameObject {
 
   getOwnDamageValue() {}
 
+
+  updateFunction_option_1 (object:GameObject|Enemy|Player|Bullet|SupplyBox) {
+
+    this.attackTo(object, {
+      damageClass: this.attack.ownDamage.damageClass,
+      value: this.calculateOwnDamageBySpeed(),
+    }); // object.damaged.push
+
+  }
+
+
+  updateFunction_option_2 (object:GameObject|Enemy|Player|Bullet|SupplyBox|null) {
+
+
+
+  }
+
   update({
     keys,
     objects,
     fieldDimentions,
-    option,
-    optionToGameobjectIterator,
+    option_1,
+    option_2 ,
   }: {
     keys: string[];
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-    option: () => void;
-    optionToGameobjectIterator: (
-      gameObject: GameObject | SupplyBox | Player | Enemy | Bullet | null
-    ) => void;
+    option_1: () => void|null;
+    option_2: () => void|null ;
+    
   }): Bullet | false {
     // получение урона
     if (this.damaged.length) {
@@ -220,20 +237,16 @@ export default class GameObject {
     // проверка коллизий
     let isCollision = false;
     for (const object of objects) {
+      // если объект не является сам собой и если объект не "умер"
       if (object !== this && !this.isDied) {
-        // если объект не является сам собой и если объект не "умер"
+        // проверка следующего шага на коллизию
         if (this.checkNextPositionColissionWith(object.position)) {
           // object instanceof SupplyBox ; // не проходит эту проверку
 
           // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
-          optionToGameobjectIterator.call(this, object); // функция удаляет supply-box из игры и что-нибудь еще ...
 
-          this.attackTo(object, {
-            damageClass: this.attack.ownDamage.damageClass,
-            value: this.calculateOwnDamageBySpeed(),
-          }); // object.damaged.push
+          this.updateFunction_option_1 (object);
 
-          
           isCollision = true; // регестрируем коллизию
         }
       }
@@ -253,11 +266,7 @@ export default class GameObject {
       this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
     } else {
       // если на следующем шаге есть коллизия
-
-      /*======== optional ======== */
-      // функция из наследника
-      option();
-      /* ========================= */
+      this.updateFunction_option_2(null);
       // снимаем проверки с других координат отличных от this.position
       this.movement.nextPosition.x = this.position.x;
       this.movement.nextPosition.y = this.position.y;

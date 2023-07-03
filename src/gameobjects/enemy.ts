@@ -3,7 +3,7 @@ import { Damage } from "../library/damage";
 import { generateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
-import GameObject, { Dimentions, GameObjectType, Position } from "./gameobject";
+import GameObject, { Dimentions, GameObjectKinds, Position } from "./gameobject";
 import { SupplyBox } from "./supply-box";
 
 // частный случай GameObject
@@ -21,14 +21,12 @@ export class Enemy extends GameObject {
       // this.updateNextPosition(generateMovementDirection());
     }
 
-    // this.setAttackDirection(false);
-
     return super.update({
       keys,
       objects,
       fieldDimentions,
-      option: () => {},
-      optionToGameobjectIterator: (gameObject: SupplyBox | null) => {},
+      option_1:null ,
+      option_2:null ,
     });
   }
 
