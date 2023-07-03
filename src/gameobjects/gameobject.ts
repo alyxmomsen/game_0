@@ -46,7 +46,7 @@ export type Dimentions = {
 };
 
 
-export default class GameObject {
+export default abstract class GameObject {
   private id: number;
   private dateOfCreated: number;
   private color: string;
@@ -188,34 +188,24 @@ export default class GameObject {
   getOwnDamageValue() {}
 
 
-  updateFunction_option_1 (object:GameObject|Enemy|Player|Bullet|SupplyBox) {
+  /* ====================== options ====================== */
+  
+  abstract isCollision_For (object:GameObject|Enemy|Player|Bullet|SupplyBox|null) : void ;
 
-    this.attackTo(object, {
-      damageClass: this.attack.ownDamage.damageClass,
-      value: this.calculateOwnDamageBySpeed(),
-    }); // object.damaged.push
+  abstract isNotCollision_Totally (object:GameObject|Enemy|Player|Bullet|SupplyBox|null) : void
 
-  }
+  abstract isCollision_Totally (object:GameObject|Enemy|Player|Bullet|SupplyBox|null) : void
 
-
-  updateFunction_option_2 (object:GameObject|Enemy|Player|Bullet|SupplyBox|null) {
-
-
-
-  }
+  /* ===================================================== */
 
   update({
     keys,
     objects,
     fieldDimentions,
-    option_1,
-    option_2 ,
   }: {
     keys: string[];
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-    option_1: () => void|null;
-    option_2: () => void|null ;
     
   }): Bullet | false {
     // получение урона
@@ -245,7 +235,7 @@ export default class GameObject {
 
           // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
 
-          this.updateFunction_option_1 (object);
+          this.isCollision_For (object);
 
           isCollision = true; // регестрируем коллизию
         }
@@ -266,7 +256,7 @@ export default class GameObject {
       this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
     } else {
       // если на следующем шаге есть коллизия
-      this.updateFunction_option_2(null);
+      this.isNotCollision_Totally(null);
       // снимаем проверки с других координат отличных от this.position
       this.movement.nextPosition.x = this.position.x;
       this.movement.nextPosition.y = this.position.y;

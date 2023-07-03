@@ -10,6 +10,11 @@ import { SupplyBox } from "./supply-box";
 
 export class Player extends GameObject {
   
+  isCollision_For(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+
+  isNotCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+
+  isCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
 
   update({
     keys,
@@ -30,8 +35,6 @@ export class Player extends GameObject {
       keys,
       objects,
       fieldDimentions,
-      option_1: null,
-      option_2: null ,
     });
   }
 

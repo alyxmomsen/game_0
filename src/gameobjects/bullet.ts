@@ -12,7 +12,16 @@ import { SupplyBox } from "./supply-box";
 
 export class Bullet extends GameObject {
 
-  updateFunction_option_2(object: Bullet | GameObject | Enemy | Player | SupplyBox): void {
+  isCollision_For(object: Bullet | GameObject | Enemy | Player | SupplyBox): void {
+    
+    this.attackTo(object, {
+      damageClass: this.attack.ownDamage.damageClass,
+      value: this.calculateOwnDamageBySpeed(),
+    }); // object.damaged.push
+
+  }
+  
+  isNotCollision_Totally(object: Bullet | GameObject | Enemy | Player | SupplyBox): void {
     // this.movement.direction = {x:0 , y:0} ;
     this.movement.setStepRate(this.movement.getStepRate() * 60); // увеличиваем задержку между шагами
     // this.setStepRate(this.movement.getStepRate() * 1.5); //  не работает
@@ -33,6 +42,9 @@ export class Bullet extends GameObject {
         axisDirections[Math.floor(Math.random() * 3)];
     }
   }
+
+  isCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+
 
   update({
     keys,
@@ -75,8 +87,6 @@ export class Bullet extends GameObject {
       keys,
       objects,
       fieldDimentions,
-      option_1:null,
-      option_2:null ,
     }); // возвращает объект Bullet
 
     return result;

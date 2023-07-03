@@ -1,16 +1,23 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
 import { Bullet } from "./bullet";
+import { Enemy } from "./enemy";
 import GameObject, { Dimentions, Position } from "./gameobject";
+import { Player } from "./player";
 
 export class SupplyBox extends GameObject {
+
+  isCollision_For(object: Player | GameObject | Enemy | Bullet | SupplyBox): void { }
+
+  isNotCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void { }
+
+  isCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void { }
+
   update({ fieldDimentions }: { fieldDimentions: Dimentions }): false | Bullet {
     return super.update({
       fieldDimentions,
       keys: [],
       objects: [],
-      option_1:null ,
-      option_2:null ,
     });
   }
 

@@ -4,10 +4,18 @@ import { generateMovementDirection } from "../library/main";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import GameObject, { Dimentions, GameObjectKinds, Position } from "./gameobject";
+import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 // частный случай GameObject
 export class Enemy extends GameObject {
+
+  isCollision_For(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+
+  isNotCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+
+  isCollision_Totally(object: Player | GameObject | Enemy | Bullet | SupplyBox): void  { }
+
   update({
     keys,
     objects,
@@ -25,8 +33,7 @@ export class Enemy extends GameObject {
       keys,
       objects,
       fieldDimentions,
-      option_1:null ,
-      option_2:null ,
+
     });
   }
 
