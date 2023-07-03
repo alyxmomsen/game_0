@@ -1,12 +1,9 @@
-import { Armor, ArmorClass } from "../library/armore";
+import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
+import { ArmorClass, Dimentions, Position } from "../library/types";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
-import GameObject, {
-  Dimentions,
-  GameObjectKinds,
-  Position,
-} from "./gameobject";
+import GameObject from "./gameobject";
 import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 

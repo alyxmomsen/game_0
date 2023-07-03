@@ -1,5 +1,5 @@
-import { Armor, ArmorClass } from "../library/armore";
-import { Attack, AttackClass } from "../library/attack";
+import { Armor } from "../library/armore";
+import { Attack } from "../library/attack";
 import { Damage } from "../library/damage";
 import { HTML_unit } from "../library/html_unit";
 
@@ -10,40 +10,12 @@ import { Bullet } from "./bullet";
 import { SupplyBox } from "./supply-box";
 import { Player } from "./player";
 import { Enemy } from "./enemy";
-
-export type GameObjectKinds =
-  | "game_object"
-  | "enemy"
-  | "player"
-  | "damage-entity"
-  | "supply-box";
-
-export type Direction = { x: 0 | 1 | -1; y: 0 | 1 | -1 };
-
-export type Position = {
-  x: number;
-  y: number;
-};
-
-export type GameObjectConstructor = {
-  id: number;
-  kind: GameObjectKinds;
-  walkStepRate: number;
-  walkStepsLimit: number;
-  color: string;
-  position: Position;
-  ownDamage: Damage;
-  direction: Direction;
-  health: number;
-  weapons: Weapon[];
-  armor: Armor;
-  shouldFadeDownStepRate: boolean;
-};
-
-export type Dimentions = {
-  width: number;
-  height: number;
-};
+import {
+  Dimentions,
+  GameObjectConstructor,
+  GameObjectKinds,
+  Position,
+} from "../library/types";
 
 export default abstract class GameObject {
   private id: number;

@@ -1,4 +1,4 @@
-export type DamageClass = "phisical" | "magic";
+import { DamageClass } from "./types";
 
 export class Damage {
   damageClass: DamageClass;

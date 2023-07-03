@@ -1,12 +1,13 @@
 import { Bullet } from "../gameobjects/bullet";
 import { Enemy } from "../gameobjects/enemy";
-import GameObject, { Dimentions } from "../gameobjects/gameobject";
+import GameObject from "../gameobjects/gameobject";
 import { Player } from "../gameobjects/player";
 import { SupplyBox } from "../gameobjects/supply-box";
 import { Damage } from "../library/damage";
 import { GameObjectHTMLs } from "../library/game-object-htmls";
 import KeysManager from "../library/keysManager";
 import { TickController, buildField } from "../library/main";
+import { Dimentions } from "../library/types";
 import { UIManager } from "../library/uimanager";
 import { Weapon } from "../library/weapon";
 

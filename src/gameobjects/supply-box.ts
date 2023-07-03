@@ -1,8 +1,9 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
+import { Dimentions, Position } from "../library/types";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
-import GameObject, { Dimentions, Position } from "./gameobject";
+import GameObject from "./gameobject";
 import { Player } from "./player";
 
 export class SupplyBox extends GameObject {

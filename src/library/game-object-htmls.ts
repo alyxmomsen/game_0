@@ -1,14 +1,4 @@
-type UI_stat = {
-  linkHTML: {
-    value: HTMLElement;
-    caption: HTMLElement;
-    wrapper: HTMLElement;
-  };
-  data: {
-    caption: string;
-    value: string;
-  };
-};
+import { UI_stat } from "./types";
 
 export class GameObjectHTMLs {
   health: UI_stat;

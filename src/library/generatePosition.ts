@@ -1,4 +1,4 @@
-import { Dimentions, Position } from "../gameobjects/gameobject";
+import { Dimentions, Position } from "./types";
 
 export function generatePostion(limits: Dimentions): Position {
   return {

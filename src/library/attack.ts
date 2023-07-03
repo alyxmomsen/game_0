@@ -1,9 +1,7 @@
-import { Direction } from "../gameobjects/gameobject";
 import { Damage } from "./damage";
 import { TickController } from "./main";
+import { Direction } from "./types";
 import { Weapon } from "./weapon";
-
-export type AttackClass = "phisical" | "magic";
 
 export class Attack {
   private status: boolean; // доработать ???

@@ -1,5 +1,5 @@
-import { Direction, Position } from "../gameobjects/gameobject";
 import { TickController } from "./main";
+import { Direction, Position } from "./types";
 
 export class Movement {
   private stepRate: number;

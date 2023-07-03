@@ -1,4 +1,4 @@
-import { Direction } from "../gameobjects/gameobject";
+import { Direction } from "./types";
 
 export class TickController {
   private lastTickTime: number;
