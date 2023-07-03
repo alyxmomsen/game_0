@@ -9,6 +9,10 @@ import { SupplyBox } from "./supply-box";
 
 export class GameObject_part_2 extends GameObject_part_1 {
 
+    getDimentions () {
+      return {...this.dimentions} ;
+    }
+
     setAttackDirection(keys: string[]) {
         const up = keys.includes("ArrowUp");
         const down = keys.includes("ArrowDown");
