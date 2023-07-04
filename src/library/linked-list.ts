@@ -2,6 +2,6 @@
 export class LinkedList {
 
     
-
+    
 
 }
