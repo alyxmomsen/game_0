@@ -12,6 +12,11 @@ import { UIManager } from "../library/uimanager";
 import { Weapon } from "../library/weapon";
 
 export default class Game {
+
+  handleTicker = new TickController(1000);
+
+  /* ---------------------- */
+
   UIManager: UIManager;
 
   creatorEnemyTicker: TickController;
@@ -159,6 +164,9 @@ export default class Game {
         })
       );
     }
+
+    this.player.displayStats() ;
+
   }
 
   render(field: HTMLElement = null) {

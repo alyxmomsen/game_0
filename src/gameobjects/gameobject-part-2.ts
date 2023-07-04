@@ -8,6 +8,16 @@ import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 export class GameObject_part_2 extends GameObject_part_1 {
+
+  displayStats () {
+
+    const str = `${this.attack.currentWeapon.damage.value} ${this.health} ${this.armor.health} ` ;
+
+    console.log(str);
+
+  }
+
+
   getDimentions() {
     return { ...this.dimentions };
   }
@@ -64,6 +74,12 @@ export class GameObject_part_2 extends GameObject_part_1 {
   setOwnDamageValue(value: number) {}
 
   getOwnDamageValue() {}
+
+  getHealth () {return this.health.toString()} ;
+
+  geTheValueDamage () {
+    
+  }
 
   // 'атака' на указаный объект
   attackTo(

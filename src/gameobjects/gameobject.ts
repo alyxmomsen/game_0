@@ -45,11 +45,11 @@ export default abstract class GameObject extends GameObject_Part_3 {
 
     // this.attack.setOwnDamge(this.calculateOwnDamageBySpeed()); // устанавливаем myOwnDamage в зависимости от скорости движения
 
-    if (this.kind === "damage-entity") {
-      console.log(
-        `${this.attack.ownDamage.value} ${this.calculateOwnDamageBySpeed()}`
-      );
-    }
+    // if (this.kind === "damage-entity") {
+    //   console.log(
+    //     `${this.attack.ownDamage.value} ${this.calculateOwnDamageBySpeed()}`
+    //   );
+    // }
 
     // проверка коллизий
     let isCollision = false;
