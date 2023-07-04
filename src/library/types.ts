@@ -1,3 +1,7 @@
+import { Bullet } from "../gameobjects/bullet";
+import { Enemy } from "../gameobjects/enemy";
+import { Player } from "../gameobjects/player";
+import { SupplyBox } from "../gameobjects/supply-box";
 import { Armor } from "./armore";
 import { Damage } from "./damage";
 import { Weapon } from "./weapon";
@@ -53,3 +57,5 @@ export type UI_stat = {
     value: string;
   };
 };
+
+export type GameObjectExtendsClasses = Enemy | Bullet | SupplyBox | Player ;
