@@ -161,31 +161,6 @@ export default class Game {
     }
   }
 
-  // renderGameObject({
-  //   elem,
-  // }: {
-  //   elem: GameObject | Enemy | Player | SupplyBox;
-  // }) {
-  //   if (
-  //     !elem.isDied &&
-  //     this.UI.gameFieldHTMLContainer &&
-  //     elem.HTLM_untit &&
-  //     this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[elem.position.y]
-  //       ?.childNodes[
-  //       elem.position.x /* если html нода с такими координатами существет */
-  //     ] !== undefined
-  //   ) {
-  //     this.UI.gameFieldHTMLContainer.childNodes[0]?.childNodes[
-  //       elem.position.y
-  //     ]?.childNodes[elem.position.x].appendChild(elem.HTLM_untit.body);
-  //     elem.render();
-  //     elem.HTLM_untit.body.style.display = "block";
-  //   } else {
-  //     elem.render();
-  //     elem.HTLM_untit.body.style.display = "none";
-  //   }
-  // }
-
   render(field: HTMLElement = null) {
     this.UIManager.clearCanvas();
 
@@ -299,28 +274,6 @@ export default class Game {
     //     })
     //   );
     // }
-
-    /* ============================= */
-
-    //
-    // this.UI = {
-    // playerCardHTMLContainer,
-    // gameFieldHTMLContainer,
-    // };
-
-    // this.UI.playerCardHTMLContainer.append(
-    //   this.player.UI.health.linkHTML.wrapper,
-    //   this.player.UI.damage.linkHTML.wrapper,
-    //   this.player.UI.armor.linkHTML.wrapper,
-    //   this.player.UI.armor_effeciency.linkHTML.wrapper
-    // );
-
-    // создаем игровое поле
-    // this.UI.gameFieldHTMLContainer.append(
-    //   buildField(this.field.resolution.height, this.field.resolution.width)
-    // );
-
-    // ui manager
 
     this.UIManager = new UIManager({
       canvas,
