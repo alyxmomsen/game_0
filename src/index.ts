@@ -1,11 +1,16 @@
 // import Game from "./game/game";
+// import f from './images/image.jpg' ;
+// import fff from './images/image.jpg' ;
+
+import f from './images/health.png' ;
+
 import Game from "./game/game";
 import { Bullet } from "./gameobjects/bullet";
 import { Player } from "./gameobjects/player";
 import { LinkedList } from "./library/linked-list";
 import "./styles/main.css";
 
-import f from './images/image.jpg' ;
+
 
 
 

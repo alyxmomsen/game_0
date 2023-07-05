@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/file-loader": "^5.0.1",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
+    "file-loader": "^6.2.0",
     "git": "^0.1.5",
     "html-webpack-plugin": "^5.5.1",
     "prettier": "^2.8.8",
