@@ -14,10 +14,14 @@ import { Weapon } from "../library/weapon";
 import file1 from "./../images/health.png";
 import file2 from "./../images/image2.png";
 
+import spr from "./../images/spites/Heroes/Knight/Idle/Idle-Sheet.png";
+
 const img1 = new Image();
 const img2 = new Image();
-img1.src = file1 ;
-img2.src = file2 ;
+const sprite = new Image();
+img1.src = file1;
+img2.src = file2;
+sprite.src = spr;
 
 export default class Game {
   handleTicker = new TickController(1000);
@@ -188,6 +192,22 @@ export default class Game {
       this.player.getColor()
     );
 
+    // if(this.player.rendering.animateTicker.tick()) {
+    //   this.player.rendering.currentSpriteState = [0 , 32 ,64 , 96][Math.floor(Math.random() * 4)] ;
+    // }
+
+    // this.UIManager.drawImg(
+    //   sprite,
+    //   this.player.rendering.currentSpriteState,
+    //   0,
+    //   32,
+    //   32,
+    //   (this.player.position.x ) * this.player.getDimentions().width - (this.player.getDimentions().width / 2),
+    //   this.player.position.y * this.player.getDimentions().height - (this.player.getDimentions().height),
+    //   this.player.getDimentions().width * 2 ,
+    //   this.player.getDimentions().height * 2 ,
+    // );
+
     this.bullets.forEach((elem) => {
       // this.renderGameObject({ elem });
 
@@ -236,7 +256,7 @@ export default class Game {
       // );
 
       this.UIManager.drawImg(
-        elem.content === 'health' ? img1 : img2 ,
+        elem.content === "health" ? img1 : img2,
         0,
         0,
         150,

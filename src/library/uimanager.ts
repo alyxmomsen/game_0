@@ -27,6 +27,7 @@ export class UIManager {
     dw: number,
     dh: number
   ) {
+    this.ctx.imageSmoothingEnabled = false;
     this.ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
   }
 

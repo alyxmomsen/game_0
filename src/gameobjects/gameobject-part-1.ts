@@ -1,6 +1,7 @@
 import { Armor } from "../library/armore";
 import { Attack } from "../library/attack";
 import { Damage } from "../library/damage";
+import { TickController } from "../library/main";
 import { Movement } from "../library/movement";
 import { Dimentions, GameObjectKinds } from "../library/types";
 
@@ -17,4 +18,8 @@ export class GameObject_part_1 {
   isDied: boolean;
   protected attack: Attack;
   movement: Movement;
+  rendering: {
+    animateTicker:TickController , 
+    currentSpriteState:number ,
+  }
 }

@@ -8,6 +8,7 @@ import { Enemy } from "./enemy";
 import { Dimentions, GameObjectConstructor } from "../library/types";
 
 import { GameObject_Part_3 } from "./gameobject-part-3";
+import { TickController } from "../library/main";
 
 export default abstract class GameObject extends GameObject_Part_3 {
   /* ====================== options ====================== */
@@ -156,5 +157,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
     this.color = color;
 
     this.dateOfCreated = Date.now();
+
+    this.rendering = {animateTicker:new TickController(200) , currentSpriteState:0}
   }
 }

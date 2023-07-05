@@ -50,8 +50,8 @@ export class SupplyBox extends GameObject {
       }),
     });
 
-    const arr:("health" | "armore")[] = ['armore' , 'health'] ;
+    const arr: ("health" | "armore")[] = ["armore", "health"];
 
-    this.content = arr[Math.floor(Math.random() * 2)] ;
+    this.content = arr[Math.floor(Math.random() * 2)];
   }
 }
