@@ -49,5 +49,9 @@ export class SupplyBox extends GameObject {
         dempher: Math.floor(Math.random() * 99) + 1,
       }),
     });
+
+    const arr:("health" | "armore")[] = ['armore' , 'health'] ;
+
+    this.content = arr[Math.floor(Math.random() * 2)] ;
   }
 }
