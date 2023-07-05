@@ -5,6 +5,10 @@ import { Player } from "./gameobjects/player";
 import { LinkedList } from "./library/linked-list";
 import "./styles/main.css";
 
+import f from './images/image.jpg' ;
+
+
+
 (function () {
 
 

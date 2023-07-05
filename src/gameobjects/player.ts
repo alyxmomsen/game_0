@@ -1,7 +1,7 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
 import { calculateMovementDirection } from "../library/main";
-import { Dimentions, Position } from "../library/types";
+import { Dimentions, GameObjectKinds, Position } from "../library/types";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
@@ -60,9 +60,10 @@ export class Player extends GameObject {
     position: Position;
     weapons: Weapon[];
   }) {
+
     super({
       id,
-      kind: "player",
+      kind:'player',
       walkStepRate: 100,
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,

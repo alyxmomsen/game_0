@@ -9,11 +9,11 @@ import { SupplyBox } from "./supply-box";
 
 export class GameObject_part_2 extends GameObject_part_1 {
 
-  displayStats () {
+  displayStatsIntoTheBrowserConsole () {
 
     const str = `${this.attack.currentWeapon.damage.value} ${this.health} ${this.armor.health} ` ;
 
-    console.log(str);
+    console.log(str) ;
 
   }
 

@@ -16,6 +16,11 @@ export class UIManager {
     );
   }
 
+  drawImg (image:CanvasImageSource , sx: number, sy: number, sw:number, sh:number, dx:number, dy:number, dw: number, dh: number) {
+
+    this.ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+  }
+
   clearCanvas() {
     this.ctx.fillStyle = "black";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);

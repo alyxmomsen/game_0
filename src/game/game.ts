@@ -154,6 +154,9 @@ export default class Game {
 
     /* ================================ */
 
+    
+    const arr:['armore , health'] =  ['armore , health'] ;
+
     if (this.supplyBoxCreatingTicker.tick()) {
       this.supplyBoxes.push(
         new SupplyBox({
@@ -165,7 +168,7 @@ export default class Game {
       );
     }
 
-    this.player.displayStats() ;
+    this.player.displayStatsIntoTheBrowserConsole() ;
 
   }
 
@@ -226,6 +229,11 @@ export default class Game {
         elem.getDimentions().height,
         elem.getColor()
       );
+
+      const img = new Image();
+      img.src = '' ;
+
+      // this.UIManager.drawImg();
       // this.renderGameObject({ elem });
     });
   }
