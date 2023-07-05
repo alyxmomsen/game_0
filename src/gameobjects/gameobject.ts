@@ -111,7 +111,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
             x: this.position.x + this.attack.direction.x * 50,
             y: this.position.y + this.attack.direction.y * 50,
           },
-          walkStepRate: /* this.attack.currentWeapon.stepRate */2,
+          walkStepRate: /* this.attack.currentWeapon.stepRate */ 2,
           walkStepRateFadeDown: this.attack.currentWeapon.stepRateFadeDown,
           walkStepsLimit: this.attack.currentWeapon
             ? this.attack.currentWeapon.stepsLimit
@@ -125,7 +125,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
     position,
     kind,
     walkStepRate,
-    walkStepRange ,
+    walkStepRange,
     walkStepsLimit,
     shouldFadeDownStepRate,
     ownDamage,
@@ -142,7 +142,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
       maxWalkSteps: walkStepsLimit,
       shouldFadeDownStepRate,
       nextPosition: { ...position },
-      stepRange:walkStepRange ,
+      stepRange: walkStepRange,
     });
 
     this.dimentions = { width: 50, height: 50 };
@@ -160,6 +160,9 @@ export default abstract class GameObject extends GameObject_Part_3 {
 
     this.dateOfCreated = Date.now();
 
-    this.rendering = {animateTicker:new TickController(200) , currentSpriteState:0}
+    this.rendering = {
+      animateTicker: new TickController(200),
+      currentSpriteState: 0,
+    };
   }
 }

@@ -92,10 +92,10 @@ export class GameObject_part_2 extends GameObject_part_1 {
   // проверка на коллизию nextposition с переданными координатами
   checkNextPositionColissionWith(subjectPostion: Position) {
     if (
-      (this.movement.nextPosition.x < subjectPostion.x + 50 &&
-      this.movement.nextPosition.x + 50 > subjectPostion.x) &&
-      (this.movement.nextPosition.y < subjectPostion.y + 50 &&
-        this.movement.nextPosition.y + 50 > subjectPostion.y)
+      this.movement.nextPosition.x < subjectPostion.x + 50 &&
+      this.movement.nextPosition.x + 50 > subjectPostion.x &&
+      this.movement.nextPosition.y < subjectPostion.y + 50 &&
+      this.movement.nextPosition.y + 50 > subjectPostion.y
     ) {
       return true;
     } else {
@@ -125,8 +125,10 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
   calculateNextPosition({ x, y }: { x: 1 | -1 | 0; y: 1 | -1 | 0 }) {
     if (x !== 0 || y !== 0) {
-      this.movement.nextPosition.y = this.position.y + y * this.movement.stepRange;
-      this.movement.nextPosition.x = this.position.x + x * this.movement.stepRange;
+      this.movement.nextPosition.y =
+        this.position.y + y * this.movement.stepRange;
+      this.movement.nextPosition.x =
+        this.position.x + x * this.movement.stepRange;
     }
 
     if (x !== 0) {

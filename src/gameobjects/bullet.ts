@@ -6,10 +6,24 @@ import GameObject from "./gameobject";
 import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
+import ric1 from "./../images/ricochet_1.mp3";
+import ric2 from "./../images/ricochet_2.mp3";
+import ric3 from "./../images/riccochet_3.mp3";
+import ric4 from "./../images/riccochet_4.mp3";
+
 export class Bullet extends GameObject {
+  audio: HTMLAudioElement;
+
   ifCollisionIs_For(
     object: Bullet | GameObject | Enemy | Player | SupplyBox
   ): boolean {
+    this.audio = new Audio(
+      [ric1, ric2, ric3, ric4][Math.floor(Math.random() * 4)]
+    );
+    this.audio.muted = false;
+    this.audio.volume = 0.05;
+    this.audio.play();
+
     this.attackTo(object, {
       damageClass: this.attack.ownDamage.damageClass,
       value: this.calculateOwnDamageBySpeed(),
@@ -52,15 +66,13 @@ export class Bullet extends GameObject {
       this.calculateNextPosition(this.movement.direction);
 
       if (this.movement.shouldFadeDownStepRate) {
-        if(this.movement.stepRange > 0) {
-          this.movement.stepRange -= 0.1
-          
-          if(this.movement.stepRange < 0) {
-            this.movement.stepRange = 0 ;
-          }
+        if (this.movement.stepRange > 0) {
+          this.movement.stepRange -= 0.1;
 
+          if (this.movement.stepRange < 0) {
+            this.movement.stepRange = 0;
+          }
         }
-        
       }
     }
   }
@@ -74,7 +86,7 @@ export class Bullet extends GameObject {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
-    if (!this.isDied ) {
+    if (!this.isDied) {
       /*   
         если 'this.movement.walkStepsLimit === 0' , то выполняется Условие 
         если 'this.movement.walkStepsLimit > 0' , то проверяется "this.movement.counterOfSteps < this.movement.walkStepsLimit"
@@ -129,7 +141,7 @@ export class Bullet extends GameObject {
       kind: "damage-entity",
       position,
       walkStepRate,
-      walkStepRange: 20 ,
+      walkStepRange: 20,
       walkStepsLimit,
       shouldFadeDownStepRate: walkStepRateFadeDown,
       direction,

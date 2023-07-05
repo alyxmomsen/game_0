@@ -58,7 +58,7 @@ export class Enemy extends GameObject {
       id,
       kind: "enemy",
       walkStepRate: Math.floor(Math.random() * 990) + 10,
-      walkStepRange:10 ,
+      walkStepRange: 10,
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
       position,

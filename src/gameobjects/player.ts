@@ -29,23 +29,17 @@ export class Player extends GameObject {
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {}
 
-  proccessKeysToMoving (keys:string[]) {
+  proccessKeysToMoving(keys: string[]) {
+    const w = keys.includes("w");
+    const s = keys.includes("s");
 
-    const w = keys.includes('w') ;
-    const s = keys.includes('s') ;
-
-    if(w) {
-      
+    if (w) {
     }
-
-
   }
 
-  calculateNextPosition_beta () {
-
-    this.movement.nextPosition.x++ ; 
+  calculateNextPosition_beta() {
+    this.movement.nextPosition.x++;
     // this.movement.
-
   }
 
   update({
@@ -85,7 +79,7 @@ export class Player extends GameObject {
       id,
       kind: "player",
       walkStepRate: 1000,
-      walkStepRange:5 ,
+      walkStepRange: 5,
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
       color: "green",

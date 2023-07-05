@@ -19,7 +19,7 @@ export class GameObject_part_1 {
   protected attack: Attack;
   movement: Movement;
   rendering: {
-    animateTicker:TickController , 
-    currentSpriteState:number ,
-  }
+    animateTicker: TickController;
+    currentSpriteState: number;
+  };
 }

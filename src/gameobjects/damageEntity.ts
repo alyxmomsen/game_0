@@ -56,7 +56,7 @@ export class DamageEntity extends GameObject {
       kind: "damage-entity",
       walkStepRate: 20,
       walkStepsLimit: 0,
-      walkStepRange:0 ,
+      walkStepRange: 0,
       color: "white",
       position,
       ownDamage: new Damage({ damageClass: "phisical", value: 50 }),

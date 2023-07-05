@@ -14,7 +14,7 @@ import { Weapon } from "../library/weapon";
 import file1 from "./../images/health.png";
 import file2 from "./../images/image2.png";
 
-// import sound from "./../images/"
+import sound from "./../images/shot.mp3";
 
 import spr from "./../images/spites/Heroes/Knight/Idle/Idle-Sheet.png";
 
@@ -30,8 +30,7 @@ sprite.src = spr;
 export default class Game {
   handleTicker = new TickController(1000);
 
-
-
+  audio: HTMLAudioElement;
   /* ---------------------- */
 
   UIManager: UIManager;
@@ -89,8 +88,16 @@ export default class Game {
           new Enemy({
             id: 0,
             position: {
-              x: Math.floor(Math.random() * this.field.resolution.width * this.field.gameCellDimentions.width),
-              y: Math.floor(Math.random() * this.field.resolution.height * this.field.gameCellDimentions.height),
+              x: Math.floor(
+                Math.random() *
+                  this.field.resolution.width *
+                  this.field.gameCellDimentions.width
+              ),
+              y: Math.floor(
+                Math.random() *
+                  this.field.resolution.height *
+                  this.field.gameCellDimentions.height
+              ),
             },
             weapons: [],
           })
@@ -131,6 +138,10 @@ export default class Game {
       fieldDimentions: this.field.resolution,
     });
     if (objectToSpawn !== false) {
+      this.audio = new Audio(sound);
+      this.audio.muted = false;
+      this.audio.volume = 0.05;
+      this.audio.play();
       this.spawnQueue.push(objectToSpawn);
     }
 
@@ -332,6 +343,18 @@ export default class Game {
       canvasHeight: 600 * 2,
       canvasWidth: 800 * 2,
       gameCellDimentions,
+    });
+
+    const audio = new Audio(sound);
+    this.audio = audio;
+
+    this.audio.muted = false;
+
+    // this.audio.play();
+
+    window.addEventListener("click", () => {
+      this.audio.muted = false;
+      // this.audio.play();
     });
   }
 }

@@ -34,6 +34,14 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.(mp3|wav)$/,
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]",
+          outputPath: "assets/audio/", // Путь для сохранения файлов MP3
+        },
+      },
     ],
   },
   mode: "production",
