@@ -11,6 +11,12 @@ import { Dimentions } from "../library/types";
 import { UIManager } from "../library/uimanager";
 import { Weapon } from "../library/weapon";
 
+
+import f from './../images/health.png' ;
+
+const img = new Image();
+      img.src = f ;
+
 export default class Game {
 
   handleTicker = new TickController(1000);
@@ -222,18 +228,19 @@ export default class Game {
     });
 
     this.supplyBoxes.forEach((elem) => {
-      this.UIManager.draw(
-        elem.position.x,
-        elem.position.y,
-        elem.getDimentions().width,
-        elem.getDimentions().height,
-        elem.getColor()
-      );
+      // this.UIManager.draw(
+      //   elem.position.x,
+      //   elem.position.y,
+      //   elem.getDimentions().width,
+      //   elem.getDimentions().height,
+      //   elem.getColor()
+      // );
 
-      const img = new Image();
-      img.src = '' ;
+      
 
-      // this.UIManager.drawImg();
+
+
+      this.UIManager.drawImg(img , 0 , 0 , 100 , 100 ,elem.position.x * elem.getDimentions().width , elem.position.y * elem.getDimentions().height ,50 , 50);
       // this.renderGameObject({ elem });
     });
   }
