@@ -2,7 +2,7 @@
 // import f from './images/image.jpg' ;
 // import fff from './images/image.jpg' ;
 
-import f from './images/health.png' ;
+
 
 import Game from "./game/game";
 import { Bullet } from "./gameobjects/bullet";
