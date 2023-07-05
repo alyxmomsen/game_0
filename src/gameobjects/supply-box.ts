@@ -36,6 +36,7 @@ export class SupplyBox extends GameObject {
       id: 0,
       kind: "supply-box",
       walkStepRate: 100,
+      walkStepRange:0 ,
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
       color: "orange",

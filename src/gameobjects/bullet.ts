@@ -26,7 +26,7 @@ export class Bullet extends GameObject {
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {
     // this.movement.direction = {x:0 , y:0} ;
-    this.movement.setTickInterval(this.movement.getTickInterval() * 60); // увеличиваем задержку между шагами
+    this.movement.stepRange /= 3; // увеличиваем задержку между шагами
     // this.setStepRate(this.movement.getStepRate() * 1.5); //  не работает
 
     const axisDirections: [1, 0, -1] = [1, 0, -1];
@@ -52,7 +52,15 @@ export class Bullet extends GameObject {
       this.calculateNextPosition(this.movement.direction);
 
       if (this.movement.shouldFadeDownStepRate) {
-        this.movement.setTickInterval(this.movement.getTickInterval() * 1.9); // уменьшаем скорость стэп-рейта на значение
+        if(this.movement.stepRange > 0) {
+          this.movement.stepRange -= 0.1
+          
+          if(this.movement.stepRange < 0) {
+            this.movement.stepRange = 0 ;
+          }
+
+        }
+        
       }
     }
   }
@@ -66,7 +74,7 @@ export class Bullet extends GameObject {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
-    if (!this.isDied && this.movement.getTick()) {
+    if (!this.isDied ) {
       /*   
         если 'this.movement.walkStepsLimit === 0' , то выполняется Условие 
         если 'this.movement.walkStepsLimit > 0' , то проверяется "this.movement.counterOfSteps < this.movement.walkStepsLimit"
@@ -79,7 +87,7 @@ export class Bullet extends GameObject {
       this.performMovement();
     }
 
-    if (this.movement.getTickInterval() > 1000) {
+    if (this.movement.stepRange <= 0) {
       // умираем , если слишком медленный
       this.isDied = true;
     }
@@ -121,6 +129,7 @@ export class Bullet extends GameObject {
       kind: "damage-entity",
       position,
       walkStepRate,
+      walkStepRange: 20 ,
       walkStepsLimit,
       shouldFadeDownStepRate: walkStepRateFadeDown,
       direction,

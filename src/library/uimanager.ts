@@ -9,8 +9,8 @@ export class UIManager {
   draw(x: number, y: number, w: number, h: number, color: string = "blue") {
     this.ctx.fillStyle = color;
     this.ctx.fillRect(
-      x * this.gameCellDimentions.width,
-      y * this.gameCellDimentions.height,
+      x /* * this.gameCellDimentions.width */,
+      y /* * this.gameCellDimentions.height */,
       w,
       h
     );

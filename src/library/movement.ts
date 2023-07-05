@@ -10,6 +10,7 @@ export class Movement {
   maxWalkSteps: number;
   shouldFadeDownStepRate: boolean;
   nextPosition: Position;
+  stepRange:number ;
 
   getTickInterval() {
     return this.stepRate;
@@ -33,14 +34,17 @@ export class Movement {
     maxWalkSteps,
     shouldFadeDownStepRate,
     nextPosition,
+    stepRange ,
   }: {
     stepRate: number;
     direction: Direction;
     maxWalkSteps: number;
     shouldFadeDownStepRate: boolean;
     nextPosition: Position;
+    stepRange:number ;
   }) {
     this.stepRate = stepRate;
+    this.stepRange = stepRange ;
     this.ticker = new TickController(stepRate);
     this.direction = direction;
     this.counterOfSteps = 0;

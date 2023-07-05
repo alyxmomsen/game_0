@@ -26,6 +26,7 @@ export type GameObjectConstructor = {
   id: number;
   kind: GameObjectKinds;
   walkStepRate: number;
+  walkStepRange:number ;
   walkStepsLimit: number;
   color: string;
   position: Position;

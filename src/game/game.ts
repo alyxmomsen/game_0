@@ -14,24 +14,28 @@ import { Weapon } from "../library/weapon";
 import file1 from "./../images/health.png";
 import file2 from "./../images/image2.png";
 
+// import sound from "./../images/"
+
 import spr from "./../images/spites/Heroes/Knight/Idle/Idle-Sheet.png";
 
+/* ====== Sprites ====== */
 const img1 = new Image();
 const img2 = new Image();
 const sprite = new Image();
 img1.src = file1;
 img2.src = file2;
 sprite.src = spr;
+/* ===================== */
 
 export default class Game {
   handleTicker = new TickController(1000);
 
+
+
   /* ---------------------- */
 
   UIManager: UIManager;
-
   creatorEnemyTicker: TickController;
-
   supplyBoxCreatingTicker: TickController;
 
   // gameObjectsPull
@@ -80,13 +84,13 @@ export default class Game {
     if (this.creatorEnemyTicker.tick()) {
       // console.log(this.enemies , 'this.enemies.length');
 
-      if (this.enemies.length < 5) {
+      if (this.enemies.length < 10) {
         this.spawnQueue.push(
           new Enemy({
             id: 0,
             position: {
-              x: Math.floor(Math.random() * this.field.resolution.width),
-              y: Math.floor(Math.random() * this.field.resolution.height),
+              x: Math.floor(Math.random() * this.field.resolution.width * this.field.gameCellDimentions.width),
+              y: Math.floor(Math.random() * this.field.resolution.height * this.field.gameCellDimentions.height),
             },
             weapons: [],
           })
@@ -171,8 +175,8 @@ export default class Game {
       this.supplyBoxes.push(
         new SupplyBox({
           position: {
-            x: Math.floor(Math.random() * this.field.resolution.width),
-            y: Math.floor(Math.random() * this.field.resolution.height),
+            x: Math.floor(Math.random() * this.field.resolution.width * 50),
+            y: Math.floor(Math.random() * this.field.resolution.height * 50),
           },
         })
       );
@@ -261,8 +265,8 @@ export default class Game {
         0,
         150,
         150,
-        elem.position.x * elem.getDimentions().width,
-        elem.position.y * elem.getDimentions().height,
+        elem.position.x,
+        elem.position.y,
         50,
         50
       );

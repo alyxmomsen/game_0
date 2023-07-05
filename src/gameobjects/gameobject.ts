@@ -108,10 +108,10 @@ export default abstract class GameObject extends GameObject_Part_3 {
           id: 0,
           ownDamage: new Damage(this.attack.currentWeapon.damage),
           position: {
-            x: this.position.x + this.attack.direction.x,
-            y: this.position.y + this.attack.direction.y,
+            x: this.position.x + this.attack.direction.x * 50,
+            y: this.position.y + this.attack.direction.y * 50,
           },
-          walkStepRate: this.attack.currentWeapon.stepRate,
+          walkStepRate: /* this.attack.currentWeapon.stepRate */2,
           walkStepRateFadeDown: this.attack.currentWeapon.stepRateFadeDown,
           walkStepsLimit: this.attack.currentWeapon
             ? this.attack.currentWeapon.stepsLimit
@@ -125,6 +125,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
     position,
     kind,
     walkStepRate,
+    walkStepRange ,
     walkStepsLimit,
     shouldFadeDownStepRate,
     ownDamage,
@@ -141,6 +142,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
       maxWalkSteps: walkStepsLimit,
       shouldFadeDownStepRate,
       nextPosition: { ...position },
+      stepRange:walkStepRange ,
     });
 
     this.dimentions = { width: 50, height: 50 };

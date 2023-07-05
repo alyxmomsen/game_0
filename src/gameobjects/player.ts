@@ -29,6 +29,25 @@ export class Player extends GameObject {
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {}
 
+  proccessKeysToMoving (keys:string[]) {
+
+    const w = keys.includes('w') ;
+    const s = keys.includes('s') ;
+
+    if(w) {
+      
+    }
+
+
+  }
+
+  calculateNextPosition_beta () {
+
+    this.movement.nextPosition.x++ ; 
+    // this.movement.
+
+  }
+
   update({
     keys,
     objects,
@@ -38,8 +57,10 @@ export class Player extends GameObject {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
-    if (!this.isDied && this.movement.getTick()) {
+    if (!this.isDied /* && this.movement.getTick() */) {
       this.calculateNextPosition(calculateMovementDirection(keys));
+
+      this.proccessKeysToMoving(keys);
     }
 
     this.setAttackDirection(keys);
@@ -63,7 +84,8 @@ export class Player extends GameObject {
     super({
       id,
       kind: "player",
-      walkStepRate: 100,
+      walkStepRate: 1000,
+      walkStepRange:5 ,
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
       color: "green",
