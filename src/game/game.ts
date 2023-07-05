@@ -11,10 +11,13 @@ import { Dimentions } from "../library/types";
 import { UIManager } from "../library/uimanager";
 import { Weapon } from "../library/weapon";
 
-import f from "./../images/health.png";
+import file1 from "./../images/health.png";
+import file2 from "./../images/image2.png";
 
-const img = new Image();
-img.src = f;
+const img1 = new Image();
+const img2 = new Image();
+img1.src = file1 ;
+img2.src = file2 ;
 
 export default class Game {
   handleTicker = new TickController(1000);
@@ -233,11 +236,11 @@ export default class Game {
       // );
 
       this.UIManager.drawImg(
-        img,
+        elem.content === 'health' ? img1 : img2 ,
         0,
         0,
-        100,
-        100,
+        150,
+        150,
         elem.position.x * elem.getDimentions().width,
         elem.position.y * elem.getDimentions().height,
         50,
