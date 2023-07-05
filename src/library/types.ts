@@ -58,4 +58,4 @@ export type UI_stat = {
   };
 };
 
-export type GameObjectExtendsClasses = Enemy | Bullet | SupplyBox | Player ;
+export type GameObjectExtendsClasses = Enemy | Bullet | SupplyBox | Player;

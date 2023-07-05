@@ -16,8 +16,17 @@ export class UIManager {
     );
   }
 
-  drawImg (image:CanvasImageSource , sx: number, sy: number, sw:number, sh:number, dx:number, dy:number, dw: number, dh: number) {
-
+  drawImg(
+    image: CanvasImageSource,
+    sx: number,
+    sy: number,
+    sw: number,
+    sh: number,
+    dx: number,
+    dy: number,
+    dw: number,
+    dh: number
+  ) {
     this.ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
   }
 

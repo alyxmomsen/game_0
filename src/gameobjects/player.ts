@@ -60,10 +60,9 @@ export class Player extends GameObject {
     position: Position;
     weapons: Weapon[];
   }) {
-
     super({
       id,
-      kind:'player',
+      kind: "player",
       walkStepRate: 100,
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,

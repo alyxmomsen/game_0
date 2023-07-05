@@ -3,13 +3,11 @@ export class Armor {
   health: number;
   dempher: number;
 
-  decreaseArmorHealth (value:number) {
+  decreaseArmorHealth(value: number) {
     // this.health ;
   }
 
-  increaseArmorHealth (value:number) {
-
-  }
+  increaseArmorHealth(value: number) {}
 
   constructor({ health, dempher }: { health: number; dempher: number }) {
     this.health = health;

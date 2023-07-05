@@ -12,7 +12,7 @@ module.exports = {
     clean: true,
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js" , ".png"],
+    extensions: [".tsx", ".ts", ".js", ".png"],
   },
   devtool: "inline-source-map",
   module: {
@@ -30,7 +30,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif)$/i,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
           },
         ],
       },

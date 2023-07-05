@@ -11,14 +11,12 @@ import { Dimentions } from "../library/types";
 import { UIManager } from "../library/uimanager";
 import { Weapon } from "../library/weapon";
 
-
-import f from './../images/health.png' ;
+import f from "./../images/health.png";
 
 const img = new Image();
-      img.src = f ;
+img.src = f;
 
 export default class Game {
-
   handleTicker = new TickController(1000);
 
   /* ---------------------- */
@@ -160,8 +158,7 @@ export default class Game {
 
     /* ================================ */
 
-    
-    const arr:['armore , health'] =  ['armore , health'] ;
+    const arr: ["armore , health"] = ["armore , health"];
 
     if (this.supplyBoxCreatingTicker.tick()) {
       this.supplyBoxes.push(
@@ -174,8 +171,7 @@ export default class Game {
       );
     }
 
-    this.player.displayStatsIntoTheBrowserConsole() ;
-
+    this.player.displayStatsIntoTheBrowserConsole();
   }
 
   render(field: HTMLElement = null) {
@@ -236,11 +232,17 @@ export default class Game {
       //   elem.getColor()
       // );
 
-      
-
-
-
-      this.UIManager.drawImg(img , 0 , 0 , 100 , 100 ,elem.position.x * elem.getDimentions().width , elem.position.y * elem.getDimentions().height ,50 , 50);
+      this.UIManager.drawImg(
+        img,
+        0,
+        0,
+        100,
+        100,
+        elem.position.x * elem.getDimentions().width,
+        elem.position.y * elem.getDimentions().height,
+        50,
+        50
+      );
       // this.renderGameObject({ elem });
     });
   }

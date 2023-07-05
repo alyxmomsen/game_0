@@ -2,21 +2,13 @@
 // import f from './images/image.jpg' ;
 // import fff from './images/image.jpg' ;
 
-
-
 import Game from "./game/game";
 import { Bullet } from "./gameobjects/bullet";
 import { Player } from "./gameobjects/player";
 import { LinkedList } from "./library/linked-list";
 import "./styles/main.css";
 
-
-
-
-
 (function () {
-
-
   const root = document.querySelector<HTMLElement>(".root");
   const gameFieldHTMLContainer =
     document.querySelector<HTMLElement>("#game-field");

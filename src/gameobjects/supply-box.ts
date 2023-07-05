@@ -7,7 +7,7 @@ import GameObject from "./gameobject";
 import { Player } from "./player";
 
 export class SupplyBox extends GameObject {
-  content:'health'|'armore' ;
+  content: "health" | "armore";
 
   ifCollisionIs_For(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
@@ -32,10 +32,6 @@ export class SupplyBox extends GameObject {
   }
 
   constructor({ position }: { position: Position }) {
-
-
-
-
     super({
       id: 0,
       kind: "supply-box",
