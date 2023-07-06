@@ -332,8 +332,8 @@ export default class Game {
 
     this.UIManager = new UIManager({
       canvas,
-      canvasHeight: 600 * 2,
-      canvasWidth: 800 * 2,
+      canvasHeight: (this.field.resolution.height + 1) * this.field.gameCellDimentions.height ,
+      canvasWidth: (this.field.resolution.width + 1) * this.field.gameCellDimentions.width ,
       gameCellDimentions,
     });
 

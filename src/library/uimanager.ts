@@ -54,8 +54,8 @@ export class UIManager {
     this.canvas = canvas;
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-    canvas.style.width = "800px";
-    canvas.style.height = "600px";
+    // canvas.style.width = "800px";
+    // canvas.style.height = "600px";
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, 100, 100);
