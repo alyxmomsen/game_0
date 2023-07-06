@@ -76,7 +76,7 @@ export default class Game {
 
     if (!this.creatorEnemyTicker) {
       this.creatorEnemyTicker = new TickController(
-        Math.floor(Math.random() * 1000)
+        Math.floor(Math.random() * 2000) + 1000
       );
     }
 
@@ -88,16 +88,8 @@ export default class Game {
           new Enemy({
             id: 0,
             position: {
-              x: Math.floor(
-                Math.random() *
-                  this.field.resolution.width *
-                  this.field.gameCellDimentions.width
-              ),
-              y: Math.floor(
-                Math.random() *
-                  this.field.resolution.height *
-                  this.field.gameCellDimentions.height
-              ),
+              x: Math.floor(Math.random() * (this.field.resolution.width)) * this.field.gameCellDimentions.width,
+              y: Math.floor(Math.random() * (this.field.resolution.height)) * this.field.gameCellDimentions.height,
             },
             weapons: [],
           })
