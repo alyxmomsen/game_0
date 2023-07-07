@@ -126,9 +126,9 @@ export class GameObject_part_2 extends GameObject_part_1 {
   calculateNextPosition({ x, y }: { x: 1 | -1 | 0; y: 1 | -1 | 0 }) {
     if (x !== 0 || y !== 0) {
       this.movement.nextPosition.y =
-        this.position.y + y * this.movement.stepRange;
+        this.position.y + (y * this.movement.stepRange);
       this.movement.nextPosition.x =
-        this.position.x + x * this.movement.stepRange;
+        this.position.x + (x * this.movement.stepRange);
     }
 
     if (x !== 0) {

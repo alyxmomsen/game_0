@@ -59,6 +59,9 @@ export class Bullet extends GameObject {
   }
 
   performMovement() {
+
+    const stepDecreaseAmount = 0.1 ;
+
     if (
       !this.movement.maxWalkSteps ||
       this.movement.counterOfSteps < this.movement.maxWalkSteps
@@ -67,7 +70,7 @@ export class Bullet extends GameObject {
 
       if (this.movement.shouldFadeDownStepRate) {
         if (this.movement.stepRange > 0) {
-          this.movement.stepRange -= 0.1;
+          this.movement.stepRange -= stepDecreaseAmount;
 
           if (this.movement.stepRange < 0) {
             this.movement.stepRange = 0;
