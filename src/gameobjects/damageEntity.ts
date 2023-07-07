@@ -59,6 +59,8 @@ export class DamageEntity extends GameObject {
       walkStepRange: 0,
       color: "white",
       position,
+      dimentions:{width:10 , height:10} ,
+      // dimetions:{width:10 , height:10} ,
       ownDamage: new Damage({ damageClass: "phisical", value: 50 }),
       direction: { x: 1, y: 0 },
       health: 10,

@@ -1,5 +1,5 @@
 import { Damage } from "../library/damage";
-import { Position } from "../library/types";
+import { Dimentions, Position } from "../library/types";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
@@ -90,12 +90,12 @@ export class GameObject_part_2 extends GameObject_part_1 {
   }
 
   // проверка на коллизию nextposition с переданными координатами
-  checkNextPositionColissionWith(subjectPostion: Position) {
+  checkNextPositionColissionWith(subjectPostion: Position , subjectDimentions:Dimentions) {
     if (
-      this.movement.nextPosition.x < subjectPostion.x + 50 &&
-      this.movement.nextPosition.x + 50 > subjectPostion.x &&
-      this.movement.nextPosition.y < subjectPostion.y + 50 &&
-      this.movement.nextPosition.y + 50 > subjectPostion.y
+      this.movement.nextPosition.x < subjectPostion.x + subjectDimentions.width &&
+      this.movement.nextPosition.x + this.dimentions.width > subjectPostion.x &&
+      this.movement.nextPosition.y < subjectPostion.y + subjectDimentions.height &&
+      this.movement.nextPosition.y + this.dimentions.height > subjectPostion.y
     ) {
       return true;
     } else {

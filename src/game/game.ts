@@ -254,25 +254,25 @@ export default class Game {
     });
 
     this.supplyBoxes.forEach((elem) => {
-      // this.UIManager.draw(
+      this.UIManager.draw(
+        elem.position.x,
+        elem.position.y,
+        elem.getDimentions().width,
+        elem.getDimentions().height,
+        elem.getColor()
+      );
+
+      // this.UIManager.drawImg(
+      //   elem.content === "health" ? img1 : img2,
+      //   0,
+      //   0,
+      //   150,
+      //   150,
       //   elem.position.x,
       //   elem.position.y,
       //   elem.getDimentions().width,
-      //   elem.getDimentions().height,
-      //   elem.getColor()
+      //   elem.getDimentions().height ,
       // );
-
-      this.UIManager.drawImg(
-        elem.content === "health" ? img1 : img2,
-        0,
-        0,
-        150,
-        150,
-        elem.position.x,
-        elem.position.y,
-        50,
-        50
-      );
       // this.renderGameObject({ elem });
     });
   }

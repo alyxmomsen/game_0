@@ -58,7 +58,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
       // если объект не является сам собой и если объект не "умер"
       if (object !== this && !this.isDied) {
         // проверка следующего шага на коллизию
-        if (this.checkNextPositionColissionWith(object.position)) {
+        if (this.checkNextPositionColissionWith(object.position , object.getDimentions())) {
           // object instanceof SupplyBox ; // не проходит эту проверку
 
           // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
@@ -123,6 +123,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
   constructor({
     id,
     position,
+    dimentions ,
     kind,
     walkStepRate,
     walkStepRange,
@@ -145,7 +146,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
       stepRange: walkStepRange,
     });
 
-    this.dimentions = { width: 50, height: 50 };
+    this.dimentions = { ...dimentions };
 
     this.position = { ...position };
     this.attack = new Attack(ownDamage, weapons);

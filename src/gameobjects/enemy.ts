@@ -62,6 +62,7 @@ export class Enemy extends GameObject {
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
       position,
+      dimentions: {width:100 , height:50} ,
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,
       direction: { x: 1, y: 0 },

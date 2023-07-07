@@ -30,6 +30,7 @@ export type GameObjectConstructor = {
   walkStepsLimit: number;
   color: string;
   position: Position;
+  dimentions:Dimentions ;
   ownDamage: Damage;
   direction: Direction;
   health: number;

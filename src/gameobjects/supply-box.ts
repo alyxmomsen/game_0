@@ -41,6 +41,7 @@ export class SupplyBox extends GameObject {
       shouldFadeDownStepRate: false,
       color: "orange",
       position,
+      dimentions: {width:160 , height:160} ,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons: [],
       direction: { x: 1, y: 0 },

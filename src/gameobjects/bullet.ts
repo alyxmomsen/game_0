@@ -140,6 +140,7 @@ export class Bullet extends GameObject {
       id,
       kind: "damage-entity",
       position,
+      dimentions: {width:20 , height:20} ,
       walkStepRate,
       walkStepRange: 20,
       walkStepsLimit,
