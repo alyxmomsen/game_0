@@ -9,7 +9,7 @@ import { SupplyBox } from "./supply-box";
 
 export class GameObject_part_2 extends GameObject_part_1 {
   displayStatsIntoTheBrowserConsole() {
-    const str = `${this.attack.currentWeapon.damage.value} ${this.health} ${this.armor.health} `;
+    const str = `${this.attack.currentWeapon.damage.value} ${this.health} ${this.armor.getHealthValue()} `;
 
     console.log(str);
   }
@@ -59,12 +59,17 @@ export class GameObject_part_2 extends GameObject_part_1 {
   }
 
   getDamage(damage: number) {
-    if (this.armor.health > 0) {
-      this.armor.health -= Math.floor((damage / 100) * this.armor.dempher);
+    if (this.armor.getHealthValue() > 0) {
+      this.armor.decreaseArmorHealth(Math.floor((damage / 100) * this.armor.dempher)) ;
+      // this.armor.decreaseArmorHealth(100);
+      console.log(Math.floor((damage / 100) * this.armor.dempher));
       this.health -= Math.floor((damage / 100) * (100 - this.armor.dempher));
+      console.log((damage / 100) * (100 - this.armor.dempher));
     } else {
       this.health -= damage;
     }
+
+    // console.log();
   }
 
   setOwnDamageValue(value: number) {}
@@ -72,7 +77,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
   getOwnDamageValue() {}
 
   getHealth() {
-    return this.health.toString();
+    return this.health;
   }
 
   geTheValueDamage() {}

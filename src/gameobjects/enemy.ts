@@ -66,10 +66,10 @@ export class Enemy extends GameObject {
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,
       direction: { x: 1, y: 0 },
-      health: /* Math.floor(Math.random() * 995) + 5 */ 1000,
+      health: Math.floor(Math.random() * 995) + 5 /* 1000 */,
       armor: new Armor({
-        health: /* Math.floor(Math.random() * 10000) */ 1000,
-        dempher: /* Math.floor(Math.random() * 99) + 1 */ 50,
+        health: Math.floor(Math.random() * 10000) /* 1000 */,
+        dempher: Math.floor(Math.random() * 99) + 1 /* 90 */,
       }),
     });
   }

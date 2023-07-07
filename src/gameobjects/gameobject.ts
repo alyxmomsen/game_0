@@ -156,7 +156,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
     this.kind = kind;
     this.id = id;
     this.health = health;
-
+    this.maxHealth = health ;
     this.color = color;
 
     this.dateOfCreated = Date.now();

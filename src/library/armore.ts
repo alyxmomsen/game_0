@@ -1,10 +1,19 @@
 // стата по броне
 export class Armor {
-  health: number;
+  private health: number;
+  private maxHealth:number ;
   dempher: number;
 
+  getHealthValue() {
+    return this.health ;
+  }
+
+  getMaxHaxHealtValue () {
+    return this.maxHealth ;
+  }
+
   decreaseArmorHealth(value: number) {
-    // this.health ;
+    this.health -= value ;
   }
 
   increaseArmorHealth(value: number) {}
@@ -12,6 +21,7 @@ export class Armor {
   constructor({ health, dempher }: { health: number; dempher: number }) {
     this.health = health;
     this.dempher = dempher;
+    this.maxHealth = health ;
     // console.log("armore is plugged");
   }
 }

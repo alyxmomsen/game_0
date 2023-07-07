@@ -14,7 +14,8 @@ export class GameObject_part_1 {
   protected dimentions: Dimentions;
   position: { x: number; y: number } | null = null;
   protected health: number;
-  protected armor: Armor;
+  maxHealth:number ;
+  armor: Armor;
   isDied: boolean;
   protected attack: Attack;
   movement: Movement;

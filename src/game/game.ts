@@ -196,7 +196,11 @@ export default class Game {
       this.player.position.y,
       this.player.getDimentions().width,
       this.player.getDimentions().height,
-      this.player.getColor()
+      this.player.getColor() , 
+      this.player.getHealth() ,
+      this.player.maxHealth ,
+      this.player.armor.getHealthValue() ,
+      this.player.armor.getMaxHaxHealtValue() ,
     );
 
     // if(this.player.rendering.animateTicker.tick()) {
@@ -223,7 +227,11 @@ export default class Game {
         elem.position.y,
         elem.getDimentions().width,
         elem.getDimentions().height,
-        elem.getColor()
+        elem.getColor() , 
+        elem.getHealth() ,
+        elem.maxHealth ,
+        elem.armor.getHealthValue() ,
+        elem.armor.getMaxHaxHealtValue() ,
       );
     });
 
@@ -237,7 +245,11 @@ export default class Game {
         elem.position.y,
         elem.getDimentions().width,
         elem.getDimentions().height,
-        elem.getColor()
+        elem.getColor() , 
+        elem.getHealth() ,
+        elem.maxHealth ,
+        elem.armor.getHealthValue() ,
+        elem.armor.getMaxHaxHealtValue() ,
       );
     });
 
@@ -249,8 +261,15 @@ export default class Game {
         elem.position.y,
         elem.getDimentions().width,
         elem.getDimentions().height,
-        elem.getColor()
+        elem.getColor() , 
+        elem.getHealth() ,
+        elem.maxHealth ,
+        elem.armor.getHealthValue() ,
+        elem.armor.getMaxHaxHealtValue() ,
       );
+
+      
+
     });
 
     this.supplyBoxes.forEach((elem) => {
@@ -259,7 +278,11 @@ export default class Game {
         elem.position.y,
         elem.getDimentions().width,
         elem.getDimentions().height,
-        elem.getColor()
+        elem.getColor() , 
+        elem.getHealth() ,
+        elem.maxHealth ,
+        elem.armor.getHealthValue() ,
+        elem.armor.getMaxHaxHealtValue() ,
       );
 
       // this.UIManager.drawImg(
