@@ -69,7 +69,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
     }
 
     // проверяем не столкнулся ли с границей game field
-    if (this.checkCollissionWithFieldLimits({ ...fieldDimentions })) {
+    if (this.checkCollissionWithFieldLimits({xResolution:fieldDimentions.width , yResolution:fieldDimentions.height })) {
       isCollision = true;
       if (this.kind === "damage-entity") {
         // костыль

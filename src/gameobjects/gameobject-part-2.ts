@@ -115,16 +115,16 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
   // проверка на коллизию со стенами
   checkCollissionWithFieldLimits({
-    width,
-    height,
+    xResolution ,
+    yResolution ,
   }: {
-    width: number;
-    height: number;
+    xResolution: number;
+    yResolution: number;
   }): boolean {
     if (
-      this.movement.nextPosition.x >= width * 50 ||
+      this.movement.nextPosition.x >= xResolution * 50 ||
       this.movement.nextPosition.x < 0 ||
-      this.movement.nextPosition.y >= height * 50 ||
+      this.movement.nextPosition.y >= yResolution * 50 ||
       this.movement.nextPosition.y < 0
     ) {
       return true;
@@ -158,11 +158,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
   /// beta beta beta
   calculateOwnDamageBySpeed() {
     const damage = this.attack.ownDamage.value;
-    const stepRate = this.movement.getTickInterval();
-    const calculatedDamageValue = Math.floor(
-      damage / ((stepRate + 1000) / (1000 - stepRate))
-    );
-
+    const calculatedDamageValue = Math.floor(damage * this.movement.stepRange / 5);
     return calculatedDamageValue;
   }
 }
