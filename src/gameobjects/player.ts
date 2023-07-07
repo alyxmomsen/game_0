@@ -84,7 +84,7 @@ export class Player extends GameObject {
       shouldFadeDownStepRate: false,
       color: "green",
       position,
-      dimentions: {width:30 , height:30} ,
+      dimentions: {width:100 , height:100} ,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons,
       direction: { x: 1, y: 0 },

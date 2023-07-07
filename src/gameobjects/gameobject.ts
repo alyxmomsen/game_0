@@ -101,6 +101,30 @@ export default abstract class GameObject extends GameObject_Part_3 {
     const left = keys.includes("ArrowLeft");
     const right = keys.includes("ArrowRight");
 
+
+    const calculateTheBulletPostition =  () => {
+
+      const position = {x:this.position.x + this.dimentions.width / 2 , y:this.position.y + this.dimentions.height / 2} ;
+
+      if(this.attack.direction.x > 0) {
+        position.x = this.position.x + this.dimentions.width ;
+      } else if (this.attack.direction.x < 0) {
+        position.x = this.position.x - 10 ;
+      }
+
+      if(this.attack.direction.y > 0) {
+        position.y = this.position.y + this.dimentions.width ;
+      } else if (this.attack.direction.y < 0) {
+        position.y = this.position.y - 10 ;
+      }
+
+      return position ;
+
+    }
+
+    const pos = calculateTheBulletPostition();
+
+
     return (up || down || left || right) && this.attack.ticker?.tick()
       ? new Bullet({
           direction: this.attack.direction,
@@ -108,8 +132,8 @@ export default abstract class GameObject extends GameObject_Part_3 {
           id: 0,
           ownDamage: new Damage(this.attack.currentWeapon.damage),
           position: {
-            x: this.position.x + this.attack.direction.x * 50,
-            y: this.position.y + this.attack.direction.y * 50,
+            x: /* this.position.x */pos.x/*  + (this.attack.direction.x) - this.dimentions.width */,
+            y: /* this.position.y */pos.y/*  + this.attack.direction.y + this.dimentions.height */,
           },
           walkStepRate: /* this.attack.currentWeapon.stepRate */ 2,
           walkStepRateFadeDown: this.attack.currentWeapon.stepRateFadeDown,

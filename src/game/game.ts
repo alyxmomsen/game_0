@@ -207,17 +207,17 @@ export default class Game {
     //   this.player.rendering.currentSpriteState = [0 , 32 ,64 , 96][Math.floor(Math.random() * 4)] ;
     // }
 
-    // this.UIManager.drawImg(
-    //   sprite,
-    //   this.player.rendering.currentSpriteState,
-    //   0,
-    //   32,
-    //   32,
-    //   (this.player.position.x ) * this.player.getDimentions().width - (this.player.getDimentions().width / 2),
-    //   this.player.position.y * this.player.getDimentions().height - (this.player.getDimentions().height),
-    //   this.player.getDimentions().width * 2 ,
-    //   this.player.getDimentions().height * 2 ,
-    // );
+    this.UIManager.drawImg(
+      sprite,
+      0 ,
+      0,
+      32,
+      32,
+      this.player.position.x ,
+      this.player.position.y - 10,
+      this.player.getDimentions().width * 1.2  ,
+      this.player.getDimentions().height * 1.2  ,
+    );
 
     this.bullets.forEach((elem) => {
       // this.renderGameObject({ elem });
