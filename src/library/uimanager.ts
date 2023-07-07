@@ -74,7 +74,7 @@ export class UIManager {
   }
 
   clearCanvas() {
-    this.ctx.fillStyle = "black";
+    this.ctx.fillStyle = "#20242f";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
