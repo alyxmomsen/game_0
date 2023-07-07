@@ -1,13 +1,13 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
-import { Dimentions, Position } from "../library/types";
+import { Dimentions, Position, SupplyBoxContent } from "../library/types";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
 import { Player } from "./player";
 
 export class SupplyBox extends GameObject {
-  content: "health" | "armore";
+  content: SupplyBoxContent;
 
   ifCollisionIs_For(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
@@ -52,7 +52,7 @@ export class SupplyBox extends GameObject {
       }),
     });
 
-    const arr: ("health" | "armore")[] = ["armore", "health"];
+    const arr: SupplyBoxContent[] = ["armor", "health" , "damage"];
 
     this.content = arr[Math.floor(Math.random() * 2)];
   }
