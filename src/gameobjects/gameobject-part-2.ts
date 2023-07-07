@@ -80,6 +80,11 @@ export class GameObject_part_2 extends GameObject_part_1 {
     return this.health;
   }
 
+  increaseHealth(value:number) {
+    this.health += value ;
+    this.maxHealth = this.health ; 
+  }
+
   geTheValueDamage() {}
 
   // 'атака' на указаный объект

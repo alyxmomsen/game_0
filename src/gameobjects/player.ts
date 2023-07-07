@@ -14,7 +14,7 @@ export class Player extends GameObject {
   ): boolean {
     if (object instanceof SupplyBox) {
       object.isDied = true;
-
+      this.increaseHealth(500);
       return false;
     } else {
       return true;
@@ -91,7 +91,7 @@ export class Player extends GameObject {
       health: 666,
       armor: new Armor({
         health: Math.floor(Math.random() * 10000),
-        dempher: Math.floor(Math.random() * 99) + 1,
+        dempher:99 /* Math.floor(Math.random() * 99) + 1 */,
       }),
     });
   }
