@@ -58,7 +58,7 @@ export class UIManager {
 
   }
 
-  drawImg(
+  drawSprite(
     image: CanvasImageSource,
     sx: number,
     sy: number,

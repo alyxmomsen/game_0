@@ -31,6 +31,9 @@ export class Player extends GameObject {
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {}
 
+  worldLimitCollision_handler(): void {
+    
+  }
 
   update({
     keys,
@@ -48,6 +51,7 @@ export class Player extends GameObject {
       this.getDamage(damage.value);
 
     });
+    this.damaged = [] ; // обнуляем массив урона
 
     this.controller.updateByKeys(keys) ;
 

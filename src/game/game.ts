@@ -82,7 +82,9 @@ export default class Game {
             x: Math.floor(Math.random() * (this.field.resolution.width)) * this.field.gameCellDimentions.width,
             y: Math.floor(Math.random() * (this.field.resolution.height)) * this.field.gameCellDimentions.height,
           },
-          weapons: [],
+          weapons: [
+            
+          ],
         }) ;
       }
     
@@ -122,6 +124,7 @@ export default class Game {
       this.bullets.push(bulletOfNull);
     }
 
+    this.bullets = this.bullets.filter(bullet => !bullet.isDied) ;
 
     this.enemies.forEach((enemy) => {
       bulletOfNull = enemy.update({
@@ -149,6 +152,7 @@ export default class Game {
         fieldDimentions: this.field.resolution,
       });
     });
+
     this.supplyBoxes = this.supplyBoxes.filter((elem) => !elem.isDied);
 
     if (this.supplyBoxCreatingTicker.tick()) {
@@ -175,19 +179,19 @@ export default class Game {
   render(field: HTMLElement = null) {
     this.UIManager.clearCanvas();
 
-    this.UIManager.draw(
-      this.player.position.x,
-      this.player.position.y,
-      this.player.getDimentions().width,
-      this.player.getDimentions().height,
-      this.player.getColor() , 
-      this.player.getHealth() ,
-      this.player.maxHealth ,
-      this.player.armor.getHealthValue() ,
-      this.player.armor.getMaxHaxHealtValue() ,
-    );
+    // this.UIManager.draw(
+    //   this.player.position.x,
+    //   this.player.position.y,
+    //   this.player.getDimentions().width,
+    //   this.player.getDimentions().height,
+    //   this.player.getColor() , 
+    //   this.player.getHealth() ,
+    //   this.player.maxHealth ,
+    //   this.player.armor.getHealthValue() ,
+    //   this.player.armor.getMaxHaxHealtValue() ,
+    // );
 
-    this.UIManager.drawImg(
+    this.UIManager.drawSprite(
       sprite,
       0 ,
       0,

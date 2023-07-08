@@ -24,9 +24,10 @@ export class Enemy extends GameObject {
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {}
 
-
+  worldLimitCollision_handler(): void {
+    
+  }
   
-
   update({
     objects,
     fieldDimentions,
@@ -35,11 +36,7 @@ export class Enemy extends GameObject {
     fieldDimentions: Dimentions;
   }): null | Bullet {
 
-    this.damaged.forEach(damage => {
-
-      this.getDamage(damage.value);
-
-    });
+    
 
     this.controller.autoUpdatePer(1000);
     

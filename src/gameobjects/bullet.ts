@@ -32,6 +32,10 @@ export class Bullet extends GameObject {
   ): void {
     
   }
+
+  worldLimitCollision_handler(): void {
+    this.isDied = true;
+  }
   
   update({
     objects,
@@ -50,7 +54,6 @@ export class Bullet extends GameObject {
   constructor({
     position,
     id,
-    direction,
     ownDamage,
     health,
     walkStepRateFadeDown,
@@ -59,7 +62,6 @@ export class Bullet extends GameObject {
   }: {
     position: Position;
     id: number;
-    direction: Direction;
     health: number;
     ownDamage: Damage;
     walkStepDirectionRange:{x:number , y:number};

@@ -23,7 +23,8 @@ export class SupplyBox extends GameObject {
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {}
 
-  updateNextPosition(): void {
+
+  worldLimitCollision_handler(): void {
     
   }
 

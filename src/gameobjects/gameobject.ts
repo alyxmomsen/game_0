@@ -5,7 +5,7 @@ import { Bullet } from "./bullet";
 import { SupplyBox } from "./supply-box";
 import { Player } from "./player";
 import { Enemy } from "./enemy";
-import { Dimentions, GameObjectConstructor } from "../library/types";
+import { Dimentions, GameObjectConstructor, GameObjectExtendsClasses } from "../library/types";
 
 import { GameObject_Part_3 } from "./gameobject-part-3";
 import { TickController } from "../library/main";
@@ -27,7 +27,45 @@ export default abstract class GameObject extends GameObject_part_2 {
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
   ): void;
 
+  abstract worldLimitCollision_handler () : void
+
   /* ===================================================== */
+
+
+  isHPisSubZero () { // возвращает true если здох по здоровью
+    return this.health <= 0 ? true : false ;
+  }
+
+
+  checkCollisionsForEveryOne (objects:GameObjectExtendsClasses[]) {// ecли есть хоть одна коллизия, то вернет true, иначе false
+
+    let isCollision = false ;
+    for (const object of objects) {
+      
+      if (object !== this && !this.isDied) { // если объект не является сам собой и если объект не "умер"
+        
+        if (this.checkNextPositionColissionWith(object.position , object.getDimentions())) { // проверка следующего шага на коллизию
+          // object instanceof SupplyBox ; // не проходит эту проверку
+          // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
+
+          isCollision = this.ifCollisionIs_For(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
+        }
+      }
+    }
+
+    return isCollision ;
+  }
+
+  getAllDamages() {
+
+    this.damaged.forEach(damage => {
+
+      this.getDamage(damage.value);
+
+    });
+
+    this.damaged = [] ; // обнуляем массив урона
+  }
 
   update({
     objects ,
@@ -38,35 +76,28 @@ export default abstract class GameObject extends GameObject_part_2 {
   }): Bullet | null {
 
     
+    this.getAllDamages(); // проходим по всем дамейджам и обнуляем список
+
+    this.isDied = this.isHPisSubZero() ? true : this.isDied ; // 
+    
     this.movement.updateStepRangeByController({...this.controller.move});
 
     this.updateNextPosition();
 
-    /* =========================================== */
-    let isCollision = false;
-
-    for (const object of objects) {
-      // если объект не является сам собой и если объект не "умер"
-      if (object !== this && !this.isDied) {
-        
-        // проверка следующего шага на коллизию
-        if (this.checkNextPositionColissionWith(object.position , object.getDimentions())) {
-          // object instanceof SupplyBox ; // не проходит эту проверку
-          // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
-
-          isCollision = this.ifCollisionIs_For(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
-        }
-      }
-    }
-    /* =========================================== */
+    let isCollision = this.checkCollisionsForEveryOne(objects);
+    
 
     // проверяем не столкнулся ли с границей game field
     if (this.checkCollissionWithFieldLimits({xResolution:fieldDimentions.width , yResolution:fieldDimentions.height })) {
+
       isCollision = true;
-      if (this.kind === "damage-entity") {
-        // костыль
-        this.isDied = true;
-      }
+
+      /* =================== otion =================== */
+
+      this.worldLimitCollision_handler ()
+
+      /* ============================================== */
+
     }
 
     if (isCollision) {
@@ -108,11 +139,12 @@ export default abstract class GameObject extends GameObject_part_2 {
       isFire = true ;
     }
 
+
+
     return  (!this.isDied && this.attack.ticker.tick() && isFire) ? new Bullet({
-      direction:{x:1 , y:0} ,
       health:100 ,
       id:0 ,
-      ownDamage:{damageClass:'magic' , value:1000} ,
+      ownDamage:this.attack.currentWeapon ? {...this.attack.currentWeapon.damage} : {damageClass:'magic' , value:100} ,
       position: this.attack.getSpawnPoint() ,
       walkStepDirectionRange:{...this.attack.direction} , 
       walkStepRateFadeDown:false ,
