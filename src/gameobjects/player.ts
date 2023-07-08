@@ -8,6 +8,9 @@ import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
 import { SupplyBox } from "./supply-box";
 
+import sprite from './../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle-Sheet.png' ;
+import { SpriteManager } from "../library/sprite-manager";
+
 export class Player extends GameObject {
   ifCollisionIs_For(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
@@ -71,6 +74,7 @@ export class Player extends GameObject {
     position: Position;
     weapons: Weapon[];
   }) {
+
     super({
       id,
       kind: "player",
@@ -80,7 +84,7 @@ export class Player extends GameObject {
       shouldFadeDownStepRate: false,
       color: "green",
       position,
-      dimentions: {width:100 , height:100} ,
+      dimentions: {width:200 , height:200} ,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons,
       health: 666,
@@ -89,5 +93,12 @@ export class Player extends GameObject {
         dempher:99 /* Math.floor(Math.random() * 99) + 1 */,
       }),
     });
+
+    
+    this.sprite = new Image();
+    this.sprite.src = sprite ;
+    
+    this.spriteManager = new SpriteManager(this.sprite , 3) ;
+    
   }
 }

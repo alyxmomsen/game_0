@@ -4,9 +4,16 @@ import { Controller } from "../library/controller";
 import { Damage } from "../library/damage";
 import { TickController } from "../library/main";
 import { Movement } from "../library/movement";
+import { SpriteManager } from "../library/sprite-manager";
 import { Dimentions, GameObjectKinds } from "../library/types";
 
+
+
 export class GameObject_part_1 {
+
+  spriteManager:SpriteManager ;
+
+  sprite:HTMLImageElement ;
   protected id: number;
   protected damaged: Damage[]; // в данный момент получаемыe уроны
   protected dateOfCreated: number;

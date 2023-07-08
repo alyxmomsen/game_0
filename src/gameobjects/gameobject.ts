@@ -168,6 +168,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     armor,
   }: GameObjectConstructor) {
     super();
+    
     this.movement = new Movement({
       maxWalkSteps: walkStepsLimit,
       shouldFadeDownStepRate,

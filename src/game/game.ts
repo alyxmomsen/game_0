@@ -191,16 +191,18 @@ export default class Game {
     //   this.player.armor.getMaxHaxHealtValue() ,
     // );
 
+    const frame = this.player.spriteManager.getFrame();
+
     this.UIManager.drawSprite(
-      sprite,
-      0 ,
-      0,
+      this.player.sprite,
+      frame.x/* 1 * (32 * (Math.floor(Math.random() * 4))) */ ,
+      frame.y,
       32,
       32,
       this.player.position.x ,
-      this.player.position.y - 10,
-      this.player.getDimentions().width * 1.2  ,
-      this.player.getDimentions().height * 1.2  ,
+      this.player.position.y ,
+      this.player.getDimentions().width * 1  ,
+      this.player.getDimentions().height * 1  ,
     );
 
     this.bullets.forEach((elem) => {
