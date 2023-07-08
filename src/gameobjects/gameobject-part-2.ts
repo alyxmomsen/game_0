@@ -62,10 +62,10 @@ export class GameObject_part_2 extends GameObject_part_1 {
   // проверка на коллизию nextposition с переданными координатами
   checkNextPositionColissionWith(subjectPostion: Position , subjectDimentions:Dimentions) {
     if (
-      this.movement.nextPosition.x < subjectPostion.x + subjectDimentions.width &&
-      this.movement.nextPosition.x + this.dimentions.width > subjectPostion.x &&
-      this.movement.nextPosition.y < subjectPostion.y + subjectDimentions.height &&
-      this.movement.nextPosition.y + this.dimentions.height > subjectPostion.y
+      this.movement.targetPosition.x < subjectPostion.x + subjectDimentions.width &&
+      this.movement.targetPosition.x + this.dimentions.width > subjectPostion.x &&
+      this.movement.targetPosition.y < subjectPostion.y + subjectDimentions.height &&
+      this.movement.targetPosition.y + this.dimentions.height > subjectPostion.y
     ) {
       return true;
     } else {
@@ -82,10 +82,10 @@ export class GameObject_part_2 extends GameObject_part_1 {
     yResolution: number;
   }): boolean {
     if (
-      this.movement.nextPosition.x >= xResolution * 50 ||
-      this.movement.nextPosition.x < 0 ||
-      this.movement.nextPosition.y >= yResolution * 50 ||
-      this.movement.nextPosition.y < 0
+      this.movement.targetPosition.x >= xResolution * 50 ||
+      this.movement.targetPosition.x < 0 ||
+      this.movement.targetPosition.y >= yResolution * 50 ||
+      this.movement.targetPosition.y < 0
     ) {
       return true;
     } else {
@@ -95,28 +95,28 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
   calculateNextPositionByMovRange({ x, y }: Direction) {
 
-    this.movement.nextPosition.y = this.position.y + this.movement.stepRange.y;
-    this.movement.nextPosition.x = this.position.x + this.movement.stepRange.x;
+    this.movement.targetPosition.y = this.position.y + this.movement.currentStepRange.y;
+    this.movement.targetPosition.x = this.position.x + this.movement.currentStepRange.x;
 
     this.movement.counterOfSteps += 1; // счетчик сделаных шагов. связан. используется
   }
 
   updatePosition() {
-    this.position.x = this.movement.nextPosition.x;
-    this.position.y = this.movement.nextPosition.y;
+    this.position.x = this.movement.targetPosition.x;
+    this.position.y = this.movement.targetPosition.y;
   }
 
   /// beta beta beta
   calculateOwnDamageBySpeed() {
     const damage = this.attack.ownDamage.value;
-    const calculatedDamageValue = Math.floor(damage * this.movement.stepRange.x / 5);
+    const calculatedDamageValue = Math.floor(damage * this.movement.currentStepRange.x / 5);
     return calculatedDamageValue;
   }
 
   updateNextPosition(): void {
 
-    this.movement.nextPosition.x = this.position.x + this.movement.stepRange.x  ;
-    this.movement.nextPosition.y = this.position.y + this.movement.stepRange.y ;
+    this.movement.targetPosition.x = this.position.x + this.movement.currentStepRange.x  ;
+    this.movement.targetPosition.y = this.position.y + this.movement.currentStepRange.y ;
   }
 
 

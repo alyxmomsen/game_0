@@ -105,9 +105,9 @@ export default abstract class GameObject extends GameObject_part_2 {
       this.totallyIfCollisionIs(null);
       // если на следующем шаге есть коллизия
       // снимаем проверки с других координат отличных от this.position
-      this.movement.stepRange = {x:0 , y:0} ;
-      this.movement.nextPosition.x = this.position.x;
-      this.movement.nextPosition.y = this.position.y;
+      // this.movement.currentStepRange = {x:0 , y:0} ;
+      this.movement.targetPosition.x = this.position.x;
+      this.movement.targetPosition.y = this.position.y;
       
     } else {
       
@@ -168,7 +168,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     armor,
   }: GameObjectConstructor) {
     super();
-    
+
     this.movement = new Movement({
       maxWalkSteps: walkStepsLimit,
       shouldFadeDownStepRate,

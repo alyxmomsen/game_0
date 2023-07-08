@@ -17,7 +17,15 @@ export class Bullet extends GameObject {
   ifCollisionIs_For(
     object: Bullet | GameObject | Enemy | Player | SupplyBox
   ): boolean {
-    this.isDied = true ;
+    // this.isDied = true ;
+
+    if(this.movement.currentStepRange.y === 0) {
+      this.movement.currentStepRange.y = 2 ;
+    }
+
+    this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 2
+    this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 2
+
     this.attackTo(object , {...this.attack.ownDamage});
 
     return true;
@@ -45,9 +53,6 @@ export class Bullet extends GameObject {
     fieldDimentions: Dimentions;
   }): null | Bullet {
 
-
-
-    
     return super.update({objects , fieldDimentions}); ;
   }
 
