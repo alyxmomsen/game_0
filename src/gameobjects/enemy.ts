@@ -1,7 +1,7 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
 import { generateMovementDirection } from "../library/main";
-import { Dimentions, Position } from "../library/types";
+import { Dimentions, GameObjectExtendsClasses, Position } from "../library/types";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import GameObject from "./gameobject";
@@ -25,20 +25,27 @@ export class Enemy extends GameObject {
   ): void {}
 
   update({
-    keys,
     objects,
     fieldDimentions,
   }: {
-    keys: string[];
-    objects: (GameObject | Enemy | SupplyBox)[];
+    objects: GameObjectExtendsClasses[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
-    if (!this.isDied && this.movement.getTick()) {
-      // this.updateNextPosition(generateMovementDirection());
+
+
+    
+
+    this.updateNextPosition();
+
+    for (const object of objects) {
+
+      if(this.checkNextPositionColissionWith(object.position , object.getDimentions())) {
+
+      }
+
     }
 
     return super.update({
-      keys,
       objects,
       fieldDimentions,
     });
@@ -57,8 +64,8 @@ export class Enemy extends GameObject {
       color: "#2e3628",
       id,
       kind: "enemy",
-      walkStepRate: Math.floor(Math.random() * 990) + 10,
-      walkStepRange: 10,
+      maxWalkStepRange:1 ,
+      walkStepDirectionRange: {x:0 , y:0},
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
       position,

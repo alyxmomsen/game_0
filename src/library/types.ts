@@ -15,7 +15,7 @@ export type GameObjectKinds =
   | "damage-entity"
   | "supply-box";
 
-export type Direction = { x: 0 | 1 | -1; y: 0 | 1 | -1 };
+export type Direction = { x: number; y: number };
 
 export type Position = {
   x: number;
@@ -25,8 +25,8 @@ export type Position = {
 export type GameObjectConstructor = {
   id: number;
   kind: GameObjectKinds;
-  walkStepRate: number;
-  walkStepRange: number;
+  maxWalkStepRange:number ; // макс скорость
+  walkStepDirectionRange: {x:number , y:number};
   walkStepsLimit: number;
   color: string;
   position: Position;

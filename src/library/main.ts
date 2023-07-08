@@ -1,4 +1,4 @@
-import { Direction } from "./types";
+import { Dimentions, Direction } from "./types";
 
 export class TickController {
   private lastTickTime: number;
@@ -26,27 +26,6 @@ export class TickController {
     this.lastTickTime = 0;
     this.tickInterval = initialTickInterval < 1 ? 1 : initialTickInterval; // Значение не менее 1;
   }
-}
-
-export function calculateMovementDirection(keys: string[]): Direction {
-  let w = keys.includes("w");
-  let s = keys.includes("s");
-  let a = keys.includes("a");
-  let d = keys.includes("d");
-
-  const f = function (a: boolean, b: boolean) {
-    if (a && !b) {
-      return -1;
-    } else if (b && !a) {
-      return 1;
-    } else if ((!a && !b) || (a && b)) {
-      return 0;
-    } else {
-      return 0;
-    }
-  };
-
-  return { x: f(a, d), y: f(w, s) };
 }
 
 export function generateMovementDirection(): { x: 0 | 1 | -1; y: -1 | 1 | 0 } {

@@ -17,18 +17,7 @@ export class Bullet extends GameObject {
   ifCollisionIs_For(
     object: Bullet | GameObject | Enemy | Player | SupplyBox
   ): boolean {
-    this.audio = new Audio(
-      [ric1, ric2, ric3, ric4][Math.floor(Math.random() * 4)]
-    );
-    this.audio.muted = false;
-    this.audio.volume = 0.05;
-    this.audio.play();
-
-    this.attackTo(object, {
-      damageClass: this.attack.ownDamage.damageClass,
-      value: this.calculateOwnDamageBySpeed(),
-    }); // object.damaged.push
-
+    
     return true;
   }
 
@@ -39,78 +28,29 @@ export class Bullet extends GameObject {
   totallyIfCollisionIs(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {
-    // this.movement.direction = {x:0 , y:0} ;
-    this.movement.stepRange /= 3; // увеличиваем задержку между шагами
-    // this.setStepRate(this.movement.getStepRate() * 1.5); //  не работает
-
-    const axisDirections: [1, 0, -1] = [1, 0, -1];
-
-    if (this.movement.direction.x !== 0) {
-      this.movement.direction.x *= -1; // меняем направление движение на противоположное
-    } else {
-      this.movement.direction.x = axisDirections[Math.floor(Math.random() * 3)];
-    }
-
-    if (this.movement.direction.y !== 0) {
-      this.movement.direction.y *= -1; // меняем направление движение на противоположное
-    } else {
-      this.movement.direction.y = axisDirections[Math.floor(Math.random() * 3)];
-    }
+    
   }
 
-  performMovement() {
-
-    const stepDecreaseAmount = 0.1 ;
-
-    if (
-      !this.movement.maxWalkSteps ||
-      this.movement.counterOfSteps < this.movement.maxWalkSteps
-    ) {
-      this.calculateNextPosition(this.movement.direction);
-
-      if (this.movement.shouldFadeDownStepRate) {
-        if (this.movement.stepRange > 0) {
-          this.movement.stepRange -= stepDecreaseAmount;
-
-          if (this.movement.stepRange < 0) {
-            this.movement.stepRange = 0;
-          }
-        }
-      }
-    }
+  updateNextPosition(): void {
+    
   }
-
+  
   update({
-    keys,
     objects,
     fieldDimentions,
   }: {
-    keys: string[];
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
-    if (!this.isDied) {
-      /*   
-        если 'this.movement.walkStepsLimit === 0' , то выполняется Условие 
-        если 'this.movement.walkStepsLimit > 0' , то проверяется "this.movement.counterOfSteps < this.movement.walkStepsLimit"
-        соответсвенно, если шагов сделано нужное колличество, то Ход не выполняется
-      */
-      /* 
-        !!! note:  ввести Weapon.range
-      */
-
-      this.performMovement();
-    }
-
-    if (this.movement.stepRange <= 0) {
-      // умираем , если слишком медленный
-      this.isDied = true;
-    }
+    
+    this.movement.nextPosition.x += this.movement.stepRange.x ;
+    this.movement.nextPosition.y += this.movement.stepRange.y ;
+    
 
     /* ========================== */
 
     const result = super.update({
-      keys,
+      // keys,
       objects,
       fieldDimentions,
     }); // возвращает объект Bullet
@@ -124,16 +64,16 @@ export class Bullet extends GameObject {
     direction,
     ownDamage,
     health,
-    walkStepRate,
     walkStepRateFadeDown,
     walkStepsLimit,
+    walkStepDirectionRange ,
   }: {
     position: Position;
     id: number;
     direction: Direction;
     health: number;
     ownDamage: Damage;
-    walkStepRate: number;
+    walkStepDirectionRange:{x:number , y:number};
     walkStepRateFadeDown: boolean;
     walkStepsLimit: number;
   }) {
@@ -144,8 +84,8 @@ export class Bullet extends GameObject {
       kind: "damage-entity",
       position,
       dimentions: {width:20 , height:20} ,
-      walkStepRate,
-      walkStepRange: 20,
+      maxWalkStepRange: 1 ,
+      walkStepDirectionRange ,
       walkStepsLimit,
       shouldFadeDownStepRate: walkStepRateFadeDown,
       direction,

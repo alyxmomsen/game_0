@@ -1,5 +1,5 @@
 import { Damage } from "../library/damage";
-import { Dimentions, Position } from "../library/types";
+import { Dimentions, Direction, Position } from "../library/types";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
@@ -8,12 +8,7 @@ import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 export class GameObject_part_2 extends GameObject_part_1 {
-  displayStatsIntoTheBrowserConsole() {
-    const str = `${this.attack.currentWeapon.damage.value} ${this.health} ${this.armor.getHealthValue()} `;
-
-    console.log(str);
-  }
-
+  
   getDimentions() {
     return { ...this.dimentions };
   }
@@ -61,10 +56,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
   getDamage(damage: number) {
     if (this.armor.getHealthValue() > 0) {
       this.armor.decreaseArmorHealth(Math.floor((damage / 100) * this.armor.dempher)) ;
-      // this.armor.decreaseArmorHealth(100);
-      console.log(Math.floor((damage / 100) * this.armor.dempher));
       this.health -= Math.floor((damage / 100) * (100 - this.armor.dempher));
-      console.log((damage / 100) * (100 - this.armor.dempher));
     } else {
       this.health -= damage;
     }
@@ -133,19 +125,10 @@ export class GameObject_part_2 extends GameObject_part_1 {
     }
   }
 
-  calculateNextPosition({ x, y }: { x: 1 | -1 | 0; y: 1 | -1 | 0 }) {
-    if (x !== 0 || y !== 0) {
-      this.movement.nextPosition.y =
-        this.position.y + (y * this.movement.stepRange);
-      this.movement.nextPosition.x =
-        this.position.x + (x * this.movement.stepRange);
-    }
+  calculateNextPositionByMovRange({ x, y }: Direction) {
 
-    if (x !== 0) {
-      this.movement.direction = { x, y };
-    } else if (y !== 0) {
-      this.movement.direction = { x, y };
-    }
+    this.movement.nextPosition.y = this.position.y + this.movement.stepRange.y;
+    this.movement.nextPosition.x = this.position.x + this.movement.stepRange.x;
 
     this.movement.counterOfSteps += 1; // счетчик сделаных шагов. связан. используется
   }
@@ -158,7 +141,13 @@ export class GameObject_part_2 extends GameObject_part_1 {
   /// beta beta beta
   calculateOwnDamageBySpeed() {
     const damage = this.attack.ownDamage.value;
-    const calculatedDamageValue = Math.floor(damage * this.movement.stepRange / 5);
+    const calculatedDamageValue = Math.floor(damage * this.movement.stepRange.x / 5);
     return calculatedDamageValue;
+  }
+
+  updateNextPosition(): void {
+
+    this.movement.nextPosition.x = this.position.x + this.movement.stepRange.x  ;
+    this.movement.nextPosition.y = this.position.y + this.movement.stepRange.y ;
   }
 }

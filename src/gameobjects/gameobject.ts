@@ -28,114 +28,24 @@ export default abstract class GameObject extends GameObject_Part_3 {
   /* ===================================================== */
 
   update({
-    keys,
-    objects,
-    fieldDimentions,
+    objects ,
+    fieldDimentions ,
   }: {
-    keys: string[];
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): Bullet | false {
-    // получение урона
-    if (this.damaged.length) {
-      for (const damage of this.damaged) {
-        this.getDamage(damage.value);
-      }
-    }
-    this.damaged = [];
 
-    // this.attack.setOwnDamge(this.calculateOwnDamageBySpeed()); // устанавливаем myOwnDamage в зависимости от скорости движения
-
-    // if (this.kind === "damage-entity") {
-    //   console.log(
-    //     `${this.attack.ownDamage.value} ${this.calculateOwnDamageBySpeed()}`
-    //   );
-    // }
-
-    // проверка коллизий
-    let isCollision = false;
-    for (const object of objects) {
-      // если объект не является сам собой и если объект не "умер"
-      if (object !== this && !this.isDied) {
-        // проверка следующего шага на коллизию
-        if (this.checkNextPositionColissionWith(object.position , object.getDimentions())) {
-          // object instanceof SupplyBox ; // не проходит эту проверку
-
-          // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
-
-          isCollision = this.ifCollisionIs_For(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
-        }
-      }
-    }
-
-    // проверяем не столкнулся ли с границей game field
-    if (this.checkCollissionWithFieldLimits({xResolution:fieldDimentions.width , yResolution:fieldDimentions.height })) {
-      isCollision = true;
-      if (this.kind === "damage-entity") {
-        // костыль
-        this.isDied = true;
-      }
-    }
-
-    if (!isCollision) {
-      this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
-      this.totallyIfCollisionIsNot(null);
-    } else {
-      this.totallyIfCollisionIs(null);
-      // если на следующем шаге есть коллизия
-      // снимаем проверки с других координат отличных от this.position
-      this.movement.nextPosition.x = this.position.x;
-      this.movement.nextPosition.y = this.position.y;
-    }
-
-    /* ======== check if this died ========*/
-
-    if (this.health <= 0) {
-      this.isDied = true;
-    }
-
-    /* =================================== */
-
-    const up = keys.includes("ArrowUp");
-    const down = keys.includes("ArrowDown");
-    const left = keys.includes("ArrowLeft");
-    const right = keys.includes("ArrowRight");
-
-
-    const calculateTheBulletPostition =  () => {
-
-      const position = {x:this.position.x + this.dimentions.width / 2 , y:this.position.y + this.dimentions.height / 2} ;
-
-      if(this.attack.direction.x > 0) {
-        position.x = this.position.x + this.dimentions.width ;
-      } else if (this.attack.direction.x < 0) {
-        position.x = this.position.x - 10 ;
-      }
-
-      if(this.attack.direction.y > 0) {
-        position.y = this.position.y + this.dimentions.width ;
-      } else if (this.attack.direction.y < 0) {
-        position.y = this.position.y - 10 ;
-      }
-
-      return position ;
-
-    }
-
-    const pos = calculateTheBulletPostition();
-
-
-    return (up || down || left || right) && this.attack.ticker?.tick()
+    return this.attack.ticker?.tick()
       ? new Bullet({
-          direction: this.attack.direction,
+          direction: {...this.attack.direction} ,
           health: 100,
           id: 0,
           ownDamage: new Damage(this.attack.currentWeapon.damage),
           position: {
-            x: /* this.position.x */pos.x/*  + (this.attack.direction.x) - this.dimentions.width */,
-            y: /* this.position.y */pos.y/*  + this.attack.direction.y + this.dimentions.height */,
+            x: 0,
+            y: 0,
           },
-          walkStepRate: /* this.attack.currentWeapon.stepRate */ 2,
+          walkStepDirectionRange:{x:9 , y:0} ,
           walkStepRateFadeDown: this.attack.currentWeapon.stepRateFadeDown,
           walkStepsLimit: this.attack.currentWeapon
             ? this.attack.currentWeapon.stepsLimit
@@ -149,8 +59,8 @@ export default abstract class GameObject extends GameObject_Part_3 {
     position,
     dimentions ,
     kind,
-    walkStepRate,
-    walkStepRange,
+    maxWalkStepRange ,
+    walkStepDirectionRange: walkStepRange,
     walkStepsLimit,
     shouldFadeDownStepRate,
     ownDamage,
@@ -161,13 +71,14 @@ export default abstract class GameObject extends GameObject_Part_3 {
     armor,
   }: GameObjectConstructor) {
     super();
+    // console.log(maxWalkStepRange , 'hello');
     this.movement = new Movement({
-      stepRate: walkStepRate,
       direction,
       maxWalkSteps: walkStepsLimit,
       shouldFadeDownStepRate,
       nextPosition: { ...position },
       stepRange: walkStepRange,
+      maxStepRange: maxWalkStepRange ,
     });
 
     this.dimentions = { ...dimentions };

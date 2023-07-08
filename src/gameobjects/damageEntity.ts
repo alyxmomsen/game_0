@@ -1,4 +1,4 @@
-import { Armor } from "../library/armore";
+/* import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
 import { ArmorClass, Dimentions, Position } from "../library/types";
 import { Bullet } from "./bullet";
@@ -31,9 +31,9 @@ export class DamageEntity extends GameObject {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): false | Bullet {
-    if (!this.isDied && this.movement.getTick()) {
-      this.calculateNextPosition(this.movement.direction);
-    }
+    // if (!this.isDied && this.movement.getTick()) {
+    //   this.calculateNextPosition(this.movement.direction);
+    // }
 
     return super.update({
       keys,
@@ -45,18 +45,20 @@ export class DamageEntity extends GameObject {
   constructor({
     id,
     position,
+    maxWalkStepRange ,
   }: {
     id: number;
     armorKind: ArmorClass;
     position: Position;
     bang_interval: number;
+    maxWalkStepRange:number ;
   }) {
     super({
       id, //
       kind: "damage-entity",
-      walkStepRate: 20,
+      maxWalkStepRange:1 ,
       walkStepsLimit: 0,
-      walkStepRange: 0,
+      walkStepDirectionRange: {x:0 , y:0},
       color: "white",
       position,
       dimentions:{width:10 , height:10} ,
@@ -73,3 +75,4 @@ export class DamageEntity extends GameObject {
     });
   }
 }
+ */

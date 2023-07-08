@@ -23,10 +23,14 @@ export class SupplyBox extends GameObject {
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {}
 
+  updateNextPosition(): void {
+    
+  }
+
   update({ fieldDimentions }: { fieldDimentions: Dimentions }): false | Bullet {
     return super.update({
       fieldDimentions,
-      keys: [],
+      // keys: [],
       objects: [],
     });
   }
@@ -35,8 +39,8 @@ export class SupplyBox extends GameObject {
     super({
       id: 0,
       kind: "supply-box",
-      walkStepRate: 100,
-      walkStepRange: 0,
+      maxWalkStepRange:1 ,
+      walkStepDirectionRange: {x:0 , y:0},
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
       color: "orange",

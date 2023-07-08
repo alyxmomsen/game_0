@@ -53,9 +53,9 @@ export default class Game {
   spawnQueue: (Enemy | Bullet | SupplyBox)[];
 
   player: Player; // объект игрока
-  enemies: Enemy[] = [];
-  gameObjects: GameObject[] = [];
-  bullets: Bullet[] = [];
+  enemies: Enemy[] ;
+  gameObjects: GameObject[] ;
+  bullets: Bullet[] ;
   supplyBoxes: SupplyBox[];
 
   // IDManager: IDManager;
@@ -71,33 +71,25 @@ export default class Game {
 
   /* ======================== */
 
-  createEnemyRandomly() {
-    // beta beta beta beta !!!!!!!
+  createEnemyRandomly(len:number = 0) {
 
-    if (!this.creatorEnemyTicker) {
-      this.creatorEnemyTicker = new TickController(
-        Math.floor(Math.random() * 2000) + 1000
-      );
-    }
+    let newEnemy:Enemy = null ;
 
-    if (this.creatorEnemyTicker.tick()) {
-      // console.log(this.enemies , 'this.enemies.length');
-
-      if (this.enemies.length < 10) {
-        this.spawnQueue.push(
-          new Enemy({
-            id: 0,
-            position: {
-              x: Math.floor(Math.random() * (this.field.resolution.width)) * this.field.gameCellDimentions.width,
-              y: Math.floor(Math.random() * (this.field.resolution.height)) * this.field.gameCellDimentions.height,
-            },
-            weapons: [],
-          })
-        );
+      if (this.enemies.length < len) {
+        newEnemy = new Enemy({
+          id: 0,
+          position: {
+            x: Math.floor(Math.random() * (this.field.resolution.width)) * this.field.gameCellDimentions.width,
+            y: Math.floor(Math.random() * (this.field.resolution.height)) * this.field.gameCellDimentions.height,
+          },
+          weapons: [],
+        }) ;
       }
-    }
-
+    
     this.creatorEnemyTicker.setTickInterval(Math.floor(Math.random() * 5000));
+
+    return newEnemy ;
+
   }
 
   sortSpawnQueue() {
@@ -112,34 +104,19 @@ export default class Game {
   }
 
   update() {
+
+    // console.log(this.enemies.length);
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
-    /* ========================================= */
-
-    this.sortSpawnQueue();
-
-    this.spawnQueue = [];
-
-    /* ========================================= */
-
-    //GameObject.update возвращает объект Bullet
-    const objectToSpawn = this.player.update({
+    this.player.update({
       keys,
       objects: [...this.enemies, ...this.supplyBoxes],
       fieldDimentions: this.field.resolution,
     });
-    if (objectToSpawn !== false) {
-      this.audio = new Audio(sound);
-      this.audio.muted = false;
-      this.audio.volume = 0.05;
-      this.audio.play();
-      this.spawnQueue.push(objectToSpawn);
-    }
 
     this.enemies.forEach((enemy) => {
       enemy.update({
-        keys,
         objects: [...this.bullets],
         fieldDimentions: this.field.resolution,
       });
@@ -148,7 +125,6 @@ export default class Game {
 
     this.bullets.forEach((bullet) => {
       bullet.update({
-        keys,
         objects: [...this.enemies, this.player],
         fieldDimentions: this.field.resolution,
       });
@@ -162,18 +138,6 @@ export default class Game {
     });
     this.supplyBoxes = this.supplyBoxes.filter((elem) => !elem.isDied);
 
-    /* ================================== */
-
-    this.createEnemyRandomly();
-
-    if (!this.creatorEnemyTicker) {
-      this.creatorEnemyTicker = new TickController(1000);
-    }
-
-    /* ================================ */
-
-    const arr: ["armore , health"] = ["armore , health"];
-
     if (this.supplyBoxCreatingTicker.tick()) {
       this.supplyBoxes.push(
         new SupplyBox({
@@ -185,7 +149,12 @@ export default class Game {
       );
     }
 
-    this.player.displayStatsIntoTheBrowserConsole();
+    if(this.creatorEnemyTicker.tick()) {
+      
+      this.enemies.push(this.createEnemyRandomly(10)) ; // генерит если в массиве меньше чем Аргумент
+    }
+
+
   }
 
   render(field: HTMLElement = null) {
@@ -203,10 +172,6 @@ export default class Game {
       this.player.armor.getMaxHaxHealtValue() ,
     );
 
-    // if(this.player.rendering.animateTicker.tick()) {
-    //   this.player.rendering.currentSpriteState = [0 , 32 ,64 , 96][Math.floor(Math.random() * 4)] ;
-    // }
-
     this.UIManager.drawImg(
       sprite,
       0 ,
@@ -220,25 +185,6 @@ export default class Game {
     );
 
     this.bullets.forEach((elem) => {
-      // this.renderGameObject({ elem });
-
-      this.UIManager.draw(
-        elem.position.x,
-        elem.position.y,
-        elem.getDimentions().width,
-        elem.getDimentions().height,
-        elem.getColor() , 
-        elem.getHealth() ,
-        elem.maxHealth ,
-        elem.armor.getHealthValue() ,
-        elem.armor.getMaxHaxHealtValue() ,
-      );
-    });
-
-    // this.renderGameObject({ elem: this.player });
-
-    this.gameObjects.forEach((elem) => {
-      // this.renderGameObject({ elem });
 
       this.UIManager.draw(
         elem.position.x,
@@ -254,7 +200,6 @@ export default class Game {
     });
 
     this.enemies.forEach((elem) => {
-      // this.renderGameObject({ elem });
 
       this.UIManager.draw(
         elem.position.x,
@@ -285,40 +230,30 @@ export default class Game {
         elem.armor.getMaxHaxHealtValue() ,
       );
 
-      // this.UIManager.drawImg(
-      //   elem.content === "health" ? img1 : img2,
-      //   0,
-      //   0,
-      //   150,
-      //   150,
-      //   elem.position.x,
-      //   elem.position.y,
-      //   elem.getDimentions().width,
-      //   elem.getDimentions().height ,
-      // );
-      // this.renderGameObject({ elem });
+      
     });
   }
 
   constructor({
     fieldResolution,
-    // playerCardHTMLContainer,
-    // gameFieldHTMLContainer,
+
     canvas,
     gameCellDimentions,
   }: {
-    // gameFieldHTMLContainer: HTMLElement; // для рендеринга игрового поля
-    // playerCardHTMLContainer: HTMLElement; // для рендеринга статистики Player
     fieldResolution: Dimentions; // размеры поля
     canvas: HTMLCanvasElement;
     gameCellDimentions: Dimentions;
   }) {
-    this.supplyBoxCreatingTicker = new TickController(10000);
-    this.supplyBoxes = [];
-
-    // this.UIManager = new UIManager ({canvas , w:fieldDimentions.width , h:fieldDimentions.height}) ;
-
+    
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
+
+    this.creatorEnemyTicker = new TickController(1000);
+    this.supplyBoxCreatingTicker = new TickController(10000);
+
+    this.supplyBoxes = [];
+    this.player = null ;
+    this.enemies = [] ;
+    this.bullets = [] ;
 
     this.field = {
       resolution: fieldResolution,
