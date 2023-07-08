@@ -30,10 +30,6 @@ export class Bullet extends GameObject {
   ): void {
     
   }
-
-  updateNextPosition(): void {
-    
-  }
   
   update({
     objects,
@@ -41,21 +37,13 @@ export class Bullet extends GameObject {
   }: {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-  }): false | Bullet {
+  }): null | Bullet {
     
-    this.movement.nextPosition.x += this.movement.stepRange.x ;
-    this.movement.nextPosition.y += this.movement.stepRange.y ;
     
 
-    /* ========================== */
+    super.update({objects , fieldDimentions});
 
-    const result = super.update({
-      // keys,
-      objects,
-      fieldDimentions,
-    }); // возвращает объект Bullet
-
-    return result;
+    return null ;
   }
 
   constructor({

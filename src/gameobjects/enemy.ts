@@ -30,25 +30,56 @@ export class Enemy extends GameObject {
   }: {
     objects: GameObjectExtendsClasses[];
     fieldDimentions: Dimentions;
-  }): false | Bullet {
+  }): null | Bullet {
 
 
+    this.controller.autoUpdatePer(1000);
     
-
-    this.updateNextPosition();
-
-    for (const object of objects) {
-
-      if(this.checkNextPositionColissionWith(object.position , object.getDimentions())) {
-
-      }
-
-    }
-
-    return super.update({
+    super.update({
       objects,
       fieldDimentions,
     });
+
+    let isFire = false ;
+    const controllerAttackDirection = this.controller.getAttackDirectionValue() ;
+    const directionRange = {x:0 , y:0} ;
+
+    if(controllerAttackDirection !== '') {
+      
+
+      switch (controllerAttackDirection) {
+        case 'down':
+          this.attack.setSpawnPoint({x:this.position.x  , y:this.position.y + this.getDimentions().height });
+          directionRange.y = 30 ;
+        break ;
+        case 'left' :
+          this.attack.setSpawnPoint({x:this.position.x - this.getDimentions().width  , y:this.position.y});
+          directionRange.x = -30 ;
+        break ;
+        case 'right': 
+          this.attack.setSpawnPoint({x:this.position.x + this.getDimentions().width  , y:this.position.y});
+          directionRange.x = 30 ;
+        break ;
+        case 'up' :
+          this.attack.setSpawnPoint({x:this.position.x  , y:this.position.y + this.getDimentions().height });
+          directionRange.y = -30 ;
+        break ;
+      }
+
+
+      isFire = true ;
+    }
+
+    return (!this.isDied && this.attack.ticker.tick() && isFire) ? new Bullet({
+      direction:{x:1 , y:0} ,
+      health:100 ,
+      id:0 ,
+      ownDamage:{damageClass:'magic' , value:1000} ,
+      position: this.attack.getSpawnPoint() ,
+      walkStepDirectionRange:directionRange , 
+      walkStepRateFadeDown:false ,
+      walkStepsLimit:0 ,
+    }) : null 
   }
 
   constructor({

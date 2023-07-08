@@ -9,8 +9,10 @@ import { Dimentions, GameObjectConstructor } from "../library/types";
 
 import { GameObject_Part_3 } from "./gameobject-part-3";
 import { TickController } from "../library/main";
+import { Controller } from "../library/controller";
+import { GameObject_part_2 } from "./gameobject-part-2";
 
-export default abstract class GameObject extends GameObject_Part_3 {
+export default abstract class GameObject extends GameObject_part_2 {
   /* ====================== options ====================== */
 
   abstract ifCollisionIs_For(
@@ -35,23 +37,53 @@ export default abstract class GameObject extends GameObject_Part_3 {
     fieldDimentions: Dimentions;
   }): Bullet | false {
 
-    return this.attack.ticker?.tick()
-      ? new Bullet({
-          direction: {...this.attack.direction} ,
-          health: 100,
-          id: 0,
-          ownDamage: new Damage(this.attack.currentWeapon.damage),
-          position: {
-            x: 0,
-            y: 0,
-          },
-          walkStepDirectionRange:{x:9 , y:0} ,
-          walkStepRateFadeDown: this.attack.currentWeapon.stepRateFadeDown,
-          walkStepsLimit: this.attack.currentWeapon
-            ? this.attack.currentWeapon.stepsLimit
-            : 0,
-        })
-      : false;
+    
+    this.movement.updateStepRangeByController({...this.controller.move});
+
+    this.updateNextPosition();
+
+    /* =========================================== */
+    let isCollision = false;
+
+    for (const object of objects) {
+      // если объект не является сам собой и если объект не "умер"
+      if (object !== this && !this.isDied) {
+        
+        // проверка следующего шага на коллизию
+        if (this.checkNextPositionColissionWith(object.position , object.getDimentions())) {
+          // object instanceof SupplyBox ; // не проходит эту проверку
+          // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
+
+          isCollision = this.ifCollisionIs_For(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
+        }
+      }
+    }
+    /* =========================================== */
+
+    // проверяем не столкнулся ли с границей game field
+    if (this.checkCollissionWithFieldLimits({xResolution:fieldDimentions.width , yResolution:fieldDimentions.height })) {
+      isCollision = true;
+      if (this.kind === "damage-entity") {
+        // костыль
+        this.isDied = true;
+      }
+    }
+
+    if (isCollision) {
+      
+      this.totallyIfCollisionIs(null);
+      // если на следующем шаге есть коллизия
+      // снимаем проверки с других координат отличных от this.position
+      this.movement.stepRange = {x:0 , y:0} ;
+      this.movement.nextPosition.x = this.position.x;
+      this.movement.nextPosition.y = this.position.y;
+      
+    } else {
+      
+      this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
+    }
+
+    return  false;
   }
 
   constructor({
@@ -71,7 +103,6 @@ export default abstract class GameObject extends GameObject_Part_3 {
     armor,
   }: GameObjectConstructor) {
     super();
-    // console.log(maxWalkStepRange , 'hello');
     this.movement = new Movement({
       direction,
       maxWalkSteps: walkStepsLimit,
@@ -84,7 +115,7 @@ export default abstract class GameObject extends GameObject_Part_3 {
     this.dimentions = { ...dimentions };
 
     this.position = { ...position };
-    this.attack = new Attack(ownDamage, weapons);
+    this.attack = new Attack({ownDamage, weapons , spawnPoint:{...this.position}});
     this.armor = armor;
     this.damaged = [];
     this.isDied = false;
@@ -100,5 +131,9 @@ export default abstract class GameObject extends GameObject_Part_3 {
       animateTicker: new TickController(200),
       currentSpriteState: 0,
     };
+
+    this.controller = new Controller ;
+
+    // console.log(this.attack.ticker);
   }
 }

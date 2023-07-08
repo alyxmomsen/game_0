@@ -1,4 +1,5 @@
 import { Armor } from "../library/armore";
+import { Controller } from "../library/controller";
 import { Damage } from "../library/damage";
 import { Dimentions, GameObjectKinds, Position } from "../library/types";
 import { Weapon } from "../library/weapon";
@@ -28,24 +29,6 @@ export class Player extends GameObject {
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {}
 
-  calculateNextPosition_beta() {
-    
-  }
-
-  
-
-  keysHandler (keys:string[]) {
-
-    const up = keys.includes("ArrowUp");
-    const down = keys.includes("ArrowDown");
-    const left = keys.includes("ArrowLeft");
-    const right = keys.includes("ArrowRight");
-
-  }
-
-  checkCollisionsTo(object:'') {
-
-  }
 
   update({
     keys,
@@ -55,65 +38,16 @@ export class Player extends GameObject {
     keys: string[];
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-  }): false | Bullet {
+  }): null | Bullet {
 
-    const w = keys.includes("w");
-    const s = keys.includes("s");
-    const a = keys.includes("a");
-    const d = keys.includes("d");
-
-    this.movement.updateStepRangeBy(w , s , a , d);
-
-    this.updateNextPosition();
-
-
-    /* =========================================== */
-    let isCollision = false;
-
-    for (const object of objects) {
-      // если объект не является сам собой и если объект не "умер"
-      if (object !== this && !this.isDied) {
-        
-        // проверка следующего шага на коллизию
-        if (this.checkNextPositionColissionWith(object.position , object.getDimentions())) {
-          // object instanceof SupplyBox ; // не проходит эту проверку
-          // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
-
-          isCollision = this.ifCollisionIs_For(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
-        }
-      }
-    }
-    /* =========================================== */
-
-    // проверяем не столкнулся ли с границей game field
-    if (this.checkCollissionWithFieldLimits({xResolution:fieldDimentions.width , yResolution:fieldDimentions.height })) {
-      isCollision = true;
-      if (this.kind === "damage-entity") {
-        // костыль
-        this.isDied = true;
-      }
-    }
-
-    if (!isCollision) {
-      this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
-      this.totallyIfCollisionIsNot(null);
-    } else {
-      this.totallyIfCollisionIs(null);
-      // если на следующем шаге есть коллизия
-      // снимаем проверки с других координат отличных от this.position
-      this.movement.stepRange = {x:0 , y:0} ;
-      this.movement.nextPosition.x = this.position.x;
-      this.movement.nextPosition.y = this.position.y;
-    }
-
-
+    this.controller.updateByKeys(keys) ;
 
     super.update({
       objects,
       fieldDimentions,
     });
 
-    return false ;
+    return null ;
 
   }
 

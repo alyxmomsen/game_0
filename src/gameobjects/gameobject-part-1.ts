@@ -1,13 +1,14 @@
 import { Armor } from "../library/armore";
 import { Attack } from "../library/attack";
+import { Controller } from "../library/controller";
 import { Damage } from "../library/damage";
 import { TickController } from "../library/main";
 import { Movement } from "../library/movement";
 import { Dimentions, GameObjectKinds } from "../library/types";
 
 export class GameObject_part_1 {
-  protected damaged: Damage[]; // в данный момент получаемыe уроны
   protected id: number;
+  protected damaged: Damage[]; // в данный момент получаемыe уроны
   protected dateOfCreated: number;
   protected color: string;
   protected kind: GameObjectKinds;
@@ -23,4 +24,11 @@ export class GameObject_part_1 {
     animateTicker: TickController;
     currentSpriteState: number;
   };
+
+  controller:Controller ;
+
+  constructor() {
+    
+  }
+
 }

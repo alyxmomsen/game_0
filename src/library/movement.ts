@@ -45,7 +45,7 @@ export class Movement {
     return value > this.maxStepRange ? true : false ;
   }
 
-  updateStepRangeBy (up:boolean , down:boolean , left:boolean , right:boolean) {
+  updateStepRangeByController ({up , down , left , right}:{up:boolean , down:boolean , left:boolean , right:boolean}) {
 
     const value = 0.5 ;
 

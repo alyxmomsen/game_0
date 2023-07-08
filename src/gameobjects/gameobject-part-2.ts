@@ -17,38 +17,6 @@ export class GameObject_part_2 extends GameObject_part_1 {
     return this.color;
   }
 
-  setAttackDirection(keys: string[]) {
-    const up = keys.includes("ArrowUp");
-    const down = keys.includes("ArrowDown");
-    const left = keys.includes("ArrowLeft");
-    const right = keys.includes("ArrowRight");
-
-    // здесь есть баг, - если одновременно зажать две клавиши , то объект атакует сам себя
-
-    if (up || down || left || right) {
-      if (up && !down) {
-        this.attack.direction.y = -1;
-      } else if (!up && down) {
-        this.attack.direction.y = 1;
-      } else {
-        this.attack.direction.y = 0;
-      }
-
-      if (left && !right) {
-        this.attack.direction.x = -1;
-      } else if (!left && right) {
-        this.attack.direction.x = 1;
-      } else {
-        this.attack.direction.x = 0;
-      }
-
-      //временный дебаг, который иногда не срабатывает
-      if (this.attack.direction.x === 0 && this.attack.direction.y === 0) {
-        this.attack.direction.x = 1;
-      }
-    }
-  }
-
   setWalkStepRate(value: number) {
     this.movement.setTickInterval(value < 1 ? 1 : value);
   }
@@ -149,5 +117,9 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
     this.movement.nextPosition.x = this.position.x + this.movement.stepRange.x  ;
     this.movement.nextPosition.y = this.position.y + this.movement.stepRange.y ;
+  }
+
+  constructor() {
+    super();
   }
 }

@@ -3,6 +3,7 @@ import { Enemy } from "../gameobjects/enemy";
 import { Player } from "../gameobjects/player";
 import { SupplyBox } from "../gameobjects/supply-box";
 import { Armor } from "./armore";
+import { Controller } from "./controller";
 import { Damage } from "./damage";
 import { Weapon } from "./weapon";
 
@@ -16,6 +17,10 @@ export type GameObjectKinds =
   | "supply-box";
 
 export type Direction = { x: number; y: number };
+
+export type Direction_XYType = {x:-1|0|1 , y:-1|0|1} ;
+
+export type Direction_stringType = 'up'|'right'|'down'|'left' ;
 
 export type Position = {
   x: number;

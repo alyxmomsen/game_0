@@ -105,27 +105,34 @@ export default class Game {
 
   update() {
 
+    let bulletOfNull:Bullet|null = null ;
+
     // console.log(this.enemies.length);
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
-    this.player.update({
+    bulletOfNull = this.player.update({
       keys,
       objects: [...this.enemies, ...this.supplyBoxes],
       fieldDimentions: this.field.resolution,
     });
 
     this.enemies.forEach((enemy) => {
-      enemy.update({
-        objects: [...this.bullets],
+      bulletOfNull = enemy.update({
+        objects: [],
         fieldDimentions: this.field.resolution,
       });
+
+      if(bulletOfNull) {
+        this.bullets.push(bulletOfNull);
+      }
+
     });
     this.enemies = this.enemies.filter((enemy) => !enemy.isDied);
 
     this.bullets.forEach((bullet) => {
       bullet.update({
-        objects: [...this.enemies, this.player],
+        objects: [/* ...this.enemies ,  */this.player],
         fieldDimentions: this.field.resolution,
       });
     });
@@ -149,9 +156,11 @@ export default class Game {
       );
     }
 
-    if(this.creatorEnemyTicker.tick()) {
-      
-      this.enemies.push(this.createEnemyRandomly(10)) ; // генерит если в массиве меньше чем Аргумент
+    if(true && this.creatorEnemyTicker.tick()) {
+      const newEnemy = this.createEnemyRandomly(3) // генерит если в массиве меньше чем Аргумент
+      if(newEnemy) {
+        this.enemies.push(newEnemy);
+      } ; 
     }
 
 
