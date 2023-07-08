@@ -138,7 +138,7 @@ export default class Game {
 
     this.bullets.forEach((bullet) => {
       bullet.update({
-        objects: [/* ...this.enemies ,  */this.player],
+        objects: [...this.enemies , this.player],
         fieldDimentions: this.field.resolution,
       });
     });

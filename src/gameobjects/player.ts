@@ -19,6 +19,8 @@ export class Player extends GameObject {
     } else {
       return true;
     }
+
+
   }
 
   totallyIfCollisionIsNot(
@@ -39,6 +41,13 @@ export class Player extends GameObject {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): null | Bullet {
+
+
+    this.damaged.forEach(damage => {
+
+      this.getDamage(damage.value);
+
+    });
 
     this.controller.updateByKeys(keys) ;
 

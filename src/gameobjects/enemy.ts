@@ -35,6 +35,12 @@ export class Enemy extends GameObject {
     fieldDimentions: Dimentions;
   }): null | Bullet {
 
+    this.damaged.forEach(damage => {
+
+      this.getDamage(damage.value);
+
+    });
+
     this.controller.autoUpdatePer(1000);
     
 
