@@ -37,7 +37,6 @@ export type GameObjectConstructor = {
   position: Position;
   dimentions:Dimentions ;
   ownDamage: Damage;
-  direction: Direction;
   health: number;
   weapons: Weapon[];
   armor: Armor;

@@ -27,7 +27,7 @@ export class SupplyBox extends GameObject {
     
   }
 
-  update({ fieldDimentions }: { fieldDimentions: Dimentions }): false | Bullet {
+  update({ fieldDimentions }: { fieldDimentions: Dimentions }): null | Bullet {
     return super.update({
       fieldDimentions,
       // keys: [],
@@ -48,7 +48,6 @@ export class SupplyBox extends GameObject {
       dimentions: {width:160 , height:160} ,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons: [],
-      direction: { x: 1, y: 0 },
       health: 666,
       armor: new Armor({
         health: Math.floor(Math.random() * 10000),

@@ -35,7 +35,7 @@ export default abstract class GameObject extends GameObject_part_2 {
   }: {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-  }): Bullet | false {
+  }): Bullet | null {
 
     
     this.movement.updateStepRangeByController({...this.controller.move});
@@ -83,7 +83,41 @@ export default abstract class GameObject extends GameObject_part_2 {
       this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
     }
 
-    return  false;
+
+    /* fire fire fire */
+
+    let isFire = false ;
+    const controllerAttackDirection = this.controller.getAttackDirectionValue() ;
+    let data:{
+      pos: {
+        x: number;
+          y: number;
+        };
+        range: {
+          x: number;
+          y: number;
+        };
+    } ;
+
+    if(controllerAttackDirection !== '') {
+      
+      data = this.calculateSpawnPointEndAttackDirectionRangeBy(controllerAttackDirection);
+      this.attack.setSpawnPoint(data.pos);
+      this.attack.setDirection(data.range);
+
+      isFire = true ;
+    }
+
+    return  (!this.isDied && this.attack.ticker.tick() && isFire) ? new Bullet({
+      direction:{x:1 , y:0} ,
+      health:100 ,
+      id:0 ,
+      ownDamage:{damageClass:'magic' , value:1000} ,
+      position: this.attack.getSpawnPoint() ,
+      walkStepDirectionRange:{...this.attack.direction} , 
+      walkStepRateFadeDown:false ,
+      walkStepsLimit:0 ,
+    }) : null;
   }
 
   constructor({
@@ -96,7 +130,6 @@ export default abstract class GameObject extends GameObject_part_2 {
     walkStepsLimit,
     shouldFadeDownStepRate,
     ownDamage,
-    direction,
     health,
     weapons,
     color,
@@ -104,7 +137,6 @@ export default abstract class GameObject extends GameObject_part_2 {
   }: GameObjectConstructor) {
     super();
     this.movement = new Movement({
-      direction,
       maxWalkSteps: walkStepsLimit,
       shouldFadeDownStepRate,
       nextPosition: { ...position },

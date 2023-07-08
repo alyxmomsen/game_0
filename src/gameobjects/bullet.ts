@@ -38,12 +38,11 @@ export class Bullet extends GameObject {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): null | Bullet {
+
+
     
     
-
-    super.update({objects , fieldDimentions});
-
-    return null ;
+    return super.update({objects , fieldDimentions}); ;
   }
 
   constructor({
@@ -76,7 +75,6 @@ export class Bullet extends GameObject {
       walkStepDirectionRange ,
       walkStepsLimit,
       shouldFadeDownStepRate: walkStepRateFadeDown,
-      direction,
       health,
       weapons: [],
       armor: new Armor({

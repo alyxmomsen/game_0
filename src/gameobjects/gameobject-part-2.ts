@@ -1,5 +1,5 @@
 import { Damage } from "../library/damage";
-import { Dimentions, Direction, Position } from "../library/types";
+import { Dimentions, Direction, Direction_stringType, Position } from "../library/types";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
@@ -117,6 +117,42 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
     this.movement.nextPosition.x = this.position.x + this.movement.stepRange.x  ;
     this.movement.nextPosition.y = this.position.y + this.movement.stepRange.y ;
+  }
+
+
+  calculateSpawnPointEndAttackDirectionRangeBy (controllerAttackDirection:Direction_stringType|'') {
+
+
+    const o = {
+      pos:{x:0 ,y:0} ,
+      range:{x:0 , y:0} ,
+    }
+
+    if(controllerAttackDirection !== '') {
+      
+      switch (controllerAttackDirection) {
+        case 'down':
+          o.pos = {x:this.position.x + this.getDimentions().width / 2  , y:this.position.y + this.getDimentions().height };
+          o.range = {x:0 , y:30}
+        break ;
+        case 'left' :
+          o.pos = {x:this.position.x  , y:this.position.y  + this.getDimentions().height / 2};
+          o.range = {x:-30 , y:0}
+        break ;
+        case 'right': 
+          o.pos = {x:this.position.x + this.getDimentions().width  , y:this.position.y  + this.getDimentions().height / 2};
+          o.range = {x:30 , y:0} ;
+        break ;
+        case 'up' :
+          o.pos = {x:this.position.x + this.getDimentions().width / 2  , y:this.position.y };
+          o.range = {x:0 , y:-30} ;
+        break ;
+      }
+
+    }
+
+    return o ;
+
   }
 
   constructor() {

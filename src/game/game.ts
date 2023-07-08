@@ -107,7 +107,6 @@ export default class Game {
 
     let bulletOfNull:Bullet|null = null ;
 
-    // console.log(this.enemies.length);
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
@@ -116,6 +115,13 @@ export default class Game {
       objects: [...this.enemies, ...this.supplyBoxes],
       fieldDimentions: this.field.resolution,
     });
+
+    if(bulletOfNull) {
+
+      
+      this.bullets.push(bulletOfNull);
+    }
+
 
     this.enemies.forEach((enemy) => {
       bulletOfNull = enemy.update({

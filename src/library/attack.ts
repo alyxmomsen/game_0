@@ -6,7 +6,7 @@ import { Weapon } from "./weapon";
 export class Attack {
   private status: boolean; // доработать ???
   ticker: TickController; // интервал между выстрелами
-  direction: Direction_XYType; // стартовый вектор начала движения Bullet
+  direction: Direction; // стартовый вектор начала движения Bullet
   private weapons: Weapon[]; // арсенал (пресеты, другими словами)
   currentWeapon: Weapon; // в данный момент выбранный пресет
   ownDamage: Damage; // урон наносимый самим объектом, не путать с уроном Weapon
@@ -38,7 +38,7 @@ export class Attack {
     this.spawnPoint = { x , y } ;
   }
 
-  setDirection ({x , y}:Direction_XYType) {
+  setDirection ({x , y}:Direction) {
     this.direction.x = x ;
     this.direction.y = y ;
   }

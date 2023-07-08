@@ -2,8 +2,7 @@ import { TickController } from "./main";
 import { Direction, Position } from "./types";
 
 export class Movement {
-  // private stepRate: number;
-  direction: Direction;
+
   private ticker: TickController;
   counterOfSteps: number;
   lastMove: number;
@@ -14,7 +13,7 @@ export class Movement {
   maxStepRange:number ;
 
   getTickInterval() {
-    // return this.stepRate;
+
   }
 
   setTickInterval(value: number) {
@@ -105,14 +104,12 @@ export class Movement {
   }
 
   constructor({
-    direction,
     maxWalkSteps,
     shouldFadeDownStepRate,
     nextPosition,
     stepRange,
     maxStepRange ,
   }: {
-    direction: Direction;
     maxWalkSteps: number;
     shouldFadeDownStepRate: boolean;
     nextPosition: Position;
@@ -121,7 +118,6 @@ export class Movement {
   }) {
     this.stepRange = stepRange;
     this.maxStepRange = maxStepRange ;
-    this.direction = direction;
     this.counterOfSteps = 0;
     this.maxWalkSteps = maxWalkSteps;
     this.shouldFadeDownStepRate = shouldFadeDownStepRate;

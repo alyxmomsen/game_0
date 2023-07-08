@@ -20,6 +20,8 @@ export class Controller {
         right:boolean ;
     }
 
+
+
     private attack:Direction_stringType|'' ;
 
     
@@ -34,10 +36,30 @@ export class Controller {
         const a = keys.includes("a");
         const d = keys.includes("d");
 
+        const arrowUp = keys.includes("ArrowUp");
+        const arrowRight = keys.includes("ArrowRight");
+        const arrowDown = keys.includes("ArrowDown");
+        const arrowLeft = keys.includes("ArrowLeft");
+
+
         this.move.up = w 
         this.move.right = d ;
         this.move.down = s ;
         this.move.left = a ;
+
+
+        if(arrowDown) {
+            this.attack = 'down' ;
+        } else if (arrowRight) {
+            this.attack = 'right' ;
+
+        } else if (arrowLeft) {
+            this.attack = 'left' ;
+        } else if (arrowUp) {
+            this.attack = 'up' ;
+        } else {
+            this.attack = '' ;
+        }
 
     }
 

@@ -42,12 +42,10 @@ export class Player extends GameObject {
 
     this.controller.updateByKeys(keys) ;
 
-    super.update({
+    return super.update({
       objects,
       fieldDimentions,
     });
-
-    return null ;
 
   }
 
@@ -72,7 +70,6 @@ export class Player extends GameObject {
       dimentions: {width:100 , height:100} ,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons,
-      direction: { x: 0, y: 0 },
       health: 666,
       armor: new Armor({
         health: Math.floor(Math.random() * 10000),
