@@ -1,4 +1,5 @@
 import { Damage } from "./damage";
+import { Dimentions } from "./types";
 
 export class Weapon {
   id: number; //
@@ -8,6 +9,7 @@ export class Weapon {
   stepRate: number; // интервал между шагами
   stepRateFadeDown: boolean; // будет ли объект аттаки замедлятся, после выстрела
   stepsLimit: number;
+  bulletDimentions:Dimentions ;
 
   constructor({
     damage,
@@ -15,17 +17,20 @@ export class Weapon {
     stepRate,
     stepRateFadeDown,
     stepsLimit,
+    bulletDimentions ,
   }: {
     damage: Damage;
     fireRate: number;
     stepRate: number;
     stepRateFadeDown: boolean;
     stepsLimit: number;
+    bulletDimentions:Dimentions ;
   }) {
     this.damage = damage;
     this.fireRate = fireRate;
     this.stepRate = stepRate;
     this.stepRateFadeDown = stepRateFadeDown;
     this.stepsLimit = stepsLimit;
+    this.bulletDimentions = bulletDimentions ;
   }
 }

@@ -58,6 +58,7 @@ export class Bullet extends GameObject {
 
   constructor({
     position,
+    dimentions ,
     id,
     ownDamage,
     health,
@@ -66,6 +67,7 @@ export class Bullet extends GameObject {
     walkStepDirectionRange ,
   }: {
     position: Position;
+    dimentions:Dimentions ;
     id: number;
     health: number;
     ownDamage: Damage;
@@ -79,7 +81,7 @@ export class Bullet extends GameObject {
       id,
       kind: "damage-entity",
       position,
-      dimentions: {width:20 , height:20} ,
+      dimentions ,
       maxWalkStepRange: 1 ,
       walkStepDirectionRange ,
       walkStepsLimit,
