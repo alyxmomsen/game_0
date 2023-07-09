@@ -135,7 +135,7 @@ export default class Game {
 
     this.enemies.forEach((enemy) => {
       bulletOfNull = enemy.update({
-        objects: [],
+        objects: [this.player],
         fieldDimentions: this.field.resolution,
       });
 

@@ -144,9 +144,9 @@ export default abstract class GameObject extends GameObject_part_2 {
       return  (!this.isDied && this.attack.ticker.tick() && isFire) ? new Bullet({
         health:100 ,
         id:0 ,
-        ownDamage:this.attack.currentWeapon ? {...this.attack.currentWeapon.damage} : {damageClass:'magic' , value:100} ,
+        ownDamage:this.attack.currentWeapon ? {...this.attack.currentWeapon.get_damage()} : {damageClass:'magic' , value:100} ,
         position: this.attack.getSpawnPoint() ,
-        dimentions:this.attack.currentWeapon ? {...this.attack.currentWeapon.bulletDimentions} : {width:10 , height:10} ,
+        dimentions:this.attack.currentWeapon ? {...this.attack.currentWeapon.get_bulletDimentions()} : {width:10 , height:10} ,
         walkStepDirectionRange:{...this.attack.direction} , 
         walkStepRangeDelta:0.1 ,
         walkStepRangeDeltaMod:0.2 ,

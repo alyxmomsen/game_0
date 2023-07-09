@@ -16,7 +16,7 @@ export class Attack {
   setCurrentWeapon() {
     if (this.weapons.length) {
       this.currentWeapon = this.weapons[0];
-      this.ticker.setTickInterval(this.currentWeapon.fireRate);
+      this.ticker.setTickInterval(this.currentWeapon.get_FireRate());
     } else {
       this.currentWeapon = null;
     }

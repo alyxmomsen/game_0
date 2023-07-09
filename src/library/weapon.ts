@@ -2,15 +2,22 @@ import { Damage } from "./damage";
 import { Dimentions } from "./types";
 
 export class Weapon {
-  id: number; //
-  title: string; // не был задействован... или уже да ))
-  damage: Damage; // урон при объекту при, например, контакте с ним
-  fireRate: number; // интервал между выстрелами
-  stepRate: number; // интервал между шагами
-  stepRateFadeDown: boolean; // будет ли объект аттаки замедлятся, после выстрела
+  private id: number; //
+  private title: string; // не был задействован... или уже да ))
+  private damage: Damage; // урон при объекту при, например, контакте с ним
+  private fireRate: number; // интервал между выстрелами
+  private stepRate: number; // интервал между шагами
+  private stepRateFadeDown: boolean; // будет ли объект аттаки замедлятся, после выстрела
   
-  stepsLimit: number;
-  bulletDimentions:Dimentions ;
+  private stepsLimit: number;
+  private bulletDimentions:Dimentions ;
+
+
+  get_FireRate () { return this.fireRate } ;
+
+  get_bulletDimentions () { return {...this.bulletDimentions} } ;
+
+  get_damage () { return {...this.damage} } ;
 
   constructor({
     damage,
