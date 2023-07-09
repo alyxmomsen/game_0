@@ -40,7 +40,9 @@ export class SupplyBox extends GameObject {
     super({
       id: 0,
       kind: "supply-box",
-      maxWalkStepRange:1 ,
+      maxAllowWalkStepRange:1 ,
+      walkStepRangeDelta:2 , 
+      walkStepRangeDeltaMod:0 ,
       walkStepDirectionRange: {x:0 , y:0},
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,

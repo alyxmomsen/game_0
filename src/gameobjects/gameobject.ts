@@ -5,12 +5,14 @@ import { Bullet } from "./bullet";
 import { SupplyBox } from "./supply-box";
 import { Player } from "./player";
 import { Enemy } from "./enemy";
-import { Dimentions, GameObjectConstructor, GameObjectExtendsClasses } from "../library/types";
+import { Dimentions, GameObjectConstructor, GameObjectExtendsClasses, GameObjectKinds, Position } from "../library/types";
 
 import { GameObject_Part_3 } from "./gameobject-part-3";
 import { TickController } from "../library/main";
 import { Controller } from "../library/controller";
 import { GameObject_part_2 } from "./gameobject-part-2";
+import { Weapon } from "../library/weapon";
+import { Armor } from "../library/armore";
 
 export default abstract class GameObject extends GameObject_part_2 {
   /* ====================== options ====================== */
@@ -146,6 +148,8 @@ export default abstract class GameObject extends GameObject_part_2 {
         position: this.attack.getSpawnPoint() ,
         dimentions:this.attack.currentWeapon ? {...this.attack.currentWeapon.bulletDimentions} : {width:10 , height:10} ,
         walkStepDirectionRange:{...this.attack.direction} , 
+        walkStepRangeDelta:0.1 ,
+        walkStepRangeDeltaMod:0.2 ,
         walkStepRateFadeDown:false ,
         walkStepsLimit:0 ,
       }) : null;
@@ -153,7 +157,7 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     }
     else {
-      
+
       return null ;
     }
 
@@ -167,7 +171,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     position,
     dimentions ,
     kind,
-    maxWalkStepRange ,
+    maxAllowWalkStepRange ,
     walkStepDirectionRange: walkStepRange,
     walkStepsLimit,
     shouldFadeDownStepRate,
@@ -176,7 +180,25 @@ export default abstract class GameObject extends GameObject_part_2 {
     weapons,
     color,
     armor,
-  }: GameObjectConstructor) {
+    walkStepRangeDelta: stepRangeDelta , 
+    walkStepRangeDeltaMod: stepRangeDeltaMod ,
+  }: {
+    id: number;
+    kind: GameObjectKinds;
+    maxAllowWalkStepRange:number ; // макс скорость
+    walkStepDirectionRange: {x:number , y:number};
+    walkStepsLimit: number;
+    color: string;
+    position: Position;
+    dimentions:Dimentions ;
+    ownDamage: Damage;
+    health: number;
+    weapons: Weapon[];
+    armor: Armor;
+    shouldFadeDownStepRate: boolean;
+    walkStepRangeDelta:number ;
+    walkStepRangeDeltaMod:number ;
+  }) {
     super();
 
     this.movement = new Movement({
@@ -184,7 +206,9 @@ export default abstract class GameObject extends GameObject_part_2 {
       shouldFadeDownStepRate,
       nextPosition: { ...position },
       stepRange: walkStepRange,
-      maxStepRange: maxWalkStepRange ,
+      maxAllowStepRange: maxAllowWalkStepRange ,
+      stepRangeDelta ,
+      stepRangeDeltaMod ,
     });
 
     this.dimentions = { ...dimentions };
@@ -208,7 +232,5 @@ export default abstract class GameObject extends GameObject_part_2 {
     };
 
     this.controller = new Controller ;
-
-    // console.log(this.attack.ticker);
   }
 }

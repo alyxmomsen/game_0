@@ -8,6 +8,7 @@ export class Weapon {
   fireRate: number; // интервал между выстрелами
   stepRate: number; // интервал между шагами
   stepRateFadeDown: boolean; // будет ли объект аттаки замедлятся, после выстрела
+  
   stepsLimit: number;
   bulletDimentions:Dimentions ;
 

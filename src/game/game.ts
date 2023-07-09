@@ -83,7 +83,14 @@ export default class Game {
             y: Math.floor(Math.random() * (this.field.resolution.height)) * this.field.gameCellDimentions.height,
           },
           weapons: [
-            
+            new Weapon({
+              bulletDimentions:{width:50 , height:50} , 
+              damage:{damageClass:'magic' , value:50} ,
+              fireRate:Math.floor(Math.random() * 900) + 100 ,
+              stepRate:1000 ,
+              stepRateFadeDown: false , 
+              stepsLimit:0 ,
+            }) ,
           ],
         }) ;
       }

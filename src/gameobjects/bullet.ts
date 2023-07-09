@@ -18,13 +18,17 @@ export class Bullet extends GameObject {
     object: Bullet | GameObject | Enemy | Player | SupplyBox
   ): boolean {
     // this.isDied = true ;
+    this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 3
+    this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 3
 
     if(this.movement.currentStepRange.y === 0) {
-      this.movement.currentStepRange.y = 2 ;
+      this.movement.currentStepRange.y = Math.floor(Math.random() * this.movement.currentStepRange.x ) * [1 , -1][Math.floor(Math.random() * 2)] ;
     }
 
-    this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 2
-    this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 2
+    if(this.movement.currentStepRange.x === 0) {
+      this.movement.currentStepRange.x = Math.floor(Math.random() *  this.movement.currentStepRange.y) *  [1 , -1][Math.floor(Math.random() * 2)] ;
+    }
+
 
     this.attackTo(object , {...this.attack.ownDamage});
 
@@ -53,6 +57,12 @@ export class Bullet extends GameObject {
     fieldDimentions: Dimentions;
   }): null | Bullet {
 
+
+    // если пуля не движется , то она удаляется из игры
+    if(this.movement.currentStepRange.x === 0 && this.movement.currentStepRange.y === 0) {
+      this.isDied = true ;
+    }
+
     return super.update({objects , fieldDimentions}); ;
   }
 
@@ -65,6 +75,8 @@ export class Bullet extends GameObject {
     walkStepRateFadeDown,
     walkStepsLimit,
     walkStepDirectionRange ,
+    walkStepRangeDelta , 
+    walkStepRangeDeltaMod ,
   }: {
     position: Position;
     dimentions:Dimentions ;
@@ -72,6 +84,8 @@ export class Bullet extends GameObject {
     health: number;
     ownDamage: Damage;
     walkStepDirectionRange:{x:number , y:number};
+    walkStepRangeDelta:number ,
+    walkStepRangeDeltaMod:number ,
     walkStepRateFadeDown: boolean;
     walkStepsLimit: number;
   }) {
@@ -82,7 +96,9 @@ export class Bullet extends GameObject {
       kind: "damage-entity",
       position,
       dimentions ,
-      maxWalkStepRange: 1 ,
+      maxAllowWalkStepRange: 1 ,
+      walkStepRangeDelta , 
+      walkStepRangeDeltaMod ,
       walkStepDirectionRange ,
       walkStepsLimit,
       shouldFadeDownStepRate: walkStepRateFadeDown,
