@@ -130,27 +130,36 @@ export default abstract class GameObject extends GameObject_part_2 {
         };
     } ;
 
-    if(controllerAttackDirection !== '') {
+    if(controllerAttackDirection !== '' && this.attack.currentWeapon) {
       
       data = this.calculateSpawnPointEndAttackDirectionRangeBy(controllerAttackDirection);
       this.attack.setSpawnPoint(data.pos);
       this.attack.setDirection(data.range);
 
       isFire = true ;
+
+
+      return  (!this.isDied && this.attack.ticker.tick() && isFire) ? new Bullet({
+        health:100 ,
+        id:0 ,
+        ownDamage:this.attack.currentWeapon ? {...this.attack.currentWeapon.damage} : {damageClass:'magic' , value:100} ,
+        position: this.attack.getSpawnPoint() ,
+        dimentions:this.attack.currentWeapon ? {...this.attack.currentWeapon.bulletDimentions} : {width:10 , height:10} ,
+        walkStepDirectionRange:{...this.attack.direction} , 
+        walkStepRateFadeDown:false ,
+        walkStepsLimit:0 ,
+      }) : null;
+
+
+    }
+    else {
+      
+      return null ;
     }
 
 
 
-    return  (!this.isDied && this.attack.ticker.tick() && isFire) ? new Bullet({
-      health:100 ,
-      id:0 ,
-      ownDamage:this.attack.currentWeapon ? {...this.attack.currentWeapon.damage} : {damageClass:'magic' , value:100} ,
-      position: this.attack.getSpawnPoint() ,
-      dimentions:this.attack.currentWeapon ? {...this.attack.currentWeapon.bulletDimentions} : {width:10 , height:10} ,
-      walkStepDirectionRange:{...this.attack.direction} , 
-      walkStepRateFadeDown:false ,
-      walkStepsLimit:0 ,
-    }) : null;
+    
   }
 
   constructor({
