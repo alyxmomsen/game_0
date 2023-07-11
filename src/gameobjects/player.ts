@@ -15,6 +15,9 @@ export class Player extends GameObject {
   ifCollisionIs_For(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): boolean {
+
+    // console.log(this.movement.currentStepRange.x , this.movement.currentStepRange.y);
+
     if (object instanceof SupplyBox) {
       object.isDied = true;
       this.increaseHealth(500);
@@ -23,6 +26,7 @@ export class Player extends GameObject {
       return true;
     }
 
+    
 
   }
 
@@ -78,7 +82,7 @@ export class Player extends GameObject {
     super({
       id,
       kind: "player",
-      maxAllowWalkStepRange:4,
+      maxAllowWalkStepRange:10,
       walkStepRangeDelta:1 , 
       walkStepRangeDeltaMod:0 ,
       walkStepDirectionRange: {x:0 , y:0},

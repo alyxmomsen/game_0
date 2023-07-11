@@ -67,6 +67,30 @@ export class GameObject_part_2 extends GameObject_part_1 {
       this.movement.targetPosition.y < subjectPostion.y + subjectDimentions.height &&
       this.movement.targetPosition.y + this.dimentions.height > subjectPostion.y
     ) {
+
+      // let xCollisionDepth = 0 ;
+
+      // let yCollisionDepth = 0 ;
+
+      // if(this.position.x < this.movement.targetPosition.x) {
+      //   xCollisionDepth = (this.movement.targetPosition.x + this.dimentions.width) - subjectPostion.x ;
+      // }
+      // else if (this.position.x > this.movement.targetPosition.x) {
+      //   xCollisionDepth = (subjectPostion.x + subjectDimentions.width) - this.movement.targetPosition.x ;
+      // }
+
+      // if(this.position.y < this.movement.targetPosition.y) {
+      //   yCollisionDepth = (this.movement.targetPosition.y + this.dimentions.height) - subjectPostion.y ;
+      // }
+      // else if (this.position.x > this.movement.targetPosition.x) {
+      //   yCollisionDepth = (subjectPostion.y + subjectDimentions.height) - this.movement.targetPosition.y ;
+      // }
+
+      // if(this.kind === 'player') {
+      //   console.log(xCollisionDepth , yCollisionDepth);
+      // }
+
+
       return true;
     } else {
       return false;
@@ -108,7 +132,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
   /// beta beta beta
   calculateOwnDamageBySpeed() {
-    const damage = this.attack.ownDamage.value;
+    const damage = this.attack.getOwnDamage();
     const calculatedDamageValue = Math.floor(damage * this.movement.currentStepRange.x / 5);
     return calculatedDamageValue;
   }

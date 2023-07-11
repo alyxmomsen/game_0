@@ -9,7 +9,7 @@ export class Attack {
   direction: Direction; // стартовый вектор начала движения Bullet
   private weapons: Weapon[]; // арсенал (пресеты, другими словами)
   currentWeapon: Weapon; // в данный момент выбранный пресет
-  ownDamage: Damage; // урон наносимый самим объектом, не путать с уроном Weapon
+  private ownDamage: Damage; // урон наносимый самим объектом, не путать с уроном Weapon
   private spawnPoint:Position ; // точка спауна для объекта аттаки
 
   // доработать. пока что выберает первое оружие (пресет настроек) из массива пресетов

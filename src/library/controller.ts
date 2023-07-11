@@ -77,9 +77,12 @@ export class Controller {
             this.move.left = !!Math.floor(Math.random() * 2);
 
 
-            const arr:["up" , "right" , "down" , "left"] = ["up" , "right" , "down" , "left"] ;
+            let isFire:boolean = !!Math.floor(Math.random() * 2) ;
 
-            this.attack = arr[Math.floor(Math.random() * 4)] ;
+
+            const arr:["up" , "right" , "down" , "left" , ""] = ["up" , "right" , "down" , "left" , ""] ;
+
+            this.attack = isFire ? arr[Math.floor(Math.random() * 5)] : '' ;
 
 
         }

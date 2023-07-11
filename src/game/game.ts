@@ -163,7 +163,7 @@ export default class Game {
 
     this.supplyBoxes = this.supplyBoxes.filter((elem) => !elem.isDied);
 
-    if (this.supplyBoxCreatingTicker.tick()) {
+    if (this.supplyBoxCreatingTicker.tick() && this.supplyBoxes.length < 3) {
       this.supplyBoxes.push(
         new SupplyBox({
           position: {
@@ -175,7 +175,7 @@ export default class Game {
     }
 
     if(true && this.creatorEnemyTicker.tick()) {
-      const newEnemy = this.createEnemyRandomly(3) // генерит если в массиве меньше чем Аргумент
+      const newEnemy = this.createEnemyRandomly(1) // генерит если в массиве меньше чем Аргумент
       if(newEnemy) {
         this.enemies.push(newEnemy);
       } ; 
@@ -187,31 +187,31 @@ export default class Game {
   render(field: HTMLElement = null) {
     this.UIManager.clearCanvas();
 
-    // this.UIManager.draw(
-    //   this.player.position.x,
-    //   this.player.position.y,
-    //   this.player.getDimentions().width,
-    //   this.player.getDimentions().height,
-    //   this.player.getColor() , 
-    //   this.player.getHealth() ,
-    //   this.player.maxHealth ,
-    //   this.player.armor.getHealthValue() ,
-    //   this.player.armor.getMaxHaxHealtValue() ,
-    // );
-
-    const frame = this.player.spriteManager.getFrame();
-
-    this.UIManager.drawSprite(
-      this.player.sprite,
-      frame.x/* 1 * (32 * (Math.floor(Math.random() * 4))) */ ,
-      frame.y,
-      32,
-      32,
-      this.player.position.x ,
-      this.player.position.y ,
-      this.player.getDimentions().width * 1  ,
-      this.player.getDimentions().height * 1  ,
+    this.UIManager.draw(
+      this.player.position.x,
+      this.player.position.y,
+      this.player.getDimentions().width,
+      this.player.getDimentions().height,
+      this.player.getColor() , 
+      this.player.getHealth() ,
+      this.player.maxHealth ,
+      this.player.armor.getHealthValue() ,
+      this.player.armor.getMaxHaxHealtValue() ,
     );
+
+    // const frame = this.player.spriteManager.getFrame();
+
+    // this.UIManager.drawSprite(
+    //   this.player.sprite,
+    //   frame.x/* 1 * (32 * (Math.floor(Math.random() * 4))) */ ,
+    //   frame.y,
+    //   32,
+    //   32,
+    //   this.player.position.x ,
+    //   this.player.position.y ,
+    //   this.player.getDimentions().width * 1  ,
+    //   this.player.getDimentions().height * 1  ,
+    // );
 
     this.bullets.forEach((elem) => {
 
@@ -231,31 +231,31 @@ export default class Game {
     this.enemies.forEach((enemy) => {
 
 
-      const frame = enemy.spriteManager.getFrame();
+      // const frame = enemy.spriteManager.getFrame();
 
-      this.UIManager.drawSprite(
-        enemy.sprite,
-        frame.x/* 1 * (32 * (Math.floor(Math.random() * 4))) */ ,
-        frame.y,
-        32,
-        32,
-        enemy.position.x ,
-        enemy.position.y ,
-        enemy.getDimentions().width * 1  ,
-        enemy.getDimentions().height * 1  ,
-      );
-
-      // this.UIManager.draw(
-      //   enemy.position.x,
-      //   enemy.position.y,
-      //   enemy.getDimentions().width,
-      //   enemy.getDimentions().height,
-      //   enemy.getColor() , 
-      //   enemy.getHealth() ,
-      //   enemy.maxHealth ,
-      //   enemy.armor.getHealthValue() ,
-      //   enemy.armor.getMaxHaxHealtValue() ,
+      // this.UIManager.drawSprite(
+      //   enemy.sprite,
+      //   frame.x/* 1 * (32 * (Math.floor(Math.random() * 4))) */ ,
+      //   frame.y,
+      //   32,
+      //   32,
+      //   enemy.position.x ,
+      //   enemy.position.y ,
+      //   enemy.getDimentions().width * 1  ,
+      //   enemy.getDimentions().height * 1  ,
       // );
+
+      this.UIManager.draw(
+        enemy.position.x,
+        enemy.position.y,
+        enemy.getDimentions().width,
+        enemy.getDimentions().height,
+        enemy.getColor() , 
+        enemy.getHealth() ,
+        enemy.maxHealth ,
+        enemy.armor.getHealthValue() ,
+        enemy.armor.getMaxHaxHealtValue() ,
+      );
 
       
 
@@ -313,7 +313,7 @@ export default class Game {
       // даем игроку арсенал
       weapons: [
         new Weapon({
-          damage: new Damage({ damageClass: "phisical", value: 100 }),
+          damage: new Damage({ damageClass: "phisical", value: 2 }),
           fireRate: 100, // интервал между выстрелами
           maxAllowedStepRange: 50, // скорость полета
           stepRateFadeDown: true, // будет ли замедляться

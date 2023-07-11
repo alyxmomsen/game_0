@@ -18,6 +18,12 @@ export class Bullet extends GameObject {
     object: Bullet | GameObject | Enemy | Player | SupplyBox
   ): boolean {
     // this.isDied = true ;
+    
+    const calculeted = Math.abs(Math.abs(this.movement.currentStepRange.x) - Math.abs(this.movement.currentStepRange.y)) ;
+    console.log( calculeted * this.attack.getOwnDamage()  );
+
+    this.attackTo(object , {damageClass:'magic' , value:this.attack.getOwnDamage() * calculeted});
+
     this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 3
     this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 3
 
@@ -30,7 +36,10 @@ export class Bullet extends GameObject {
     }
 
 
-    this.attackTo(object , {...this.attack.ownDamage});
+
+
+
+    
 
     return true;
   }

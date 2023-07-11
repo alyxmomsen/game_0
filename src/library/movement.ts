@@ -11,6 +11,9 @@ export class Movement {
   targetPosition: Position;
   currentStepRange: {x:number ,y:number};
   stepRangeDelta:number ; // дельта скорости
+  // increaseStepRa
+  StepRangeIncreaseValue:number ; // дельта уменьшения скорости
+  StepRangeDecreaseValue:number ; // дельта уменьшения скорости
   stepRangeDeltaMod:number ; // модификатор дельты  скорости
   maxAllowedStepRange:number ; // максимальная скорость
 
