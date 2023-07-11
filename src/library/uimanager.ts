@@ -6,8 +6,17 @@ export class UIManager {
 
   gameCellDimentions: Dimentions;
 
-  draw(x: number, y: number, w: number, h: number, color: string = "blue" , health:number , maxHealth:number ,armorHealth:number , maxAH:number) {
-    
+  draw(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    color: string = "blue",
+    health: number,
+    maxHealth: number,
+    armorHealth: number,
+    maxAH: number
+  ) {
     // console.log(maxAH);
 
     this.ctx.fillStyle = color;
@@ -18,44 +27,45 @@ export class UIManager {
       h
     );
 
-    const calculate = function (maxBarWide:number , maxValue:number , currentValue:number) {
-
-      const widePercentagep_1 =  maxBarWide / 100
-      const hp_1 = maxValue / 100 ;
-      const hp = currentValue / hp_1 ;
-      const currentWidePercent = widePercentagep_1 * hp ;
+    const calculate = function (
+      maxBarWide: number,
+      maxValue: number,
+      currentValue: number
+    ) {
+      const widePercentagep_1 = maxBarWide / 100;
+      const hp_1 = maxValue / 100;
+      const hp = currentValue / hp_1;
+      const currentWidePercent = widePercentagep_1 * hp;
 
       // const result = currentWidePercent ;
 
-      return {currentPercentOfValue:hp , currentPercentOfWide:currentWidePercent} ;
-    }
+      return {
+        currentPercentOfValue: hp,
+        currentPercentOfWide: currentWidePercent,
+      };
+    };
 
-    let {currentPercentOfValue , currentPercentOfWide}:{
+    let {
+      currentPercentOfValue,
+      currentPercentOfWide,
+    }: {
       currentPercentOfValue: number;
       currentPercentOfWide: number;
-  } = calculate(w , maxHealth , health) ;
+    } = calculate(w, maxHealth, health);
 
-    if(currentPercentOfValue < 100) {
-
-      this.ctx.fillStyle = 'red' ;
-      this.ctx.fillRect(
-        x , y - 10 , currentPercentOfWide , 10
-      ) ;
+    if (currentPercentOfValue < 100) {
+      this.ctx.fillStyle = "red";
+      this.ctx.fillRect(x, y - 10, currentPercentOfWide, 10);
     }
 
-    const result = calculate(w , maxAH , armorHealth) ;
+    const result = calculate(w, maxAH, armorHealth);
 
     // console.log(result.currentPercentOfValue , result.currentPercentOfWide);
 
-    if(result.currentPercentOfValue < 100) {
-
-      this.ctx.fillStyle = 'green' ;
-      this.ctx.fillRect(
-        x , y - 20 , result.currentPercentOfWide , 10
-      ) ;
+    if (result.currentPercentOfValue < 100) {
+      this.ctx.fillStyle = "green";
+      this.ctx.fillRect(x, y - 20, result.currentPercentOfWide, 10);
     }
-
-
   }
 
   drawSprite(

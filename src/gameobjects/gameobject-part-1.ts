@@ -7,22 +7,19 @@ import { Movement } from "../library/movement";
 import { SpriteManager } from "../library/sprite-manager";
 import { Dimentions, GameObjectKinds } from "../library/types";
 
-
-
 export class GameObject_part_1 {
-
-  spriteManager:SpriteManager ;
-  sprite:HTMLImageElement ;
+  spriteManager: SpriteManager;
+  sprite: HTMLImageElement;
 
   protected id: number;
   protected damaged: Damage[]; // в данный момент получаемыe уроны
   protected dateOfCreated: number; // дата спауна
-  protected color: string; 
+  protected color: string;
   protected kind: GameObjectKinds;
   protected dimentions: Dimentions;
   position: { x: number; y: number } | null = null;
   protected health: number;
-  maxHealth:number ; 
+  maxHealth: number;
   armor: Armor;
   isDied: boolean;
   protected attack: Attack;
@@ -32,10 +29,7 @@ export class GameObject_part_1 {
     currentSpriteState: number;
   };
 
-  controller:Controller ;
+  controller: Controller;
 
-  constructor() {
-    
-  }
-
+  constructor() {}
 }

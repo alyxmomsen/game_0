@@ -8,18 +8,25 @@ export class Weapon {
   private fireRate: number; // интервал между выстрелами
   private maxAllowedStepRange: number; // интервал между шагами
   private stepRateFadeDown: boolean; // будет ли объект аттаки замедлятся, после выстрела
-  
+
   private stepsLimit: number;
-  private bulletDimentions:Dimentions ;
+  private bulletDimentions: Dimentions;
 
+  get_FireRate() {
+    return this.fireRate;
+  }
 
-  get_FireRate () { return this.fireRate } ;
+  get_bulletDimentions() {
+    return { ...this.bulletDimentions };
+  }
 
-  get_bulletDimentions () { return {...this.bulletDimentions} } ;
+  get_damage() {
+    return { ...this.damage };
+  }
 
-  get_damage () { return {...this.damage} } ;
-
-  get_maxAllowedStepRange () { return this.maxAllowedStepRange } 
+  get_maxAllowedStepRange() {
+    return this.maxAllowedStepRange;
+  }
 
   constructor({
     damage,
@@ -27,20 +34,20 @@ export class Weapon {
     maxAllowedStepRange,
     stepRateFadeDown,
     stepsLimit,
-    bulletDimentions ,
+    bulletDimentions,
   }: {
     damage: Damage;
     fireRate: number;
     maxAllowedStepRange: number;
     stepRateFadeDown: boolean;
     stepsLimit: number;
-    bulletDimentions:Dimentions ;
+    bulletDimentions: Dimentions;
   }) {
     this.damage = damage;
     this.fireRate = fireRate;
     this.maxAllowedStepRange = maxAllowedStepRange;
     this.stepRateFadeDown = stepRateFadeDown;
     this.stepsLimit = stepsLimit;
-    this.bulletDimentions = bulletDimentions ;
+    this.bulletDimentions = bulletDimentions;
   }
 }

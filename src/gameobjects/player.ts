@@ -8,14 +8,13 @@ import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
 import { SupplyBox } from "./supply-box";
 
-import sprite from './../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle-Sheet.png' ;
+import sprite from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle-Sheet.png";
 import { SpriteManager } from "../library/sprite-manager";
 
 export class Player extends GameObject {
   ifCollisionIs_For(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): boolean {
-
     // console.log(this.movement.currentStepRange.x , this.movement.currentStepRange.y);
 
     if (object instanceof SupplyBox) {
@@ -25,9 +24,6 @@ export class Player extends GameObject {
     } else {
       return true;
     }
-
-    
-
   }
 
   totallyIfCollisionIsNot(
@@ -38,9 +34,7 @@ export class Player extends GameObject {
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {}
 
-  worldLimitCollision_handler(): void {
-    
-  }
+  worldLimitCollision_handler(): void {}
 
   update({
     keys,
@@ -51,22 +45,17 @@ export class Player extends GameObject {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): null | Bullet {
-
-
-    this.damaged.forEach(damage => {
-
+    this.damaged.forEach((damage) => {
       this.getDamage(damage.value);
-
     });
-    this.damaged = [] ; // обнуляем массив урона
+    this.damaged = []; // обнуляем массив урона
 
-    this.controller.updateByKeys(keys) ;
+    this.controller.updateByKeys(keys);
 
     return super.update({
       objects,
       fieldDimentions,
     });
-
   }
 
   constructor({
@@ -78,32 +67,29 @@ export class Player extends GameObject {
     position: Position;
     weapons: Weapon[];
   }) {
-
     super({
       id,
       kind: "player",
-      maxAllowWalkStepRange:10,
-      walkStepRangeDelta:1 , 
-      walkStepRangeDeltaMod:0 ,
-      walkStepDirectionRange: {x:0 , y:0},
+      maxAllowWalkStepRange: 10,
+      walkStepRangeDelta: 1,
+      walkStepRangeDeltaMod: 0,
+      walkStepDirectionRange: { x: 0, y: 0 },
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
       color: "green",
       position,
-      dimentions: {width:200 , height:200} ,
+      dimentions: { width: 200, height: 200 },
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons,
       health: 666,
       armor: new Armor({
         health: Math.floor(Math.random() * 10000),
-        dempher:99 /* Math.floor(Math.random() * 99) + 1 */,
+        dempher: 99 /* Math.floor(Math.random() * 99) + 1 */,
       }),
     });
 
-    
     this.sprite = new Image();
-    this.sprite.src = sprite ;
-    this.spriteManager = new SpriteManager(this.sprite , 3) ;
-    
+    this.sprite.src = sprite;
+    this.spriteManager = new SpriteManager(this.sprite, 3);
   }
 }

@@ -18,9 +18,9 @@ export type GameObjectKinds =
 
 export type Direction = { x: number; y: number };
 
-export type Direction_XYType = {x:-1|0|1 , y:-1|0|1} ;
+export type Direction_XYType = { x: -1 | 0 | 1; y: -1 | 0 | 1 };
 
-export type Direction_stringType = 'up'|'right'|'down'|'left' ;
+export type Direction_stringType = "up" | "right" | "down" | "left";
 
 export type Position = {
   x: number;
@@ -30,19 +30,19 @@ export type Position = {
 export type GameObjectConstructor = {
   id: number;
   kind: GameObjectKinds;
-  maxAllowWalkStepRange:number ; // макс скорость
-  walkStepDirectionRange: {x:number , y:number};
+  maxAllowWalkStepRange: number; // макс скорость
+  walkStepDirectionRange: { x: number; y: number };
   walkStepsLimit: number;
   color: string;
   position: Position;
-  dimentions:Dimentions ;
+  dimentions: Dimentions;
   ownDamage: Damage;
   health: number;
   weapons: Weapon[];
   armor: Armor;
   shouldFadeDownStepRate: boolean;
-  stepRangeDelta:number ;
-  stepRangeDeltaMod:number ;
+  stepRangeDelta: number;
+  stepRangeDeltaMod: number;
 };
 
 export type Dimentions = {
@@ -68,4 +68,4 @@ export type UI_stat = {
 
 export type GameObjectExtendsClasses = Enemy | Bullet | SupplyBox | Player;
 
-export type SupplyBoxContent = "health"|"armor"|"damage" ;
+export type SupplyBoxContent = "health" | "armor" | "damage";

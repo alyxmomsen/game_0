@@ -1,9 +1,3 @@
-
 export class GameController {
-
-    
-
-    constructor () {
-
-    }
+  constructor() {}
 }

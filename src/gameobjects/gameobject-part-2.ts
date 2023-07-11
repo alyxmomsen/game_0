@@ -1,5 +1,10 @@
 import { Damage } from "../library/damage";
-import { Dimentions, Direction, Direction_stringType, Position } from "../library/types";
+import {
+  Dimentions,
+  Direction,
+  Direction_stringType,
+  Position,
+} from "../library/types";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
@@ -8,7 +13,6 @@ import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 export class GameObject_part_2 extends GameObject_part_1 {
-  
   getDimentions() {
     return { ...this.dimentions };
   }
@@ -23,7 +27,9 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
   getDamage(damage: number) {
     if (this.armor.getHealthValue() > 0) {
-      this.armor.decreaseArmorHealth(Math.floor((damage / 100) * this.armor.dempher)) ;
+      this.armor.decreaseArmorHealth(
+        Math.floor((damage / 100) * this.armor.dempher)
+      );
       this.health -= Math.floor((damage / 100) * (100 - this.armor.dempher));
     } else {
       this.health -= damage;
@@ -40,9 +46,9 @@ export class GameObject_part_2 extends GameObject_part_1 {
     return this.health;
   }
 
-  increaseHealth(value:number) {
-    this.health += value ;
-    this.maxHealth = this.health ; 
+  increaseHealth(value: number) {
+    this.health += value;
+    this.maxHealth = this.health;
   }
 
   geTheValueDamage() {}
@@ -60,14 +66,19 @@ export class GameObject_part_2 extends GameObject_part_1 {
   }
 
   // проверка на коллизию nextposition с переданными координатами
-  checkNextPositionColissionWith(subjectPostion: Position , subjectDimentions:Dimentions) {
+  checkNextPositionColissionWith(
+    subjectPostion: Position,
+    subjectDimentions: Dimentions
+  ) {
     if (
-      this.movement.targetPosition.x < subjectPostion.x + subjectDimentions.width &&
-      this.movement.targetPosition.x + this.dimentions.width > subjectPostion.x &&
-      this.movement.targetPosition.y < subjectPostion.y + subjectDimentions.height &&
+      this.movement.targetPosition.x <
+        subjectPostion.x + subjectDimentions.width &&
+      this.movement.targetPosition.x + this.dimentions.width >
+        subjectPostion.x &&
+      this.movement.targetPosition.y <
+        subjectPostion.y + subjectDimentions.height &&
       this.movement.targetPosition.y + this.dimentions.height > subjectPostion.y
     ) {
-
       // let xCollisionDepth = 0 ;
 
       // let yCollisionDepth = 0 ;
@@ -90,7 +101,6 @@ export class GameObject_part_2 extends GameObject_part_1 {
       //   console.log(xCollisionDepth , yCollisionDepth);
       // }
 
-
       return true;
     } else {
       return false;
@@ -99,8 +109,8 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
   // проверка на коллизию со стенами
   checkCollissionWithFieldLimits({
-    xResolution ,
-    yResolution ,
+    xResolution,
+    yResolution,
   }: {
     xResolution: number;
     yResolution: number;
@@ -118,9 +128,10 @@ export class GameObject_part_2 extends GameObject_part_1 {
   }
 
   calculateNextPositionByMovRange({ x, y }: Direction) {
-
-    this.movement.targetPosition.y = this.position.y + this.movement.currentStepRange.y;
-    this.movement.targetPosition.x = this.position.x + this.movement.currentStepRange.x;
+    this.movement.targetPosition.y =
+      this.position.y + this.movement.currentStepRange.y;
+    this.movement.targetPosition.x =
+      this.position.x + this.movement.currentStepRange.x;
 
     this.movement.counterOfSteps += 1; // счетчик сделаных шагов. связан. используется
   }
@@ -133,52 +144,68 @@ export class GameObject_part_2 extends GameObject_part_1 {
   /// beta beta beta
   calculateOwnDamageBySpeed() {
     const damage = this.attack.getOwnDamage();
-    const calculatedDamageValue = Math.floor(damage * this.movement.currentStepRange.x / 5);
+    const calculatedDamageValue = Math.floor(
+      (damage * this.movement.currentStepRange.x) / 5
+    );
     return calculatedDamageValue;
   }
 
   updateNextPosition(): void {
-
-    this.movement.targetPosition.x = this.position.x + this.movement.currentStepRange.x  ;
-    this.movement.targetPosition.y = this.position.y + this.movement.currentStepRange.y ;
+    this.movement.targetPosition.x =
+      this.position.x + this.movement.currentStepRange.x;
+    this.movement.targetPosition.y =
+      this.position.y + this.movement.currentStepRange.y;
   }
 
-
-  calculateSpawnPointEndAttackDirectionRangeBy (controllerAttackDirection:Direction_stringType|'') {
-
-
+  calculateSpawnPointEndAttackDirectionRangeBy(
+    controllerAttackDirection: Direction_stringType | ""
+  ) {
     const o = {
-      pos:{x:0 ,y:0} ,
-      range:{x:0 , y:0} ,
-    }
+      pos: { x: 0, y: 0 },
+      range: { x: 0, y: 0 },
+    };
 
-    const maxAllowedStepRange = this.attack.currentWeapon.get_maxAllowedStepRange();
+    const maxAllowedStepRange =
+      this.attack.currentWeapon.get_maxAllowedStepRange();
 
-    if(controllerAttackDirection !== '') {
-      
+    if (controllerAttackDirection !== "") {
       switch (controllerAttackDirection) {
-        case 'down':
-          o.pos = {x:this.position.x + this.getDimentions().width / 2  , y:this.position.y + this.getDimentions().height };
-          o.range = {x:0 , y:maxAllowedStepRange}
-        break ;
-        case 'left' :
-          o.pos = {x:this.position.x - this.attack.currentWeapon.get_bulletDimentions().width  , y:this.position.y  + this.getDimentions().height / 2};
-          o.range = {x:-maxAllowedStepRange , y:0}
-        break ;
-        case 'right': 
-          o.pos = {x:this.position.x + this.getDimentions().width  , y:this.position.y  + this.getDimentions().height / 2};
-          o.range = {x:maxAllowedStepRange , y:0} ;
-        break ;
-        case 'up' :
-          o.pos = {x:this.position.x + this.getDimentions().width / 2  , y:this.position.y - this.attack.currentWeapon.get_bulletDimentions().height };
-          o.range = {x:0 , y:-maxAllowedStepRange} ;
-        break ;
+        case "down":
+          o.pos = {
+            x: this.position.x + this.getDimentions().width / 2,
+            y: this.position.y + this.getDimentions().height,
+          };
+          o.range = { x: 0, y: maxAllowedStepRange };
+          break;
+        case "left":
+          o.pos = {
+            x:
+              this.position.x -
+              this.attack.currentWeapon.get_bulletDimentions().width,
+            y: this.position.y + this.getDimentions().height / 2,
+          };
+          o.range = { x: -maxAllowedStepRange, y: 0 };
+          break;
+        case "right":
+          o.pos = {
+            x: this.position.x + this.getDimentions().width,
+            y: this.position.y + this.getDimentions().height / 2,
+          };
+          o.range = { x: maxAllowedStepRange, y: 0 };
+          break;
+        case "up":
+          o.pos = {
+            x: this.position.x + this.getDimentions().width / 2,
+            y:
+              this.position.y -
+              this.attack.currentWeapon.get_bulletDimentions().height,
+          };
+          o.range = { x: 0, y: -maxAllowedStepRange };
+          break;
       }
-
     }
 
-    return o ;
-
+    return o;
   }
 
   constructor() {

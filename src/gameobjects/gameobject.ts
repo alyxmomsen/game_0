@@ -5,7 +5,13 @@ import { Bullet } from "./bullet";
 import { SupplyBox } from "./supply-box";
 import { Player } from "./player";
 import { Enemy } from "./enemy";
-import { Dimentions, GameObjectConstructor, GameObjectExtendsClasses, GameObjectKinds, Position } from "../library/types";
+import {
+  Dimentions,
+  GameObjectConstructor,
+  GameObjectExtendsClasses,
+  GameObjectKinds,
+  Position,
+} from "../library/types";
 
 import { GameObject_Part_3 } from "./gameobject-part-3";
 import { TickController } from "../library/main";
@@ -29,24 +35,30 @@ export default abstract class GameObject extends GameObject_part_2 {
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
   ): void;
 
-  abstract worldLimitCollision_handler () : void
+  abstract worldLimitCollision_handler(): void;
 
   /* ===================================================== */
 
-
-  isHPisSubZero () { // возвращает true если здох по здоровью
-    return this.health <= 0 ? true : false ;
+  isHPisSubZero() {
+    // возвращает true если здох по здоровью
+    return this.health <= 0 ? true : false;
   }
 
+  checkCollisionsForEveryOne(objects: GameObjectExtendsClasses[]) {
+    // ecли есть хоть одна коллизия, то вернет true, иначе false
 
-  checkCollisionsForEveryOne (objects:GameObjectExtendsClasses[]) {// ecли есть хоть одна коллизия, то вернет true, иначе false
-
-    let isCollision = false ;
+    let isCollision = false;
     for (const object of objects) {
-      
-      if (object !== this && !this.isDied) { // если объект не является сам собой и если объект не "умер"
-        
-        if (this.checkNextPositionColissionWith(object.position , object.getDimentions())) { // проверка следующего шага на коллизию
+      if (object !== this && !this.isDied) {
+        // если объект не является сам собой и если объект не "умер"
+
+        if (
+          this.checkNextPositionColissionWith(
+            object.position,
+            object.getDimentions()
+          )
+        ) {
+          // проверка следующего шага на коллизию
           // object instanceof SupplyBox ; // не проходит эту проверку
           // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
 
@@ -55,126 +67,116 @@ export default abstract class GameObject extends GameObject_part_2 {
       }
     }
 
-    return isCollision ;
+    return isCollision;
   }
 
   getAllDamages() {
-
-    this.damaged.forEach(damage => {
-
+    this.damaged.forEach((damage) => {
       this.getDamage(damage.value);
-
     });
 
-    this.damaged = [] ; // обнуляем массив урона
+    this.damaged = []; // обнуляем массив урона
   }
 
   update({
-    objects ,
-    fieldDimentions ,
+    objects,
+    fieldDimentions,
   }: {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): Bullet | null {
-
-    
     this.getAllDamages(); // проходим по всем дамейджам и обнуляем список
 
-    this.isDied = this.isHPisSubZero() ? true : this.isDied ; // 
-    
-    this.movement.updateStepRangeByController({...this.controller.move});
+    this.isDied = this.isHPisSubZero() ? true : this.isDied; //
+
+    this.movement.updateStepRangeByController({ ...this.controller.move });
 
     this.updateNextPosition();
 
     let isCollision = this.checkCollisionsForEveryOne(objects);
-    
 
     // проверяем не столкнулся ли с границей game field
-    if (this.checkCollissionWithFieldLimits({xResolution:fieldDimentions.width , yResolution:fieldDimentions.height })) {
-
+    if (
+      this.checkCollissionWithFieldLimits({
+        xResolution: fieldDimentions.width,
+        yResolution: fieldDimentions.height,
+      })
+    ) {
       // isCollision = true;
 
       /* =================== otion =================== */
 
-      this.worldLimitCollision_handler ()
+      this.worldLimitCollision_handler();
 
       /* ============================================== */
-
     }
 
     if (isCollision) {
-      
       this.totallyIfCollisionIs(null);
       // если на следующем шаге есть коллизия
       // снимаем проверки с других координат отличных от this.position
       // this.movement.currentStepRange = {x:0 , y:0} ;
       this.movement.targetPosition.x = this.position.x;
       this.movement.targetPosition.y = this.position.y;
-      
     } else {
-      
       this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
     }
 
-
     /* fire fire fire */
 
-    let isFire = false ;
-    const controllerAttackDirection = this.controller.getAttackDirectionValue() ;
-    let data:{
+    let isFire = false;
+    const controllerAttackDirection = this.controller.getAttackDirectionValue();
+    let data: {
       pos: {
         x: number;
-          y: number;
-        };
-        range: {
-          x: number;
-          y: number;
-        };
-    } ;
+        y: number;
+      };
+      range: {
+        x: number;
+        y: number;
+      };
+    };
 
-    if(controllerAttackDirection !== '' && this.attack.currentWeapon) {
-      
-      data = this.calculateSpawnPointEndAttackDirectionRangeBy(controllerAttackDirection);
+    if (controllerAttackDirection !== "" && this.attack.currentWeapon) {
+      data = this.calculateSpawnPointEndAttackDirectionRangeBy(
+        controllerAttackDirection
+      );
       this.attack.setSpawnPoint(data.pos);
       this.attack.setDirection(data.range);
 
-      isFire = true ;
+      isFire = true;
 
-
-      return  (!this.isDied && this.attack.ticker.tick() && isFire) ? new Bullet({
-        health:100 ,
-        id:0 ,
-        ownDamage:this.attack.currentWeapon ? {...this.attack.currentWeapon.get_damage()} : {damageClass:'magic' , value:100} ,
-        position: this.attack.getSpawnPoint() ,
-        dimentions:this.attack.currentWeapon ? {...this.attack.currentWeapon.get_bulletDimentions()} : {width:10 , height:10} ,
-        maxAllowWalkStepRange: this.attack.currentWeapon.get_maxAllowedStepRange(),
-        walkStepDirectionRange:{...this.attack.direction} , 
-        walkStepRangeDelta:0.1 ,
-        walkStepRangeDeltaMod:0.2 ,
-        walkStepRateFadeDown:false ,
-        walkStepsLimit:0 ,
-      }) : null;
-
-
+      return !this.isDied && this.attack.ticker.tick() && isFire
+        ? new Bullet({
+            health: 100,
+            id: 0,
+            ownDamage: this.attack.currentWeapon
+              ? { ...this.attack.currentWeapon.get_damage() }
+              : { damageClass: "magic", value: 100 },
+            position: this.attack.getSpawnPoint(),
+            dimentions: this.attack.currentWeapon
+              ? { ...this.attack.currentWeapon.get_bulletDimentions() }
+              : { width: 10, height: 10 },
+            maxAllowWalkStepRange:
+              this.attack.currentWeapon.get_maxAllowedStepRange(),
+            walkStepDirectionRange: { ...this.attack.direction },
+            walkStepRangeDelta: 0.1,
+            walkStepRangeDeltaMod: 0.2,
+            walkStepRateFadeDown: false,
+            walkStepsLimit: 0,
+          })
+        : null;
+    } else {
+      return null;
     }
-    else {
-
-      
-
-      return null ;
-    }
-
-
-
-    
   }
 
   constructor({
     id,
     position,
-    dimentions ,
+    dimentions,
     kind,
-    maxAllowWalkStepRange ,
+    maxAllowWalkStepRange,
     walkStepDirectionRange: walkStepRange,
     walkStepsLimit,
     shouldFadeDownStepRate,
@@ -183,24 +185,24 @@ export default abstract class GameObject extends GameObject_part_2 {
     weapons,
     color,
     armor,
-    walkStepRangeDelta: stepRangeDelta , 
-    walkStepRangeDeltaMod: stepRangeDeltaMod ,
+    walkStepRangeDelta: stepRangeDelta,
+    walkStepRangeDeltaMod: stepRangeDeltaMod,
   }: {
     id: number;
     kind: GameObjectKinds;
-    maxAllowWalkStepRange:number ; // макс скорость
-    walkStepDirectionRange: {x:number , y:number};
+    maxAllowWalkStepRange: number; // макс скорость
+    walkStepDirectionRange: { x: number; y: number };
     walkStepsLimit: number;
     color: string;
     position: Position;
-    dimentions:Dimentions ;
+    dimentions: Dimentions;
     ownDamage: Damage;
     health: number;
     weapons: Weapon[];
     armor: Armor;
     shouldFadeDownStepRate: boolean;
-    walkStepRangeDelta:number ;
-    walkStepRangeDeltaMod:number ;
+    walkStepRangeDelta: number;
+    walkStepRangeDeltaMod: number;
   }) {
     super();
 
@@ -209,22 +211,26 @@ export default abstract class GameObject extends GameObject_part_2 {
       shouldFadeDownStepRate,
       nextPosition: { ...position },
       stepRange: walkStepRange,
-      maxAllowStepRange: maxAllowWalkStepRange ,
-      stepRangeDelta ,
-      stepRangeDeltaMod ,
+      maxAllowStepRange: maxAllowWalkStepRange,
+      stepRangeDelta,
+      stepRangeDeltaMod,
     });
 
     this.dimentions = { ...dimentions };
 
     this.position = { ...position };
-    this.attack = new Attack({ownDamage, weapons , spawnPoint:{...this.position}});
+    this.attack = new Attack({
+      ownDamage,
+      weapons,
+      spawnPoint: { ...this.position },
+    });
     this.armor = armor;
     this.damaged = [];
     this.isDied = false;
     this.kind = kind;
     this.id = id;
     this.health = health;
-    this.maxHealth = health ;
+    this.maxHealth = health;
     this.color = color;
 
     this.dateOfCreated = Date.now();
@@ -234,6 +240,6 @@ export default abstract class GameObject extends GameObject_part_2 {
       currentSpriteState: 0,
     };
 
-    this.controller = new Controller ;
+    this.controller = new Controller();
   }
 }

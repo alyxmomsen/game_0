@@ -10,7 +10,7 @@ export class Attack {
   private weapons: Weapon[]; // арсенал (пресеты, другими словами)
   currentWeapon: Weapon; // в данный момент выбранный пресет
   private ownDamage: Damage; // урон наносимый самим объектом, не путать с уроном Weapon
-  private spawnPoint:Position ; // точка спауна для объекта аттаки
+  private spawnPoint: Position; // точка спауна для объекта аттаки
 
   // доработать. пока что выберает первое оружие (пресет настроек) из массива пресетов
   setCurrentWeapon() {
@@ -30,25 +30,33 @@ export class Attack {
     return this.ownDamage.value;
   }
 
-  getSpawnPoint () {
-    return {...this.spawnPoint} ;
+  getSpawnPoint() {
+    return { ...this.spawnPoint };
   }
 
-  setSpawnPoint ({x , y}:Position) {
-    this.spawnPoint = { x , y } ;
+  setSpawnPoint({ x, y }: Position) {
+    this.spawnPoint = { x, y };
   }
 
-  setDirection ({x , y}:Direction) {
-    this.direction.x = x ;
-    this.direction.y = y ;
+  setDirection({ x, y }: Direction) {
+    this.direction.x = x;
+    this.direction.y = y;
   }
 
-  constructor({ownDamage , weapons , spawnPoint}:{ownDamage: Damage, weapons: Weapon[] , spawnPoint:Position}) {
+  constructor({
+    ownDamage,
+    weapons,
+    spawnPoint,
+  }: {
+    ownDamage: Damage;
+    weapons: Weapon[];
+    spawnPoint: Position;
+  }) {
     this.ownDamage = ownDamage;
     this.weapons = weapons; // получение арсенала
     this.direction = { x: 0, y: 0 };
-    this.spawnPoint = spawnPoint ;
-    this.ticker = new TickController(1000) ;
+    this.spawnPoint = spawnPoint;
+    this.ticker = new TickController(1000);
     this.setCurrentWeapon();
 
     // console.log('constructed');

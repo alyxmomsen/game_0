@@ -21,7 +21,7 @@ import sound from "./../images/shot.mp3";
 
 import spr from "./../images/spites/Heroes/Knight/Idle/Idle-Sheet.png";
 
-import bkg from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png" ;
+import bkg from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png";
 
 /* ====== Sprites ====== */
 const img1 = new Image();
@@ -59,44 +59,46 @@ export default class Game {
   spawnQueue: (Enemy | Bullet | SupplyBox)[];
 
   player: Player; // объект игрока
-  enemies: Enemy[] ;
-  gameObjects: GameObject[] ;
-  bullets: Bullet[] ;
+  enemies: Enemy[];
+  gameObjects: GameObject[];
+  bullets: Bullet[];
   supplyBoxes: SupplyBox[];
 
   /* ======================== */
 
-  viewPort:ViewPort ;
-  controller:GameController ;
+  viewPort: ViewPort;
+  controller: GameController;
 
-  createEnemyRandomly(len:number = 0) {
+  createEnemyRandomly(len: number = 0) {
+    let newEnemy: Enemy = null;
 
-    let newEnemy:Enemy = null ;
+    if (this.enemies.length < len) {
+      newEnemy = new Enemy({
+        id: 0,
+        position: {
+          x:
+            Math.floor(Math.random() * this.field.resolution.width) *
+            this.field.gameCellDimentions.width,
+          y:
+            Math.floor(Math.random() * this.field.resolution.height) *
+            this.field.gameCellDimentions.height,
+        },
+        weapons: [
+          new Weapon({
+            bulletDimentions: { width: 50, height: 50 },
+            damage: { damageClass: "magic", value: 50 },
+            fireRate: Math.floor(Math.random() * 900) + 100,
+            maxAllowedStepRange: 10,
+            stepRateFadeDown: false,
+            stepsLimit: 0,
+          }),
+        ],
+      });
+    }
 
-      if (this.enemies.length < len) {
-        newEnemy = new Enemy({
-          id: 0,
-          position: {
-            x: Math.floor(Math.random() * (this.field.resolution.width)) * this.field.gameCellDimentions.width,
-            y: Math.floor(Math.random() * (this.field.resolution.height)) * this.field.gameCellDimentions.height,
-          },
-          weapons: [
-            new Weapon({
-              bulletDimentions:{width:50 , height:50} , 
-              damage:{damageClass:'magic' , value:50} ,
-              fireRate:Math.floor(Math.random() * 900) + 100 ,
-              maxAllowedStepRange:10 ,
-              stepRateFadeDown: false , 
-              stepsLimit:0 ,
-            }) ,
-          ],
-        }) ;
-      }
-    
     this.creatorEnemyTicker.setTickInterval(Math.floor(Math.random() * 5000));
 
-    return newEnemy ;
-
+    return newEnemy;
   }
 
   sortSpawnQueue() {
@@ -111,8 +113,7 @@ export default class Game {
   }
 
   update() {
-
-    let bulletOfNull:Bullet|null = null ;
+    let bulletOfNull: Bullet | null = null;
 
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
@@ -123,13 +124,11 @@ export default class Game {
       fieldDimentions: this.field.resolution,
     });
 
-    if(bulletOfNull) {
-
-      
+    if (bulletOfNull) {
       this.bullets.push(bulletOfNull);
     }
 
-    this.bullets = this.bullets.filter(bullet => !bullet.isDied) ;
+    this.bullets = this.bullets.filter((bullet) => !bullet.isDied);
 
     this.enemies.forEach((enemy) => {
       bulletOfNull = enemy.update({
@@ -137,28 +136,26 @@ export default class Game {
         fieldDimentions: this.field.resolution,
       });
 
-      if(bulletOfNull) {
+      if (bulletOfNull) {
         this.bullets.push(bulletOfNull);
       }
-
     });
     this.enemies = this.enemies.filter((enemy) => !enemy.isDied);
 
     this.bullets.forEach((bullet) => {
       bullet.update({
-        objects: [...this.enemies , this.player],
+        objects: [...this.enemies, this.player],
         fieldDimentions: this.field.resolution,
       });
 
       // if(
-        // bullet.position.x > this.viewPort.position.x + this.field.resolution.width + this.field.gameCellDimentions.width ||
-        // bullet.position.x < this.viewPort.position.x ||
-        // bullet.position.y > this.viewPort.position.y + this.field.resolution.height + this.field.gameCellDimentions.height ||
-        // bullet.position.y < this.viewPort.position.y
+      // bullet.position.x > this.viewPort.position.x + this.field.resolution.width + this.field.gameCellDimentions.width ||
+      // bullet.position.x < this.viewPort.position.x ||
+      // bullet.position.y > this.viewPort.position.y + this.field.resolution.height + this.field.gameCellDimentions.height ||
+      // bullet.position.y < this.viewPort.position.y
       //   ) {
       //   bullet.isDied = true ;
       // }
-
     });
     this.bullets = this.bullets.filter((elem) => !elem.isDied);
 
@@ -181,63 +178,66 @@ export default class Game {
       );
     }
 
-    if(true && this.creatorEnemyTicker.tick()) {
-      const newEnemy = this.createEnemyRandomly(1) // генерит если в массиве меньше чем Аргумент
-      if(newEnemy) {
+    if (true && this.creatorEnemyTicker.tick()) {
+      const newEnemy = this.createEnemyRandomly(1); // генерит если в массиве меньше чем Аргумент
+      if (newEnemy) {
         this.enemies.push(newEnemy);
-      } ; 
+      }
     }
 
-    this.viewPort.updatePositionMoveStepRangeByKeys(this.keysManager.getPressedKeys());
+    this.viewPort.updatePositionMoveStepRangeByKeys(
+      this.keysManager.getPressedKeys()
+    );
     this.viewPort.updatePosition();
     // console.log(this.viewPort.position.x , this.viewPort.position.y);
 
     console.log(this.bullets.length);
-
   }
 
   render(field: HTMLElement = null) {
     this.UIManager.clearCanvas();
 
     const background = new Image();
-    background.src = bkg ;
+    background.src = bkg;
 
-    for (let i=0 ; i<this.field.resolution.height ;i++) {
-
-      for (let j=0 ; j<this.field.resolution.width ;j++) {
-
+    for (let i = 0; i < this.field.resolution.height; i++) {
+      for (let j = 0; j < this.field.resolution.width; j++) {
         // this.UIManager.draw(
         //   j + this.viewPort.position.x ,
         //   i + this.viewPort.position.y ,
         //   this.field.gameCellDimentions.width ,
         //   this.field.gameCellDimentions.height ,
-        //   this.player.getColor() , 
+        //   this.player.getColor() ,
         //   this.player.getHealth() ,
         //   this.player.maxHealth ,
         //   this.player.armor.getHealthValue() ,
         //   this.player.armor.getMaxHaxHealtValue() ,
         // );
 
-        this.UIManager.drawSprite(background , 160 , 0 ,60 , 63  , (j * 200) + this.viewPort.position.x, i * 200 + this.viewPort.position.y , 200 , 200);
-
+        this.UIManager.drawSprite(
+          background,
+          160,
+          0,
+          60,
+          63,
+          j * 200 + this.viewPort.position.x,
+          i * 200 + this.viewPort.position.y,
+          200,
+          200
+        );
       }
-      
-
     }
-
-    
-
 
     this.UIManager.draw(
       this.player.position.x + this.viewPort.position.x,
       this.player.position.y + this.viewPort.position.y,
       this.player.getDimentions().width,
       this.player.getDimentions().height,
-      this.player.getColor() , 
-      this.player.getHealth() ,
-      this.player.maxHealth ,
-      this.player.armor.getHealthValue() ,
-      this.player.armor.getMaxHaxHealtValue() ,
+      this.player.getColor(),
+      this.player.getHealth(),
+      this.player.maxHealth,
+      this.player.armor.getHealthValue(),
+      this.player.armor.getMaxHaxHealtValue()
     );
 
     // const frame = this.player.spriteManager.getFrame();
@@ -255,23 +255,20 @@ export default class Game {
     // );
 
     this.bullets.forEach((bullet) => {
-
       this.UIManager.draw(
         bullet.position.x + this.viewPort.position.x,
         bullet.position.y + this.viewPort.position.y,
         bullet.getDimentions().width,
         bullet.getDimentions().height,
-        bullet.getColor() , 
-        bullet.getHealth() ,
-        bullet.maxHealth ,
-        bullet.armor.getHealthValue() ,
-        bullet.armor.getMaxHaxHealtValue() ,
+        bullet.getColor(),
+        bullet.getHealth(),
+        bullet.maxHealth,
+        bullet.armor.getHealthValue(),
+        bullet.armor.getMaxHaxHealtValue()
       );
     });
 
     this.enemies.forEach((enemy) => {
-
-
       // const frame = enemy.spriteManager.getFrame();
 
       // this.UIManager.drawSprite(
@@ -291,15 +288,12 @@ export default class Game {
         enemy.position.y + this.viewPort.position.y,
         enemy.getDimentions().width,
         enemy.getDimentions().height,
-        enemy.getColor() , 
-        enemy.getHealth() ,
-        enemy.maxHealth ,
-        enemy.armor.getHealthValue() ,
-        enemy.armor.getMaxHaxHealtValue() ,
+        enemy.getColor(),
+        enemy.getHealth(),
+        enemy.maxHealth,
+        enemy.armor.getHealthValue(),
+        enemy.armor.getMaxHaxHealtValue()
       );
-
-      
-
     });
 
     this.supplyBoxes.forEach((elem) => {
@@ -308,14 +302,12 @@ export default class Game {
         elem.position.y + this.viewPort.position.y,
         elem.getDimentions().width,
         elem.getDimentions().height,
-        elem.getColor() , 
-        elem.getHealth() ,
-        elem.maxHealth ,
-        elem.armor.getHealthValue() ,
-        elem.armor.getMaxHaxHealtValue() ,
+        elem.getColor(),
+        elem.getHealth(),
+        elem.maxHealth,
+        elem.armor.getHealthValue(),
+        elem.armor.getMaxHaxHealtValue()
       );
-
-      
     });
   }
 
@@ -329,16 +321,15 @@ export default class Game {
     canvas: HTMLCanvasElement;
     gameCellDimentions: Dimentions;
   }) {
-    
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
 
     this.creatorEnemyTicker = new TickController(1000);
     this.supplyBoxCreatingTicker = new TickController(10000);
 
     this.supplyBoxes = [];
-    this.player = null ;
-    this.enemies = [] ;
-    this.bullets = [] ;
+    this.player = null;
+    this.enemies = [];
+    this.bullets = [];
 
     this.field = {
       resolution: fieldResolution,
@@ -358,8 +349,8 @@ export default class Game {
           fireRate: 100, // интервал между выстрелами
           maxAllowedStepRange: 50, // скорость полета
           stepRateFadeDown: true, // будет ли замедляться
-          stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе) 
-          bulletDimentions:{width:100 , height:100} , 
+          stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
+          bulletDimentions: { width: 100, height: 100 },
         }),
       ],
     });
@@ -376,8 +367,11 @@ export default class Game {
 
     this.UIManager = new UIManager({
       canvas,
-      canvasHeight: (this.field.resolution.height + 1) * this.field.gameCellDimentions.height ,
-      canvasWidth: (this.field.resolution.width + 1) * this.field.gameCellDimentions.width ,
+      canvasHeight:
+        (this.field.resolution.height + 1) *
+        this.field.gameCellDimentions.height,
+      canvasWidth:
+        (this.field.resolution.width + 1) * this.field.gameCellDimentions.width,
       gameCellDimentions,
     });
 
@@ -386,7 +380,7 @@ export default class Game {
 
     this.audio.muted = false;
 
-    this.viewPort = new ViewPort () ;
+    this.viewPort = new ViewPort();
 
     // this.controller = new GameController ();
 

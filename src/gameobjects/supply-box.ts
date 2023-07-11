@@ -23,10 +23,7 @@ export class SupplyBox extends GameObject {
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {}
 
-
-  worldLimitCollision_handler(): void {
-    
-  }
+  worldLimitCollision_handler(): void {}
 
   update({ fieldDimentions }: { fieldDimentions: Dimentions }): null | Bullet {
     return super.update({
@@ -40,15 +37,15 @@ export class SupplyBox extends GameObject {
     super({
       id: 0,
       kind: "supply-box",
-      maxAllowWalkStepRange:1 ,
-      walkStepRangeDelta:2 , 
-      walkStepRangeDeltaMod:0 ,
-      walkStepDirectionRange: {x:0 , y:0},
+      maxAllowWalkStepRange: 1,
+      walkStepRangeDelta: 2,
+      walkStepRangeDeltaMod: 0,
+      walkStepDirectionRange: { x: 0, y: 0 },
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
       color: "orange",
       position,
-      dimentions: {width:160 , height:160} ,
+      dimentions: { width: 160, height: 160 },
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons: [],
       health: 666,
@@ -58,7 +55,7 @@ export class SupplyBox extends GameObject {
       }),
     });
 
-    const arr: SupplyBoxContent[] = ["armor", "health" , "damage"];
+    const arr: SupplyBoxContent[] = ["armor", "health", "damage"];
 
     this.content = arr[Math.floor(Math.random() * 2)];
   }
