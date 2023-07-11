@@ -128,24 +128,26 @@ export class GameObject_part_2 extends GameObject_part_1 {
       range:{x:0 , y:0} ,
     }
 
+    const maxAllowedStepRange = this.attack.currentWeapon.get_maxAllowedStepRange();
+
     if(controllerAttackDirection !== '') {
       
       switch (controllerAttackDirection) {
         case 'down':
           o.pos = {x:this.position.x + this.getDimentions().width / 2  , y:this.position.y + this.getDimentions().height };
-          o.range = {x:0 , y:30}
+          o.range = {x:0 , y:maxAllowedStepRange}
         break ;
         case 'left' :
           o.pos = {x:this.position.x - this.attack.currentWeapon.get_bulletDimentions().width  , y:this.position.y  + this.getDimentions().height / 2};
-          o.range = {x:-30 , y:0}
+          o.range = {x:-maxAllowedStepRange , y:0}
         break ;
         case 'right': 
           o.pos = {x:this.position.x + this.getDimentions().width  , y:this.position.y  + this.getDimentions().height / 2};
-          o.range = {x:30 , y:0} ;
+          o.range = {x:maxAllowedStepRange , y:0} ;
         break ;
         case 'up' :
           o.pos = {x:this.position.x + this.getDimentions().width / 2  , y:this.position.y - this.attack.currentWeapon.get_bulletDimentions().height };
-          o.range = {x:0 , y:-30} ;
+          o.range = {x:0 , y:-maxAllowedStepRange} ;
         break ;
       }
 

@@ -147,6 +147,7 @@ export default abstract class GameObject extends GameObject_part_2 {
         ownDamage:this.attack.currentWeapon ? {...this.attack.currentWeapon.get_damage()} : {damageClass:'magic' , value:100} ,
         position: this.attack.getSpawnPoint() ,
         dimentions:this.attack.currentWeapon ? {...this.attack.currentWeapon.get_bulletDimentions()} : {width:10 , height:10} ,
+        maxAllowWalkStepRange: this.attack.currentWeapon.get_maxAllowedStepRange(),
         walkStepDirectionRange:{...this.attack.direction} , 
         walkStepRangeDelta:0.1 ,
         walkStepRangeDeltaMod:0.2 ,

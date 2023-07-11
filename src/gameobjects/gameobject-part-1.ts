@@ -12,8 +12,8 @@ import { Dimentions, GameObjectKinds } from "../library/types";
 export class GameObject_part_1 {
 
   spriteManager:SpriteManager ;
-
   sprite:HTMLImageElement ;
+
   protected id: number;
   protected damaged: Damage[]; // в данный момент получаемыe уроны
   protected dateOfCreated: number; // дата спауна

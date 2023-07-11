@@ -8,6 +8,9 @@ import GameObject from "./gameobject";
 import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
+import sprite from './../images/spites/Enemy/Orc Crew/Orc - Warrior/Idle/Idle-Sheet.png' ;
+import { SpriteManager } from "../library/sprite-manager";
+
 // частный случай GameObject
 export class Enemy extends GameObject {
   ifCollisionIs_For(
@@ -60,14 +63,14 @@ export class Enemy extends GameObject {
       color: "#2e3628",
       id,
       kind: "enemy",
-      maxAllowWalkStepRange:4 ,
+      maxAllowWalkStepRange:2 ,
       walkStepRangeDelta:2 , 
       walkStepRangeDeltaMod:0 ,
       walkStepDirectionRange: {x:0 , y:0},
       walkStepsLimit: 10,
       shouldFadeDownStepRate: false,
       position,
-      dimentions: {width:100 , height:50} ,
+      dimentions: {width:200 , height:200} ,
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,
       health: Math.floor(Math.random() * 995) + 5 /* 1000 */,
@@ -76,5 +79,13 @@ export class Enemy extends GameObject {
         dempher: Math.floor(Math.random() * 99) + 1 /* 90 */,
       }),
     });
+
+    
+
+    this.sprite = new Image() ;
+    this.sprite.src = sprite ;
+
+    this.spriteManager = new SpriteManager(this.sprite , 3);
+
   }
 }

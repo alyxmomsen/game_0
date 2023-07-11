@@ -21,9 +21,10 @@ import spr from "./../images/spites/Heroes/Knight/Idle/Idle-Sheet.png";
 /* ====== Sprites ====== */
 const img1 = new Image();
 const img2 = new Image();
-const sprite = new Image();
 img1.src = file1;
 img2.src = file2;
+
+const sprite = new Image();
 sprite.src = spr;
 /* ===================== */
 
@@ -87,7 +88,7 @@ export default class Game {
               bulletDimentions:{width:50 , height:50} , 
               damage:{damageClass:'magic' , value:50} ,
               fireRate:Math.floor(Math.random() * 900) + 100 ,
-              stepRate:1000 ,
+              maxAllowedStepRange:10 ,
               stepRateFadeDown: false , 
               stepsLimit:0 ,
             }) ,
@@ -227,19 +228,34 @@ export default class Game {
       );
     });
 
-    this.enemies.forEach((elem) => {
+    this.enemies.forEach((enemy) => {
 
-      this.UIManager.draw(
-        elem.position.x,
-        elem.position.y,
-        elem.getDimentions().width,
-        elem.getDimentions().height,
-        elem.getColor() , 
-        elem.getHealth() ,
-        elem.maxHealth ,
-        elem.armor.getHealthValue() ,
-        elem.armor.getMaxHaxHealtValue() ,
+
+      const frame = enemy.spriteManager.getFrame();
+
+      this.UIManager.drawSprite(
+        enemy.sprite,
+        frame.x/* 1 * (32 * (Math.floor(Math.random() * 4))) */ ,
+        frame.y,
+        32,
+        32,
+        enemy.position.x ,
+        enemy.position.y ,
+        enemy.getDimentions().width * 1  ,
+        enemy.getDimentions().height * 1  ,
       );
+
+      // this.UIManager.draw(
+      //   enemy.position.x,
+      //   enemy.position.y,
+      //   enemy.getDimentions().width,
+      //   enemy.getDimentions().height,
+      //   enemy.getColor() , 
+      //   enemy.getHealth() ,
+      //   enemy.maxHealth ,
+      //   enemy.armor.getHealthValue() ,
+      //   enemy.armor.getMaxHaxHealtValue() ,
+      // );
 
       
 
@@ -299,7 +315,7 @@ export default class Game {
         new Weapon({
           damage: new Damage({ damageClass: "phisical", value: 100 }),
           fireRate: 100, // интервал между выстрелами
-          stepRate: 1, // скорость полета
+          maxAllowedStepRange: 50, // скорость полета
           stepRateFadeDown: true, // будет ли замедляться
           stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе) 
           bulletDimentions:{width:100 , height:100} , 

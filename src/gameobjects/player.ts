@@ -99,7 +99,6 @@ export class Player extends GameObject {
     
     this.sprite = new Image();
     this.sprite.src = sprite ;
-    
     this.spriteManager = new SpriteManager(this.sprite , 3) ;
     
   }

@@ -72,6 +72,7 @@ export class Bullet extends GameObject {
     id,
     ownDamage,
     health,
+    maxAllowWalkStepRange ,
     walkStepRateFadeDown,
     walkStepsLimit,
     walkStepDirectionRange ,
@@ -83,6 +84,7 @@ export class Bullet extends GameObject {
     id: number;
     health: number;
     ownDamage: Damage;
+    maxAllowWalkStepRange:number ;
     walkStepDirectionRange:{x:number , y:number};
     walkStepRangeDelta:number ,
     walkStepRangeDeltaMod:number ,
@@ -96,7 +98,7 @@ export class Bullet extends GameObject {
       kind: "damage-entity",
       position,
       dimentions ,
-      maxAllowWalkStepRange: 1 ,
+      maxAllowWalkStepRange ,
       walkStepRangeDelta , 
       walkStepRangeDeltaMod ,
       walkStepDirectionRange ,
