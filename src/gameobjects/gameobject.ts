@@ -92,7 +92,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     // проверяем не столкнулся ли с границей game field
     if (this.checkCollissionWithFieldLimits({xResolution:fieldDimentions.width , yResolution:fieldDimentions.height })) {
 
-      isCollision = true;
+      // isCollision = true;
 
       /* =================== otion =================== */
 

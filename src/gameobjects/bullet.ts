@@ -19,10 +19,10 @@ export class Bullet extends GameObject {
   ): boolean {
     // this.isDied = true ;
     
-    const calculeted = Math.abs(Math.abs(this.movement.currentStepRange.x) - Math.abs(this.movement.currentStepRange.y)) ;
-    console.log( calculeted * this.attack.getOwnDamage()  );
+    const calculeteStepRange = Math.abs(Math.abs(this.movement.currentStepRange.x) - Math.abs(this.movement.currentStepRange.y)) ;
+    console.log( calculeteStepRange * this.attack.getOwnDamage()  );
 
-    this.attackTo(object , {damageClass:'magic' , value:this.attack.getOwnDamage() * calculeted});
+    this.attackTo(object , {damageClass:'magic' , value:this.attack.getOwnDamage() * calculeteStepRange});
 
     this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 3
     this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 3
@@ -55,7 +55,7 @@ export class Bullet extends GameObject {
   }
 
   worldLimitCollision_handler(): void {
-    this.isDied = true;
+    // this.isDied = true;
   }
   
   update({

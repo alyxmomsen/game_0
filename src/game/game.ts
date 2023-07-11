@@ -3,12 +3,15 @@ import { Enemy } from "../gameobjects/enemy";
 import GameObject from "../gameobjects/gameobject";
 import { Player } from "../gameobjects/player";
 import { SupplyBox } from "../gameobjects/supply-box";
+import { Controller } from "../library/controller";
 import { Damage } from "../library/damage";
 import { GameObjectHTMLs } from "../library/game-object-htmls";
+import { GameController } from "../library/gameController";
 import KeysManager from "../library/keysManager";
 import { TickController } from "../library/main";
-import { Dimentions } from "../library/types";
+import { Dimentions, Position } from "../library/types";
 import { UIManager } from "../library/uimanager";
+import { ViewPort } from "../library/view-port";
 import { Weapon } from "../library/weapon";
 
 import file1 from "./../images/health.png";
@@ -17,6 +20,8 @@ import file2 from "./../images/image2.png";
 import sound from "./../images/shot.mp3";
 
 import spr from "./../images/spites/Heroes/Knight/Idle/Idle-Sheet.png";
+
+import bkg from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png" ;
 
 /* ====== Sprites ====== */
 const img1 = new Image();
@@ -59,18 +64,10 @@ export default class Game {
   bullets: Bullet[] ;
   supplyBoxes: SupplyBox[];
 
-  // IDManager: IDManager;
-
-  /* ======== html| / UI  ========== */
-
-  // UI_gameField: HTMLElement ;
-  UI: {
-    playerCardHTMLContainer: HTMLElement;
-    // gameFieldHTMLContainer: HTMLElement;
-  };
-  // UI_playerCard:HTMLElement ;
-
   /* ======================== */
+
+  viewPort:ViewPort ;
+  controller:GameController ;
 
   createEnemyRandomly(len:number = 0) {
 
@@ -152,6 +149,16 @@ export default class Game {
         objects: [...this.enemies , this.player],
         fieldDimentions: this.field.resolution,
       });
+
+      // if(
+        // bullet.position.x > this.viewPort.position.x + this.field.resolution.width + this.field.gameCellDimentions.width ||
+        // bullet.position.x < this.viewPort.position.x ||
+        // bullet.position.y > this.viewPort.position.y + this.field.resolution.height + this.field.gameCellDimentions.height ||
+        // bullet.position.y < this.viewPort.position.y
+      //   ) {
+      //   bullet.isDied = true ;
+      // }
+
     });
     this.bullets = this.bullets.filter((elem) => !elem.isDied);
 
@@ -181,15 +188,49 @@ export default class Game {
       } ; 
     }
 
+    this.viewPort.updatePositionMoveStepRangeByKeys(this.keysManager.getPressedKeys());
+    this.viewPort.updatePosition();
+    // console.log(this.viewPort.position.x , this.viewPort.position.y);
+
+    console.log(this.bullets.length);
 
   }
 
   render(field: HTMLElement = null) {
     this.UIManager.clearCanvas();
 
+    const background = new Image();
+    background.src = bkg ;
+
+    for (let i=0 ; i<this.field.resolution.height ;i++) {
+
+      for (let j=0 ; j<this.field.resolution.width ;j++) {
+
+        // this.UIManager.draw(
+        //   j + this.viewPort.position.x ,
+        //   i + this.viewPort.position.y ,
+        //   this.field.gameCellDimentions.width ,
+        //   this.field.gameCellDimentions.height ,
+        //   this.player.getColor() , 
+        //   this.player.getHealth() ,
+        //   this.player.maxHealth ,
+        //   this.player.armor.getHealthValue() ,
+        //   this.player.armor.getMaxHaxHealtValue() ,
+        // );
+
+        this.UIManager.drawSprite(background , 160 , 0 ,60 , 63  , (j * 200) + this.viewPort.position.x, i * 200 + this.viewPort.position.y , 200 , 200);
+
+      }
+      
+
+    }
+
+    
+
+
     this.UIManager.draw(
-      this.player.position.x,
-      this.player.position.y,
+      this.player.position.x + this.viewPort.position.x,
+      this.player.position.y + this.viewPort.position.y,
       this.player.getDimentions().width,
       this.player.getDimentions().height,
       this.player.getColor() , 
@@ -213,18 +254,18 @@ export default class Game {
     //   this.player.getDimentions().height * 1  ,
     // );
 
-    this.bullets.forEach((elem) => {
+    this.bullets.forEach((bullet) => {
 
       this.UIManager.draw(
-        elem.position.x,
-        elem.position.y,
-        elem.getDimentions().width,
-        elem.getDimentions().height,
-        elem.getColor() , 
-        elem.getHealth() ,
-        elem.maxHealth ,
-        elem.armor.getHealthValue() ,
-        elem.armor.getMaxHaxHealtValue() ,
+        bullet.position.x + this.viewPort.position.x,
+        bullet.position.y + this.viewPort.position.y,
+        bullet.getDimentions().width,
+        bullet.getDimentions().height,
+        bullet.getColor() , 
+        bullet.getHealth() ,
+        bullet.maxHealth ,
+        bullet.armor.getHealthValue() ,
+        bullet.armor.getMaxHaxHealtValue() ,
       );
     });
 
@@ -246,8 +287,8 @@ export default class Game {
       // );
 
       this.UIManager.draw(
-        enemy.position.x,
-        enemy.position.y,
+        enemy.position.x + this.viewPort.position.x,
+        enemy.position.y + this.viewPort.position.y,
         enemy.getDimentions().width,
         enemy.getDimentions().height,
         enemy.getColor() , 
@@ -263,8 +304,8 @@ export default class Game {
 
     this.supplyBoxes.forEach((elem) => {
       this.UIManager.draw(
-        elem.position.x,
-        elem.position.y,
+        elem.position.x + this.viewPort.position.x,
+        elem.position.y + this.viewPort.position.y,
         elem.getDimentions().width,
         elem.getDimentions().height,
         elem.getColor() , 
@@ -344,6 +385,10 @@ export default class Game {
     this.audio = audio;
 
     this.audio.muted = false;
+
+    this.viewPort = new ViewPort () ;
+
+    // this.controller = new GameController ();
 
     // this.audio.play();
 
