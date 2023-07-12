@@ -171,6 +171,56 @@ export default abstract class GameObject extends GameObject_part_2 {
     }
   }
 
+
+  draw (ctx:CanvasRenderingContext2D) {
+
+    ctx.imageSmoothingEnabled = false;
+    ctx.fillStyle = 'black' ;
+    ctx.lineWidth = 2 ;
+    // ctx.fillRect(this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
+    ctx.strokeRect(this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
+
+    const calculate = function (
+      maxBarWide: number,
+      maxValue: number,
+      currentValue: number
+    ) {
+      const widePercentagep_1 = maxBarWide / 100;
+      const hp_1 = maxValue / 100;
+      const hp = currentValue / hp_1;
+      const currentWidePercent = widePercentagep_1 * hp;
+
+      return {
+        currentPercentOfValue: hp,
+        currentPercentOfWide: currentWidePercent,
+      };
+    };
+
+    let {
+      currentPercentOfValue,
+      currentPercentOfWide,
+    }: {
+      currentPercentOfValue: number;
+      currentPercentOfWide: number;
+    } = calculate(this.dimentions.width, this.maxHealth, this.health);
+
+    if (currentPercentOfValue < 100) {
+      ctx.fillStyle = "red";
+      ctx.fillRect(this.position.x, this.position.y - 10, currentPercentOfWide, 10);
+    }
+
+    const result = calculate(this.dimentions.width, this.armor.getMaxHaxHealtValue(), this.armor.getHealthValue());
+
+    if (result.currentPercentOfValue < 100) {
+      ctx.fillStyle = "green";
+      ctx.fillRect(this.position.x, this.position.y - 20, result.currentPercentOfWide, 10);
+    }
+
+    const frame = this.spriteManager.getFrame();
+    ctx.drawImage(this.spriteManager.sprite.src , frame.x , frame.y , 32, 32 , this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
+
+  }
+
   constructor({
     id,
     position,

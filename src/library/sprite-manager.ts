@@ -4,8 +4,8 @@ export class SpriteManager {
   tickController: TickController;
 
   currentFrame: number;
-
   framesAmount: number;
+  
   sprite: {
     frame: { x: number; y: number };
     src: HTMLImageElement;

@@ -10,6 +10,7 @@ import ric1 from "./../images/ricochet_1.mp3";
 import ric2 from "./../images/ricochet_2.mp3";
 import ric3 from "./../images/riccochet_3.mp3";
 import ric4 from "./../images/riccochet_4.mp3";
+import { SpriteManager } from "../library/sprite-manager";
 
 export class Bullet extends GameObject {
   audio: HTMLAudioElement;
@@ -123,5 +124,12 @@ export class Bullet extends GameObject {
         dempher: Math.floor(Math.random() * 99) + 1,
       }),
     });
+
+    this.sprite = new Image();
+    this.sprite.src = '';
+
+    this.spriteManager = new SpriteManager(this.sprite, 3);
+
   }
+
 }

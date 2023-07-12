@@ -189,31 +189,35 @@ export default class Game {
       this.keysManager.getPressedKeys()
     );
     this.viewPort.updatePosition();
-    // console.log(this.viewPort.position.x , this.viewPort.position.y);
 
     console.log(this.bullets.length);
   }
 
+
+  
+
+
   render(field: HTMLElement = null) {
     this.UIManager.clearCanvas();
+
+    // this.UIManager.ctx.clearRect(0 , 0 , this.field.resolution.width  * this.field.gameCellDimentions.width , this.field.resolution.height  * this.field.gameCellDimentions.height);
 
     const background = new Image();
     background.src = bkg;
 
     for (let i = 0; i < this.field.resolution.height; i++) {
       for (let j = 0; j < this.field.resolution.width; j++) {
-        // this.UIManager.draw(
-        //   j + this.viewPort.position.x ,
-        //   i + this.viewPort.position.y ,
-        //   this.field.gameCellDimentions.width ,
-        //   this.field.gameCellDimentions.height ,
-        //   this.player.getColor() ,
-        //   this.player.getHealth() ,
-        //   this.player.maxHealth ,
-        //   this.player.armor.getHealthValue() ,
-        //   this.player.armor.getMaxHaxHealtValue() ,
-        // );
 
+        this.UIManager.ctx.drawImage(background,
+          160,
+          0,
+          60,
+          63,
+          j * 200 + this.viewPort.position.x,
+          i * 200 + this.viewPort.position.y,
+          200,
+          200);
+        
         this.UIManager.drawSprite(
           background,
           160,
@@ -228,86 +232,23 @@ export default class Game {
       }
     }
 
-    this.UIManager.draw(
-      this.player.position.x + this.viewPort.position.x,
-      this.player.position.y + this.viewPort.position.y,
-      this.player.getDimentions().width,
-      this.player.getDimentions().height,
-      this.player.getColor(),
-      this.player.getHealth(),
-      this.player.maxHealth,
-      this.player.armor.getHealthValue(),
-      this.player.armor.getMaxHaxHealtValue()
-    );
-
-    // const frame = this.player.spriteManager.getFrame();
-
-    // this.UIManager.drawSprite(
-    //   this.player.sprite,
-    //   frame.x/* 1 * (32 * (Math.floor(Math.random() * 4))) */ ,
-    //   frame.y,
-    //   32,
-    //   32,
-    //   this.player.position.x ,
-    //   this.player.position.y ,
-    //   this.player.getDimentions().width * 1  ,
-    //   this.player.getDimentions().height * 1  ,
-    // );
+    this.player.draw(this.UIManager.ctx);
 
     this.bullets.forEach((bullet) => {
-      this.UIManager.draw(
-        bullet.position.x + this.viewPort.position.x,
-        bullet.position.y + this.viewPort.position.y,
-        bullet.getDimentions().width,
-        bullet.getDimentions().height,
-        bullet.getColor(),
-        bullet.getHealth(),
-        bullet.maxHealth,
-        bullet.armor.getHealthValue(),
-        bullet.armor.getMaxHaxHealtValue()
-      );
+      
+      bullet.draw(this.UIManager.ctx);
+
     });
 
     this.enemies.forEach((enemy) => {
-      // const frame = enemy.spriteManager.getFrame();
 
-      // this.UIManager.drawSprite(
-      //   enemy.sprite,
-      //   frame.x/* 1 * (32 * (Math.floor(Math.random() * 4))) */ ,
-      //   frame.y,
-      //   32,
-      //   32,
-      //   enemy.position.x ,
-      //   enemy.position.y ,
-      //   enemy.getDimentions().width * 1  ,
-      //   enemy.getDimentions().height * 1  ,
-      // );
-
-      this.UIManager.draw(
-        enemy.position.x + this.viewPort.position.x,
-        enemy.position.y + this.viewPort.position.y,
-        enemy.getDimentions().width,
-        enemy.getDimentions().height,
-        enemy.getColor(),
-        enemy.getHealth(),
-        enemy.maxHealth,
-        enemy.armor.getHealthValue(),
-        enemy.armor.getMaxHaxHealtValue()
-      );
+      enemy.draw(this.UIManager.ctx);
     });
 
-    this.supplyBoxes.forEach((elem) => {
-      this.UIManager.draw(
-        elem.position.x + this.viewPort.position.x,
-        elem.position.y + this.viewPort.position.y,
-        elem.getDimentions().width,
-        elem.getDimentions().height,
-        elem.getColor(),
-        elem.getHealth(),
-        elem.maxHealth,
-        elem.armor.getHealthValue(),
-        elem.armor.getMaxHaxHealtValue()
-      );
+    this.supplyBoxes.forEach((supplyBox) => {
+      
+      supplyBox.draw(this.UIManager.ctx);
+
     });
   }
 

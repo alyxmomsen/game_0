@@ -1,5 +1,6 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
+import { SpriteManager } from "../library/sprite-manager";
 import { Dimentions, Position, SupplyBoxContent } from "../library/types";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
@@ -58,5 +59,12 @@ export class SupplyBox extends GameObject {
     const arr: SupplyBoxContent[] = ["armor", "health", "damage"];
 
     this.content = arr[Math.floor(Math.random() * 2)];
+
+
+    this.sprite = new Image();
+    this.sprite.src = '';
+
+    this.spriteManager = new SpriteManager(this.sprite, 3);
+
   }
 }
