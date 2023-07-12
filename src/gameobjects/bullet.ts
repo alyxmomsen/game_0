@@ -11,6 +11,7 @@ import ric2 from "./../images/ricochet_2.mp3";
 import ric3 from "./../images/riccochet_3.mp3";
 import ric4 from "./../images/riccochet_4.mp3";
 import { SpriteManager } from "../library/sprite-manager";
+import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
 export class Bullet extends GameObject {
   audio: HTMLAudioElement;
@@ -128,8 +129,17 @@ export class Bullet extends GameObject {
     this.sprite = new Image();
     this.sprite.src = '';
 
-    this.spriteManager = new SpriteManager(this.sprite, 3);
-
+    // this.spriteManager = new SpriteManager(this.sprite, 3);
+    this.spriteManager = new SpriteManager_beta([
+      {
+        src:this.sprite ,
+        firstFramePosition:{x:0 , y:0} ,
+        height:32 , 
+        width:32 ,
+        maxAllowFrames:4 ,
+        stepRange:32 ,
+      } , 
+    ]);
   }
 
 }

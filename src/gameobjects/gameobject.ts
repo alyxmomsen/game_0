@@ -216,8 +216,8 @@ export default abstract class GameObject extends GameObject_part_2 {
       ctx.fillRect(this.position.x, this.position.y - 20, result.currentPercentOfWide, 10);
     }
 
-    const frame = this.spriteManager.getFrame();
-    ctx.drawImage(this.spriteManager.sprite.src , frame.x , frame.y , 32, 32 , this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
+    const frame = this.spriteManager.getFrame(this.kind === 'player' ? 1 : 0);
+    ctx.drawImage(frame.src , frame.x , frame.y , 32, 32 , this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
 
   }
 

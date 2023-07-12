@@ -8,8 +8,10 @@ import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
 import { SupplyBox } from "./supply-box";
 
-import sprite from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle-Sheet.png";
+import skeletonSpriteIdle from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle-Sheet.png";
+import skeletonSpriteRun from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet.png" ;
 import { SpriteManager } from "../library/sprite-manager";
+import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
 export class Player extends GameObject {
   ifCollisionIs_For(
@@ -88,8 +90,29 @@ export class Player extends GameObject {
       }),
     });
 
-    this.sprite = new Image();
-    this.sprite.src = sprite;
-    this.spriteManager = new SpriteManager(this.sprite, 3);
+    const s = new Image () ;
+    s.src = skeletonSpriteIdle ;
+
+    const s2 = new Image () ;
+    s2.src = skeletonSpriteRun ;
+
+    this.spriteManager = new SpriteManager_beta([
+      {
+        src:s ,
+        firstFramePosition:{x:0 , y:0} ,
+        height:32 , 
+        width:32 ,
+        maxAllowFrames:4 ,
+        stepRange:32 ,
+      } , 
+      {
+        src:s2 ,
+        firstFramePosition:{x:18 , y:33} ,
+        height:33 , 
+        width:33 ,
+        maxAllowFrames:6 ,
+        stepRange:64 ,
+      }
+    ]);
   }
 }

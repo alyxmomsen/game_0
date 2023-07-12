@@ -24,7 +24,7 @@ import knightIdleSprite from "./../images/spites/Heroes/Knight/Idle/Idle-Sheet.p
 import KnightRunSprite from "./../images/spites/Heroes/Knight/Run/Run-Sheet.png";
 
 import bkg from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png";
-import { SpriteManager_beta } from "../library/sprite-manager-2";
+import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
 /* ====== Sprites ====== */
 const img1 = new Image();
@@ -269,6 +269,7 @@ export default class Game {
     // this.spriteManager.upDateFrame(1);
     const frame = this.spriteManager.getFrame(this.state);
 
+    // this.UIManager.ctx.scale(-1 , 1);
     this.UIManager.ctx.drawImage(frame.src , frame.x , frame.y , frame.width , frame.height , 0 , 0  ,200 , 200);
 
 
@@ -362,8 +363,9 @@ export default class Game {
 
 
 
-    
 
+
+    
     const spr2 = new Image();
     spr2.src = knightIdleSprite ;
     const run = new Image();

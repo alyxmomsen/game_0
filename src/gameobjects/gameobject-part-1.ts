@@ -5,10 +5,11 @@ import { Damage } from "../library/damage";
 import { TickController } from "../library/main";
 import { Movement } from "../library/movement";
 import { SpriteManager } from "../library/sprite-manager";
+import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import { Dimentions, GameObjectKinds } from "../library/types";
 
 export class GameObject_part_1 {
-  spriteManager: SpriteManager;
+  spriteManager: SpriteManager_beta;
   sprite: HTMLImageElement;
   protected id: number;
   protected damaged: Damage[]; // в данный момент получаемыe уроны

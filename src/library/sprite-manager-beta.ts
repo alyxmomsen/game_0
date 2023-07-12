@@ -16,7 +16,7 @@ export class SpriteManager_beta {
 
   upDateFrame (assetID:number) {
 
-    if(this.tickController.tick()) {
+    if(this.tickController.tick() && this.assets.length) {
 
         const asset = this.assets[assetID] ;
     
