@@ -2,6 +2,13 @@ import { TickController } from "./main";
 
 export class SpriteManager {
   tickController: TickController;
+  assets:{
+    length:number ;
+    src:HTMLImageElement ;
+    width:number ;
+    height:number ;
+    distanceBetween:number ;
+  }[] ;
 
   currentFrame: {x:number , y:number};
   framesAmount: number;
@@ -12,12 +19,15 @@ export class SpriteManager {
   };
 
   getFrame() {
-    if (this.currentFrame.x > 3) {
-      this.currentFrame.x = 0;
-    }
-
+    
     if (this.tickController.tick()) {
-      this.currentFrame.x++;
+
+      if (this.currentFrame.x + 1 > 3) {
+        this.currentFrame.x = 0;
+      }
+      else {
+        ++this.currentFrame.x;
+      }
     }
 
     return { x: this.currentFrame.x * 32, y: 0 };
@@ -34,5 +44,11 @@ export class SpriteManager {
     this.framesAmount = framesAmount;
 
     this.tickController = new TickController(1000 / 5);
+
+
+    this.assets ;
+
+
+
   }
 }

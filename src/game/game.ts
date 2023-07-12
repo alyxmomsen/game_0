@@ -19,9 +19,12 @@ import file2 from "./../images/image2.png";
 
 import sound from "./../images/shot.mp3";
 
-import spr from "./../images/spites/Heroes/Knight/Idle/Idle-Sheet.png";
+import knightIdleSprite from "./../images/spites/Heroes/Knight/Idle/Idle-Sheet.png";
+
+import KnightRunSprite from "./../images/spites/Heroes/Knight/Run/Run-Sheet.png";
 
 import bkg from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png";
+import { SpriteManager_beta } from "../library/sprite-manager-2";
 
 /* ====== Sprites ====== */
 const img1 = new Image();
@@ -30,10 +33,20 @@ img1.src = file1;
 img2.src = file2;
 
 const sprite = new Image();
-sprite.src = spr;
+sprite.src = knightIdleSprite;
 /* ===================== */
 
 export default class Game {
+
+  state:0|1 ;
+
+
+  spriteManager:SpriteManager_beta ;
+
+  /* test ^^^^ */
+
+
+
   handleTicker = new TickController(1000);
 
   audio: HTMLAudioElement;
@@ -190,7 +203,7 @@ export default class Game {
     );
     this.viewPort.updatePosition();
 
-    console.log(this.bullets.length);
+    // console.log(this.bullets.length);
   }
 
 
@@ -250,6 +263,15 @@ export default class Game {
       supplyBox.draw(this.UIManager.ctx);
 
     });
+
+
+
+    // this.spriteManager.upDateFrame(1);
+    const frame = this.spriteManager.getFrame(this.state);
+
+    this.UIManager.ctx.drawImage(frame.src , frame.x , frame.y , frame.width , frame.height , 0 , 0  ,200 , 200);
+
+
   }
 
   constructor({
@@ -331,5 +353,46 @@ export default class Game {
       this.audio.muted = false;
       // this.audio.play();
     });
+
+
+
+
+
+
+
+
+
+    
+
+    const spr2 = new Image();
+    spr2.src = knightIdleSprite ;
+    const run = new Image();
+    run.src = KnightRunSprite ;
+    this.spriteManager = new SpriteManager_beta([
+      {
+        src:spr2 ,
+        firstFramePosition:{x:0 , y:0} ,
+        height:32 , 
+        width:32 ,
+        maxAllowFrames:4 ,
+        stepRange:32 ,
+      } , 
+      {
+        src:run ,
+        firstFramePosition:{x:18 , y:33} ,
+        height:33 , 
+        width:33 ,
+        maxAllowFrames:6 ,
+        stepRange:64 ,
+      }
+    ]);
+
+    this.state = 0 ;
+
+
+    window.onclick = () => {
+      this.state = this.state ? 0 : 1 ;
+    }
+
   }
 }
