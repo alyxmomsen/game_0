@@ -3,6 +3,7 @@ import {
   Dimentions,
   Direction,
   Direction_stringType,
+  PersonStates,
   Position,
 } from "../library/types";
 import { Bullet } from "./bullet";
@@ -224,6 +225,26 @@ export class GameObject_part_2 extends GameObject_part_1 {
     }
 
     return o;
+  }
+
+  // setState (state:PersonStates) {
+  //   this.state = state ;
+  // }
+
+  updateState () {
+
+    if(this.movement.currentStepRange.x !== 0 || this.movement.currentStepRange.y !== 0) {
+      this.state = 'move' ;
+    }
+    else {
+      this.state = 'stand' ;
+    }
+
+  }
+
+
+  private getState () {
+    return this.state ;
   }
 
   constructor() {

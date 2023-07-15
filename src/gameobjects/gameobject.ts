@@ -146,6 +146,14 @@ export default abstract class GameObject extends GameObject_part_2 {
       };
     };
 
+
+    if(this.kind === 'player') {
+
+      console.log(this.state);
+    }
+
+    this.updateState();
+
     if (controllerAttackDirection !== "" && this.attack.currentWeapon) {
       data = this.calculateSpawnPointEndAttackDirectionRangeBy(
         controllerAttackDirection
@@ -178,6 +186,9 @@ export default abstract class GameObject extends GameObject_part_2 {
     } else {
       return null;
     }
+
+    
+
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -204,9 +215,9 @@ export default abstract class GameObject extends GameObject_part_2 {
       y: number;
       width: number;
       height: number;
-    } = this.spriteManager.getFrame(0);
+    } = this.spriteManager.getFrame(this.kind === 'player' ? (this.state === 'move' ? 1 : 0) : 0);
 
-    console.log(frame);
+    // console.log(frame);
 
     const calculate = function (
       maxBarWide: number,
@@ -351,5 +362,8 @@ export default abstract class GameObject extends GameObject_part_2 {
     this.controller = new Controller();
 
     this.spriteManager = spriteManager;
+
+    this.state = 'stand' ;
   }
+
 }

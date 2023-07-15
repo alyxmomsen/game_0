@@ -69,3 +69,5 @@ export type UI_stat = {
 export type GameObjectExtendsClasses = Enemy | Bullet | SupplyBox | Player;
 
 export type SupplyBoxContent = "health" | "armor" | "damage";
+
+export type PersonStates = "move" | "stand" ; // тип для  состояния gameobject и его наследников, используется для анимации спрайтов

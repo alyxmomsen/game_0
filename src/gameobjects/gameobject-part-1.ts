@@ -6,9 +6,12 @@ import { TickController } from "../library/main";
 import { Movement } from "../library/movement";
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
-import { Dimentions, GameObjectKinds } from "../library/types";
+import { Dimentions, GameObjectKinds, PersonStates } from "../library/types";
 
 export class GameObject_part_1 {
+
+  protected state:PersonStates ;
+
   spriteManager: SpriteManager_beta;
   sprite: HTMLImageElement;
   protected id: number;

@@ -1,8 +1,10 @@
 import { TickController } from "./main";
+import { PersonStates } from "./types";
 
 export class SpriteManager_beta {
-  tickController: TickController;
-  assets: {
+
+  private tickController: TickController;
+  private assets: {
     maxAllowFrames: number;
     firstPositionOfX: number;
     spriteImage: HTMLImageElement;
@@ -13,19 +15,19 @@ export class SpriteManager_beta {
     currentStep: number;
   }[];
 
-  upDateFrame(assetID: number) {
+  private upDateFrame(assetID: number) {
     if (this.tickController.tick() && this.assets.length) {
       const asset = this.assets[assetID];
 
       asset.framePosition.x =
         asset.currentStep * asset.stepRange + asset.firstPositionOfX;
 
-      console.log(asset.currentStep, asset.maxAllowFrames);
+      // console.log(asset.currentStep, asset.maxAllowFrames);
 
       if (asset.currentStep + 1 < asset.maxAllowFrames) {
         asset.currentStep++;
       } else {
-        asset.currentStep = 0;
+        asset.currentStep = 0 ;
       }
     }
   }

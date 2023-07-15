@@ -23,8 +23,6 @@ import "./styles/main.css";
   let theGame:Game|null ;
 
   theGame = canvas ? new Game({
-    // gameFieldHTMLContainer,
-    // playerCardHTMLContainer,
     fieldResolution: gameFieldResolution,
     canvas,
     gameCellDimentions: { width: 50, height: 50 },

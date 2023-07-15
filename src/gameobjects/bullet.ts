@@ -25,7 +25,7 @@ export class Bullet extends GameObject {
       Math.abs(this.movement.currentStepRange.x) -
         Math.abs(this.movement.currentStepRange.y)
     );
-    console.log(calculeteStepRange * this.attack.getOwnDamage());
+    // console.log(calculeteStepRange * this.attack.getOwnDamage());
 
     this.attackTo(object, {
       damageClass: "magic",
