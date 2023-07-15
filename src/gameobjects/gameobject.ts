@@ -23,7 +23,7 @@ import { SpriteManager_beta } from "../library/sprite-manager-beta";
 export default abstract class GameObject extends GameObject_part_2 {
   /* ====================== options ====================== */
 
-  abstract ifCollisionIs_For(
+  abstract collisionHandlerWith(
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
   ): boolean;
 
@@ -44,10 +44,15 @@ export default abstract class GameObject extends GameObject_part_2 {
     return this.health <= 0 ? true : false;
   }
 
-  checkCollisionsForEveryOne(objects: GameObjectExtendsClasses[]) {
+  checkCollisionsForEveryOne(
+    objects: GameObjectExtendsClasses[]
+  ): GameObjectExtendsClasses[] {
     // ecли есть хоть одна коллизия, то вернет true, иначе false
 
     let isCollision = false;
+
+    const collided: GameObject[] = [];
+
     for (const object of objects) {
       if (object !== this && !this.isDied) {
         // если объект не является сам собой и если объект не "умер"
@@ -59,11 +64,7 @@ export default abstract class GameObject extends GameObject_part_2 {
               object.getDimentions()
             )
           ) {
-            // проверка следующего шага на коллизию
-            // object instanceof SupplyBox ; // не проходит эту проверку
-            // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
-
-            isCollision = this.ifCollisionIs_For(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
+            collided.push(object);
           }
         } else {
           console.log("object position is NULL");
@@ -71,7 +72,7 @@ export default abstract class GameObject extends GameObject_part_2 {
       }
     }
 
-    return isCollision;
+    return collided;
   }
 
   getAllDamages() {
@@ -89,49 +90,42 @@ export default abstract class GameObject extends GameObject_part_2 {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
   }): Bullet | null {
-    this.getAllDamages(); // проходим по всем дамейджам и обнуляем список
+    this.getAllDamages(); // обрабатываем полученые уроны
 
-    this.isDied = this.isHPisSubZero() ? true : this.isDied; //
+    this.isDied = this.isHPisSubZero() ? true : this.isDied; // проверяем this.health на ноль-или-отрицательное-значение
 
-    this.movement.updateStepRangeByController({ ...this.controller.move });
+    this.movement.updateStepRangeByController({ ...this.controller.move }); // назначаем длину шага по контроллеру
 
-    this.updateNextPosition();
+    this.updateTargetPosition(); // вычисляем следующую позицию для дальнейшей проверки её
 
-    let isCollision = this.checkCollisionsForEveryOne(objects);
+    let collidedObjects = this.checkCollisionsForEveryOne(objects); // проверяем след позицию на коллизию и получаем объекты или пустой массив
+    let isWallsCollision = false;
 
-    // проверяем не столкнулся ли с границей game field
-    if (
-      this.checkCollissionWithFieldLimits({...fieldDimentions})
-    ) {
-      if(this.kind === 'damage-entity') {
-        
-        console.log('collision');
-      }
-      isCollision = true;
-
-      /* =================== otion =================== */
-
-      this.worldLimitCollision_handler();
-
-      /* ============================================== */
+    /* проверяем не столкнулся ли с границей game field */
+    if (this.checkCollissionWithFieldLimits({ ...fieldDimentions })) {
+      isWallsCollision = true;
     }
 
-    if (isCollision) {
-      this.totallyIfCollisionIs(null);
-      // если на следующем шаге есть коллизия
-      // снимаем проверки с других координат отличных от this.position
-      // this.movement.currentStepRange = {x:0 , y:0} ;
+    /* ===================================================== */
+
+    if (collidedObjects.length || isWallsCollision) {
+      // обработка столкновений
+
+      collidedObjects.forEach((object) => {
+        this.collisionHandlerWith(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
+      });
+
       if (this.position) {
         this.movement.targetPosition.x = this.position.x;
         this.movement.targetPosition.y = this.position.y;
       } else {
         console.log("position is NULL");
       }
-    } else {
-      this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
     }
 
-    /* fire fire fire */
+    this.updatePosition(); // обновляем позицию на основании this.movement.targetPosition
+
+    /* implementation logic of the "Fire" */
 
     let isFire = false;
     const controllerAttackDirection = this.controller.getAttackDirectionValue();
@@ -146,10 +140,8 @@ export default abstract class GameObject extends GameObject_part_2 {
       };
     };
 
-
-    if(this.kind === 'player') {
-
-      console.log(this.state);
+    if (this.kind === "player") {
+      // console.log(this.state);
     }
 
     this.updateState();
@@ -181,14 +173,12 @@ export default abstract class GameObject extends GameObject_part_2 {
             walkStepRangeDeltaMod: 0.2,
             walkStepRateFadeDown: false,
             walkStepsLimit: 0,
+            isRigidBody: true,
           })
         : null;
     } else {
       return null;
     }
-
-    
-
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -215,7 +205,9 @@ export default abstract class GameObject extends GameObject_part_2 {
       y: number;
       width: number;
       height: number;
-    } = this.spriteManager.getFrame(this.kind === 'player' ? (this.state === 'move' ? 1 : 0) : 0);
+    } = this.spriteManager.getFrame(
+      this.kind === "player" ? (this.state === "move" ? 1 : 0) : 0
+    );
 
     // console.log(frame);
 
@@ -277,15 +269,21 @@ export default abstract class GameObject extends GameObject_part_2 {
       }
     }
 
-    if(this.position) {
-
-      if(frame) {
-  
-        ctx.drawImage(frame.spriteImage , frame.x , frame.y , frame.width , frame.height , this.position.x , this.position.y ,this.dimentions.width ,this.dimentions.height);
+    if (this.position) {
+      if (frame) {
+        ctx.drawImage(
+          frame.spriteImage,
+          frame.x,
+          frame.y,
+          frame.width,
+          frame.height,
+          this.position.x,
+          this.position.y,
+          this.dimentions.width,
+          this.dimentions.height
+        );
       }
     }
-
-
   }
 
   constructor({
@@ -322,6 +320,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     walkStepRangeDelta: number;
     walkStepRangeDeltaMod: number;
     spriteManager: SpriteManager_beta;
+    isRigidBody: boolean;
   }) {
     super();
 
@@ -363,7 +362,6 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     this.spriteManager = spriteManager;
 
-    this.state = 'stand' ;
+    this.state = "stand";
   }
-
 }

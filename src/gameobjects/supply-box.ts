@@ -11,7 +11,7 @@ import { Player } from "./player";
 export class SupplyBox extends GameObject {
   content: SupplyBoxContent;
 
-  ifCollisionIs_For(
+  collisionHandlerWith(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): boolean {
     return true;
@@ -56,6 +56,7 @@ export class SupplyBox extends GameObject {
         dempher: Math.floor(Math.random() * 99) + 1,
       }),
       spriteManager: new SpriteManager_beta([]),
+      isRigidBody: false,
     });
 
     const arr: SupplyBoxContent[] = ["armor", "health", "damage"];

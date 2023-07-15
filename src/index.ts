@@ -17,26 +17,23 @@ import "./styles/main.css";
 
   const canvas = document.querySelector("canvas");
 
-  const gameFieldResolution = { horizontal: 30, vertical: 20};
+  const gameFieldResolution = { horizontal: 30, vertical: 20 };
 
-  
-  let theGame:Game|null ;
+  let theGame: Game | null;
 
-  theGame = canvas ? new Game({
-    fieldResolution: gameFieldResolution,
-    gameCellDimentions: { width: 50, height: 50 },
-    canvas,
-  }) : null ;
+  theGame = canvas
+    ? new Game({
+        fieldResolution: gameFieldResolution,
+        gameCellDimentions: { width: 50, height: 50 },
+        canvas,
+      })
+    : null;
 
   const mainLoop = function () {
-
-
-    if(theGame) {
-
+    if (theGame) {
       theGame.update();
       theGame.render();
     }
-
 
     window.requestAnimationFrame(mainLoop);
   };

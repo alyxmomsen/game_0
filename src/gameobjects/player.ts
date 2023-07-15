@@ -14,7 +14,7 @@ import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
 export class Player extends GameObject {
-  ifCollisionIs_For(
+  collisionHandlerWith(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): boolean {
     // console.log(this.movement.currentStepRange.x , this.movement.currentStepRange.y);
@@ -106,6 +106,7 @@ export class Player extends GameObject {
           stepRange: 64,
         },
       ]),
+      isRigidBody: true,
     });
   }
 }

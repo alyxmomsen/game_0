@@ -2,7 +2,6 @@ import { TickController } from "./main";
 import { PersonStates } from "./types";
 
 export class SpriteManager_beta {
-
   private tickController: TickController;
   private assets: {
     maxAllowFrames: number;
@@ -27,7 +26,7 @@ export class SpriteManager_beta {
       if (asset.currentStep + 1 < asset.maxAllowFrames) {
         asset.currentStep++;
       } else {
-        asset.currentStep = 0 ;
+        asset.currentStep = 0;
       }
     }
   }

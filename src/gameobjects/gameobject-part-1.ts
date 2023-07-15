@@ -9,8 +9,10 @@ import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import { Dimentions, GameObjectKinds, PersonStates } from "../library/types";
 
 export class GameObject_part_1 {
+  protected isRigidBody: boolean; // плотный ли объект (учитыывется при столкновениях)
+  protected weight: number; // учитывается при столкновениях и инерции, например
 
-  protected state:PersonStates ;
+  protected state: PersonStates;
 
   spriteManager: SpriteManager_beta;
   sprite: HTMLImageElement;
