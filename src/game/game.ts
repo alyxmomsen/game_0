@@ -57,7 +57,7 @@ export default class Game {
   keysManager: KeysManager; // Объект менеджера ключей клавиш
 
   field: {
-    resolution: Dimentions;
+    resolution: {horizontal:number , vertical:number}; // разрешение игрового поля
     gameCellDimentions: {
       width: number;
       height: number;
@@ -79,6 +79,8 @@ export default class Game {
   controller: GameController;
 
   createEnemyRandomly(len: number = 0) {
+
+    
     let newEnemy: Enemy | null = null;
 
     if (this.enemies.length < len) {
@@ -86,11 +88,9 @@ export default class Game {
         id: 0,
         position: {
           x:
-            Math.floor(Math.random() * this.field.resolution.width) *
-            this.field.gameCellDimentions.width,
+            Math.floor(Math.random() * this.calculateFieldDimentions().width ) ,
           y:
-            Math.floor(Math.random() * this.field.resolution.height) *
-            this.field.gameCellDimentions.height,
+            Math.floor(Math.random() * this.calculateFieldDimentions().height),
         },
         weapons: [
           new Weapon({
@@ -103,6 +103,8 @@ export default class Game {
           }),
         ],
       });
+
+      console.log('enemy created'  , newEnemy);
     }
 
     this.creatorEnemyTicker.setTickInterval(Math.floor(Math.random() * 5000));
@@ -121,6 +123,16 @@ export default class Game {
     });
   }
 
+  calculateFieldDimentions () {
+    let width:number ;
+    let height:number ;
+
+    width = this.field.resolution.horizontal * this.field.gameCellDimentions.width ;
+    height = this.field.resolution.vertical * this.field.gameCellDimentions.height ;
+
+    return {width , height} ;
+  }
+
   update() {
     let bulletOfNull: Bullet | null = null;
 
@@ -130,7 +142,7 @@ export default class Game {
     bulletOfNull = this.player.update({
       keys,
       objects: [...this.enemies, ...this.supplyBoxes],
-      fieldDimentions: this.field.resolution,
+      fieldDimentions: this.calculateFieldDimentions(),
     });
 
     if (bulletOfNull) {
@@ -142,7 +154,7 @@ export default class Game {
     this.enemies.forEach((enemy) => {
       bulletOfNull = enemy.update({
         objects: [this.player],
-        fieldDimentions: this.field.resolution,
+        fieldDimentions: this.calculateFieldDimentions(),
       });
 
       if (bulletOfNull) {
@@ -154,7 +166,7 @@ export default class Game {
     this.bullets.forEach((bullet) => {
       bullet.update({
         objects: [...this.enemies, this.player],
-        fieldDimentions: this.field.resolution,
+        fieldDimentions: this.calculateFieldDimentions(),
       });
 
       // if(
@@ -170,7 +182,7 @@ export default class Game {
 
     this.supplyBoxes.forEach((supBox) => {
       supBox.update({
-        fieldDimentions: this.field.resolution,
+        fieldDimentions:this.calculateFieldDimentions() ,
       });
     });
 
@@ -180,8 +192,8 @@ export default class Game {
       this.supplyBoxes.push(
         new SupplyBox({
           position: {
-            x: Math.floor(Math.random() * this.field.resolution.width * 50),
-            y: Math.floor(Math.random() * this.field.resolution.height * 50),
+            x: Math.floor(Math.random() * this.calculateFieldDimentions().width),
+            y: Math.floor(Math.random() * this.calculateFieldDimentions().height),
           },
         })
       );
@@ -210,8 +222,8 @@ export default class Game {
     const background = new Image();
     background.src = bkg;
 
-    for (let i = 0; i < this.field.resolution.height; i++) {
-      for (let j = 0; j < this.field.resolution.width; j++) {
+    for (let i = 0; i < this.field.resolution.vertical; i++) {
+      for (let j = 0; j < this.field.resolution.horizontal; j++) {
         this.UIManager.ctx.drawImage(
           background,
           160,
@@ -259,7 +271,7 @@ export default class Game {
     canvas,
     gameCellDimentions,
   }: {
-    fieldResolution: Dimentions; // размеры поля
+    fieldResolution: {horizontal:number , vertical:number}; // размеры поля
     canvas: HTMLCanvasElement;
     gameCellDimentions: Dimentions;
   }) {
@@ -272,9 +284,9 @@ export default class Game {
     this.enemies = [];
     this.bullets = [];
 
-    this.field = {
-      resolution: fieldResolution,
-      gameCellDimentions,
+    this.field = { // разрешение игрового поля и размеры ячейки игрового поля
+      resolution: fieldResolution, // разрешение
+      gameCellDimentions, // размер ячейки
     };
 
     this.spawnQueue = []; // массив объектов (пока что Bullet) подлежащие добавлению в массив объектов для дальнейшей итерации в игр/м. цикле
@@ -308,11 +320,8 @@ export default class Game {
 
     this.UIManager = new UIManager({
       canvas,
-      canvasHeight:
-        (this.field.resolution.height + 1) *
-        this.field.gameCellDimentions.height,
-      canvasWidth:
-        (this.field.resolution.width + 1) * this.field.gameCellDimentions.width,
+      canvasHeight:9 * 120 ,
+      canvasWidth:16 * 120,
       gameCellDimentions,
     });
 
@@ -360,5 +369,9 @@ export default class Game {
     window.onclick = () => {
       this.state = this.state ? 0 : 1;
     };
+
+    console.log(this.field , this.UIManager.canvas);
+
+
   }
 }

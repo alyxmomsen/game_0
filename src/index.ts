@@ -17,15 +17,15 @@ import "./styles/main.css";
 
   const canvas = document.querySelector("canvas");
 
-  const gameFieldResolution = { width: 40, height: 20 };
+  const gameFieldResolution = { horizontal: 30, vertical: 20};
 
   
   let theGame:Game|null ;
 
   theGame = canvas ? new Game({
     fieldResolution: gameFieldResolution,
-    canvas,
     gameCellDimentions: { width: 50, height: 50 },
+    canvas,
   }) : null ;
 
   const mainLoop = function () {

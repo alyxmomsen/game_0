@@ -7,7 +7,6 @@ import { Player } from "./player";
 import { Enemy } from "./enemy";
 import {
   Dimentions,
-  GameObjectConstructor,
   GameObjectExtendsClasses,
   GameObjectKinds,
   Position,
@@ -102,12 +101,13 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     // проверяем не столкнулся ли с границей game field
     if (
-      this.checkCollissionWithFieldLimits({
-        xResolution: fieldDimentions.width,
-        yResolution: fieldDimentions.height,
-      })
+      this.checkCollissionWithFieldLimits({...fieldDimentions})
     ) {
-      // isCollision = true;
+      if(this.kind === 'damage-entity') {
+        
+        console.log('collision');
+      }
+      isCollision = true;
 
       /* =================== otion =================== */
 

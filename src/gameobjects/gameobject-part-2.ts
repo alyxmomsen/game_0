@@ -110,18 +110,21 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
   // проверка на коллизию со стенами
   checkCollissionWithFieldLimits({
-    xResolution,
-    yResolution,
+    width,
+    height,
   }: {
-    xResolution: number;
-    yResolution: number;
+    width: number;
+    height: number;
   }): boolean {
     if (
-      this.movement.targetPosition.x >= xResolution * 50 ||
+      this.movement.targetPosition.x + this.dimentions.width >= width ||
       this.movement.targetPosition.x < 0 ||
-      this.movement.targetPosition.y >= yResolution * 50 ||
+      this.movement.targetPosition.y + this.dimentions.height >= height ||
       this.movement.targetPosition.y < 0
     ) {
+
+      console.log(this.position , this.movement.targetPosition , width , height);
+
       return true;
     } else {
       return false;
