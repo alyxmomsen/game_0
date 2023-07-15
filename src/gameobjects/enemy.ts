@@ -19,7 +19,7 @@ import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
 // частный случай GameObject
 export class Enemy extends GameObject {
-  ifCollisionIs_For(
+  collisionHandlerWith(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): boolean {
     return true;
@@ -88,6 +88,7 @@ export class Enemy extends GameObject {
           stepRange: 32,
         },
       ]),
+      isRigidBody: true,
     });
   }
 }

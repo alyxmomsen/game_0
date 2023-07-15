@@ -1,3 +1,4 @@
+import { calculateCollisionByVector } from "../library/calculateCollisionByVector";
 import { Damage } from "../library/damage";
 import {
   Dimentions,
@@ -71,40 +72,45 @@ export class GameObject_part_2 extends GameObject_part_1 {
     subjectPostion: Position,
     subjectDimentions: Dimentions
   ) {
-    if (
-      this.movement.targetPosition.x <
-        subjectPostion.x + subjectDimentions.width &&
-      this.movement.targetPosition.x + this.dimentions.width >
-        subjectPostion.x &&
-      this.movement.targetPosition.y <
-        subjectPostion.y + subjectDimentions.height &&
-      this.movement.targetPosition.y + this.dimentions.height > subjectPostion.y
-    ) {
-      // let xCollisionDepth = 0 ;
+    if (this.position) {
+      
+      if (
+        // is collision on the start point
+        this.position.x + this.dimentions.width >= subjectPostion.x &&
+        this.position.x <= subjectPostion.x + subjectDimentions.width &&
+        this.position.y + this.dimentions.height >= subjectPostion.y &&
+        this.position.y <= subjectPostion.y + subjectDimentions.height
+      ) {
+        return true;
+      } else if (
+        // is collision on the END-POINT
 
-      // let yCollisionDepth = 0 ;
+        this.movement.targetPosition.x <=
+          subjectPostion.x + subjectDimentions.width &&
+        this.movement.targetPosition.x + this.dimentions.width >=
+          subjectPostion.x &&
+        this.movement.targetPosition.y <=
+          subjectPostion.y + subjectDimentions.height &&
+        this.movement.targetPosition.y + this.dimentions.height >=
+          subjectPostion.y
+      ) {
+        calculateCollisionByVector(
+          {
+            position: this.position,
+            dimentions: this.dimentions,
+            targetPosition: this.movement.targetPosition,
+          },
+          {
+            position: subjectPostion,
+            dimentions: subjectDimentions,
+          }
+        );
 
-      // if(this.position.x < this.movement.targetPosition.x) {
-      //   xCollisionDepth = (this.movement.targetPosition.x + this.dimentions.width) - subjectPostion.x ;
-      // }
-      // else if (this.position.x > this.movement.targetPosition.x) {
-      //   xCollisionDepth = (subjectPostion.x + subjectDimentions.width) - this.movement.targetPosition.x ;
-      // }
-
-      // if(this.position.y < this.movement.targetPosition.y) {
-      //   yCollisionDepth = (this.movement.targetPosition.y + this.dimentions.height) - subjectPostion.y ;
-      // }
-      // else if (this.position.x > this.movement.targetPosition.x) {
-      //   yCollisionDepth = (subjectPostion.y + subjectDimentions.height) - this.movement.targetPosition.y ;
-      // }
-
-      // if(this.kind === 'player') {
-      //   console.log(xCollisionDepth , yCollisionDepth);
-      // }
-
-      return true;
-    } else {
-      return false;
+        return true;
+      } else {
+        
+        return false;
+      }
     }
   }
 
@@ -122,8 +128,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
       this.movement.targetPosition.y + this.dimentions.height >= height ||
       this.movement.targetPosition.y < 0
     ) {
-
-      console.log(this.position , this.movement.targetPosition , width , height);
+      // console.log(this.position , this.movement.targetPosition , width , height);
 
       return true;
     } else {
@@ -162,7 +167,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
     return calculatedDamageValue;
   }
 
-  updateNextPosition(): void {
+  updateTargetPosition(): void {
     if (this.position) {
       this.movement.targetPosition.x =
         this.position.x + this.movement.currentStepRange.x;
@@ -176,6 +181,8 @@ export class GameObject_part_2 extends GameObject_part_1 {
   calculateSpawnPointEndAttackDirectionRangeBy(
     controllerAttackDirection: Direction_stringType | ""
   ) {
+    const SHIFT = 2;
+
     const o = {
       pos: { x: 0, y: 0 },
       range: { x: 0, y: 0 },
@@ -191,7 +198,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
             case "down":
               o.pos = {
                 x: this.position.x + this.getDimentions().width / 2,
-                y: this.position.y + this.getDimentions().height,
+                y: this.position.y + this.getDimentions().height + SHIFT,
               };
               o.range = { x: 0, y: maxAllowedStepRange };
               break;
@@ -199,14 +206,15 @@ export class GameObject_part_2 extends GameObject_part_1 {
               o.pos = {
                 x:
                   this.position.x -
-                  this.attack.currentWeapon.get_bulletDimentions().width,
+                  (this.attack.currentWeapon.get_bulletDimentions().width +
+                    SHIFT),
                 y: this.position.y + this.getDimentions().height / 2,
               };
               o.range = { x: -maxAllowedStepRange, y: 0 };
               break;
             case "right":
               o.pos = {
-                x: this.position.x + this.getDimentions().width,
+                x: this.position.x + this.getDimentions().width + SHIFT,
                 y: this.position.y + this.getDimentions().height / 2,
               };
               o.range = { x: maxAllowedStepRange, y: 0 };
@@ -216,7 +224,8 @@ export class GameObject_part_2 extends GameObject_part_1 {
                 x: this.position.x + this.getDimentions().width / 2,
                 y:
                   this.position.y -
-                  this.attack.currentWeapon.get_bulletDimentions().height,
+                  (this.attack.currentWeapon.get_bulletDimentions().height +
+                    SHIFT),
               };
               o.range = { x: 0, y: -maxAllowedStepRange };
               break;
@@ -234,20 +243,19 @@ export class GameObject_part_2 extends GameObject_part_1 {
   //   this.state = state ;
   // }
 
-  updateState () {
-
-    if(this.movement.currentStepRange.x !== 0 || this.movement.currentStepRange.y !== 0) {
-      this.state = 'move' ;
+  updateState() {
+    if (
+      this.movement.currentStepRange.x !== 0 ||
+      this.movement.currentStepRange.y !== 0
+    ) {
+      this.state = "move";
+    } else {
+      this.state = "stand";
     }
-    else {
-      this.state = 'stand' ;
-    }
-
   }
 
-
-  private getState () {
-    return this.state ;
+  private getState() {
+    return this.state;
   }
 
   constructor() {

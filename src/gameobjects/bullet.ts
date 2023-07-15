@@ -16,7 +16,7 @@ import { SpriteManager_beta } from "../library/sprite-manager-beta";
 export class Bullet extends GameObject {
   audio: HTMLAudioElement;
 
-  ifCollisionIs_For(
+  collisionHandlerWith(
     object: Bullet | GameObject | Enemy | Player | SupplyBox
   ): boolean {
     // this.isDied = true ;
@@ -92,6 +92,7 @@ export class Bullet extends GameObject {
     walkStepDirectionRange,
     walkStepRangeDelta,
     walkStepRangeDeltaMod,
+    isRigidBody,
   }: {
     position: Position;
     dimentions: Dimentions;
@@ -104,6 +105,7 @@ export class Bullet extends GameObject {
     walkStepRangeDeltaMod: number;
     walkStepRateFadeDown: boolean;
     walkStepsLimit: number;
+    isRigidBody: boolean;
   }) {
     super({
       ownDamage,
@@ -125,6 +127,7 @@ export class Bullet extends GameObject {
         dempher: Math.floor(Math.random() * 99) + 1,
       }),
       spriteManager: new SpriteManager_beta([]),
+      isRigidBody,
     });
   }
 }

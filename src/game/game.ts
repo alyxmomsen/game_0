@@ -57,7 +57,7 @@ export default class Game {
   keysManager: KeysManager; // Объект менеджера ключей клавиш
 
   field: {
-    resolution: {horizontal:number , vertical:number}; // разрешение игрового поля
+    resolution: { horizontal: number; vertical: number }; // разрешение игрового поля
     gameCellDimentions: {
       width: number;
       height: number;
@@ -79,18 +79,14 @@ export default class Game {
   controller: GameController;
 
   createEnemyRandomly(len: number = 0) {
-
-    
     let newEnemy: Enemy | null = null;
 
     if (this.enemies.length < len) {
       newEnemy = new Enemy({
         id: 0,
         position: {
-          x:
-            Math.floor(Math.random() * this.calculateFieldDimentions().width ) ,
-          y:
-            Math.floor(Math.random() * this.calculateFieldDimentions().height),
+          x: Math.floor(Math.random() * this.calculateFieldDimentions().width),
+          y: Math.floor(Math.random() * this.calculateFieldDimentions().height),
         },
         weapons: [
           new Weapon({
@@ -104,7 +100,7 @@ export default class Game {
         ],
       });
 
-      console.log('enemy created'  , newEnemy);
+      console.log("enemy created", newEnemy);
     }
 
     this.creatorEnemyTicker.setTickInterval(Math.floor(Math.random() * 5000));
@@ -123,14 +119,16 @@ export default class Game {
     });
   }
 
-  calculateFieldDimentions () {
-    let width:number ;
-    let height:number ;
+  calculateFieldDimentions() {
+    let width: number;
+    let height: number;
 
-    width = this.field.resolution.horizontal * this.field.gameCellDimentions.width ;
-    height = this.field.resolution.vertical * this.field.gameCellDimentions.height ;
+    width =
+      this.field.resolution.horizontal * this.field.gameCellDimentions.width;
+    height =
+      this.field.resolution.vertical * this.field.gameCellDimentions.height;
 
-    return {width , height} ;
+    return { width, height };
   }
 
   update() {
@@ -182,7 +180,7 @@ export default class Game {
 
     this.supplyBoxes.forEach((supBox) => {
       supBox.update({
-        fieldDimentions:this.calculateFieldDimentions() ,
+        fieldDimentions: this.calculateFieldDimentions(),
       });
     });
 
@@ -192,8 +190,12 @@ export default class Game {
       this.supplyBoxes.push(
         new SupplyBox({
           position: {
-            x: Math.floor(Math.random() * this.calculateFieldDimentions().width),
-            y: Math.floor(Math.random() * this.calculateFieldDimentions().height),
+            x: Math.floor(
+              Math.random() * this.calculateFieldDimentions().width
+            ),
+            y: Math.floor(
+              Math.random() * this.calculateFieldDimentions().height
+            ),
           },
         })
       );
@@ -271,7 +273,7 @@ export default class Game {
     canvas,
     gameCellDimentions,
   }: {
-    fieldResolution: {horizontal:number , vertical:number}; // размеры поля
+    fieldResolution: { horizontal: number; vertical: number }; // размеры поля
     canvas: HTMLCanvasElement;
     gameCellDimentions: Dimentions;
   }) {
@@ -284,7 +286,8 @@ export default class Game {
     this.enemies = [];
     this.bullets = [];
 
-    this.field = { // разрешение игрового поля и размеры ячейки игрового поля
+    this.field = {
+      // разрешение игрового поля и размеры ячейки игрового поля
       resolution: fieldResolution, // разрешение
       gameCellDimentions, // размер ячейки
     };
@@ -300,10 +303,10 @@ export default class Game {
         new Weapon({
           damage: new Damage({ damageClass: "phisical", value: 2 }),
           fireRate: 100, // интервал между выстрелами
-          maxAllowedStepRange: 50, // скорость полета
+          maxAllowedStepRange: 100, // скорость полета
           stepRateFadeDown: true, // будет ли замедляться
           stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
-          bulletDimentions: { width: 100, height: 100 },
+          bulletDimentions: { width: 50, height: 50 },
         }),
       ],
     });
@@ -320,8 +323,8 @@ export default class Game {
 
     this.UIManager = new UIManager({
       canvas,
-      canvasHeight:9 * 120 ,
-      canvasWidth:16 * 120,
+      canvasHeight: 9 * 120,
+      canvasWidth: 16 * 120,
       gameCellDimentions,
     });
 
@@ -370,8 +373,6 @@ export default class Game {
       this.state = this.state ? 0 : 1;
     };
 
-    console.log(this.field , this.UIManager.canvas);
-
-
+    console.log(this.field, this.UIManager.canvas);
   }
 }
