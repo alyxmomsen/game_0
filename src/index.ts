@@ -18,17 +18,27 @@ import "./styles/main.css";
   const canvas = document.querySelector("canvas");
 
   const gameFieldResolution = { width: 40, height: 20 };
-  const theGame = new Game({
+
+  
+  let theGame:Game|null ;
+
+  theGame = canvas ? new Game({
     // gameFieldHTMLContainer,
     // playerCardHTMLContainer,
     fieldResolution: gameFieldResolution,
     canvas,
     gameCellDimentions: { width: 50, height: 50 },
-  });
+  }) : null ;
 
   const mainLoop = function () {
-    theGame.update();
-    theGame.render(root);
+
+
+    if(theGame) {
+
+      theGame.update();
+      theGame.render();
+    }
+
 
     window.requestAnimationFrame(mainLoop);
   };

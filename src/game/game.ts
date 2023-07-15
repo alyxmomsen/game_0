@@ -37,15 +37,11 @@ sprite.src = knightIdleSprite;
 /* ===================== */
 
 export default class Game {
+  state: 0 | 1;
 
-  state:0|1 ;
-
-
-  spriteManager:SpriteManager_beta ;
+  spriteManager: SpriteManager_beta;
 
   /* test ^^^^ */
-
-
 
   handleTicker = new TickController(1000);
 
@@ -58,7 +54,7 @@ export default class Game {
 
   // gameObjectsPull
 
-  keysManager: KeysManager = null; // Объект менеджера ключей клавиш
+  keysManager: KeysManager; // Объект менеджера ключей клавиш
 
   field: {
     resolution: Dimentions;
@@ -83,7 +79,7 @@ export default class Game {
   controller: GameController;
 
   createEnemyRandomly(len: number = 0) {
-    let newEnemy: Enemy = null;
+    let newEnemy: Enemy | null = null;
 
     if (this.enemies.length < len) {
       newEnemy = new Enemy({
@@ -206,11 +202,7 @@ export default class Game {
     // console.log(this.bullets.length);
   }
 
-
-  
-
-
-  render(field: HTMLElement = null) {
+  render() {
     this.UIManager.clearCanvas();
 
     // this.UIManager.ctx.clearRect(0 , 0 , this.field.resolution.width  * this.field.gameCellDimentions.width , this.field.resolution.height  * this.field.gameCellDimentions.height);
@@ -220,8 +212,8 @@ export default class Game {
 
     for (let i = 0; i < this.field.resolution.height; i++) {
       for (let j = 0; j < this.field.resolution.width; j++) {
-
-        this.UIManager.ctx.drawImage(background,
+        this.UIManager.ctx.drawImage(
+          background,
           160,
           0,
           60,
@@ -229,8 +221,9 @@ export default class Game {
           j * 200 + this.viewPort.position.x,
           i * 200 + this.viewPort.position.y,
           200,
-          200);
-        
+          200
+        );
+
         this.UIManager.drawSprite(
           background,
           160,
@@ -248,31 +241,16 @@ export default class Game {
     this.player.draw(this.UIManager.ctx);
 
     this.bullets.forEach((bullet) => {
-      
       bullet.draw(this.UIManager.ctx);
-
     });
 
     this.enemies.forEach((enemy) => {
-
       enemy.draw(this.UIManager.ctx);
     });
 
     this.supplyBoxes.forEach((supplyBox) => {
-      
       supplyBox.draw(this.UIManager.ctx);
-
     });
-
-
-
-    // this.spriteManager.upDateFrame(1);
-    const frame = this.spriteManager.getFrame(this.state);
-
-    // this.UIManager.ctx.scale(-1 , 1);
-    this.UIManager.ctx.drawImage(frame.src , frame.x , frame.y , frame.width , frame.height , 0 , 0  ,200 , 200);
-
-
   }
 
   constructor({
@@ -291,7 +269,6 @@ export default class Game {
     this.supplyBoxCreatingTicker = new TickController(10000);
 
     this.supplyBoxes = [];
-    this.player = null;
     this.enemies = [];
     this.bullets = [];
 
@@ -355,46 +332,33 @@ export default class Game {
       // this.audio.play();
     });
 
+    // const spr2 = new Image();
+    // spr2.src = knightIdleSprite;
+    // const run = new Image();
+    // run.src = KnightRunSprite;
+    // this.spriteManager = new SpriteManager_beta([
+    //   {
+    //     src: spr2,
+    //     firstFramePosition: { x: 0, y: 0 },
+    //     height: 32,
+    //     width: 32,
+    //     maxAllowFrames: 4,
+    //     stepRange: 32,
+    //   },
+    //   {
+    //     src: run,
+    //     firstFramePosition: { x: 18, y: 33 },
+    //     height: 33,
+    //     width: 33,
+    //     maxAllowFrames: 6,
+    //     stepRange: 64,
+    //   },
+    // ]);
 
-
-
-
-
-
-
-
-
-
-    
-    const spr2 = new Image();
-    spr2.src = knightIdleSprite ;
-    const run = new Image();
-    run.src = KnightRunSprite ;
-    this.spriteManager = new SpriteManager_beta([
-      {
-        src:spr2 ,
-        firstFramePosition:{x:0 , y:0} ,
-        height:32 , 
-        width:32 ,
-        maxAllowFrames:4 ,
-        stepRange:32 ,
-      } , 
-      {
-        src:run ,
-        firstFramePosition:{x:18 , y:33} ,
-        height:33 , 
-        width:33 ,
-        maxAllowFrames:6 ,
-        stepRange:64 ,
-      }
-    ]);
-
-    this.state = 0 ;
-
+    this.state = 0;
 
     window.onclick = () => {
-      this.state = this.state ? 0 : 1 ;
-    }
-
+      this.state = this.state ? 0 : 1;
+    };
   }
 }

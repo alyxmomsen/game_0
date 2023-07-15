@@ -27,10 +27,10 @@ export class UIManager {
   }
 
   constructor({
-    canvas ,
-    canvasWidth ,
-    canvasHeight ,
-    gameCellDimentions ,
+    canvas,
+    canvasWidth,
+    canvasHeight,
+    gameCellDimentions,
   }: {
     canvas: HTMLCanvasElement;
     canvasWidth: number;
@@ -43,11 +43,16 @@ export class UIManager {
     // canvas.style.width = "800px";
     // canvas.style.height = "600px";
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0, 0, 100, 100);
 
-    this.ctx = ctx;
+    if (ctx) {
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, 100, 100);
 
-    this.gameCellDimentions = { ...gameCellDimentions };
+      this.ctx = ctx;
+
+      this.gameCellDimentions = { ...gameCellDimentions };
+    } else {
+      console.log("ctx is NULL");
+    }
   }
 }

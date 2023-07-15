@@ -78,24 +78,16 @@ export class Enemy extends GameObject {
         health: Math.floor(Math.random() * 10000) /* 1000 */,
         dempher: Math.floor(Math.random() * 99) + 1 /* 90 */,
       }),
+      spriteManager: new SpriteManager_beta([
+        {
+          src: sprite,
+          firstFramePosition: { x: 0, y: 0 },
+          height: 32,
+          width: 32,
+          maxAllowFrames: 4,
+          stepRange: 32,
+        },
+      ]),
     });
-
-    this.sprite = new Image();
-    this.sprite.src = sprite;
-
-    // this.spriteManager = new SpriteManager(this.sprite, 3);
-
-
-    this.spriteManager = new SpriteManager_beta([
-      {
-        src:this.sprite ,
-        firstFramePosition:{x:0 , y:0} ,
-        height:32 , 
-        width:32 ,
-        maxAllowFrames:4 ,
-        stepRange:32 ,
-      } , 
-    ]);
-
   }
 }

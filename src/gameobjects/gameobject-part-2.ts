@@ -128,17 +128,25 @@ export class GameObject_part_2 extends GameObject_part_1 {
   }
 
   calculateNextPositionByMovRange({ x, y }: Direction) {
-    this.movement.targetPosition.y =
-      this.position.y + this.movement.currentStepRange.y;
-    this.movement.targetPosition.x =
-      this.position.x + this.movement.currentStepRange.x;
+    if (this.position) {
+      this.movement.targetPosition.y =
+        this.position.y + this.movement.currentStepRange.y;
+      this.movement.targetPosition.x =
+        this.position.x + this.movement.currentStepRange.x;
 
-    this.movement.counterOfSteps += 1; // счетчик сделаных шагов. связан. используется
+      this.movement.counterOfSteps += 1; // счетчик сделаных шагов. связан. используется
+    } else {
+      console.log("position is NULL");
+    }
   }
 
   updatePosition() {
-    this.position.x = this.movement.targetPosition.x;
-    this.position.y = this.movement.targetPosition.y;
+    if (this.position) {
+      this.position.x = this.movement.targetPosition.x;
+      this.position.y = this.movement.targetPosition.y;
+    } else {
+      console.log("position is NULL");
+    }
   }
 
   /// beta beta beta
@@ -151,10 +159,14 @@ export class GameObject_part_2 extends GameObject_part_1 {
   }
 
   updateNextPosition(): void {
-    this.movement.targetPosition.x =
-      this.position.x + this.movement.currentStepRange.x;
-    this.movement.targetPosition.y =
-      this.position.y + this.movement.currentStepRange.y;
+    if (this.position) {
+      this.movement.targetPosition.x =
+        this.position.x + this.movement.currentStepRange.x;
+      this.movement.targetPosition.y =
+        this.position.y + this.movement.currentStepRange.y;
+    } else {
+      console.log("position is NULL");
+    }
   }
 
   calculateSpawnPointEndAttackDirectionRangeBy(
@@ -165,43 +177,49 @@ export class GameObject_part_2 extends GameObject_part_1 {
       range: { x: 0, y: 0 },
     };
 
-    const maxAllowedStepRange =
-      this.attack.currentWeapon.get_maxAllowedStepRange();
+    if (this.attack.currentWeapon) {
+      const maxAllowedStepRange =
+        this.attack.currentWeapon.get_maxAllowedStepRange();
 
-    if (controllerAttackDirection !== "") {
-      switch (controllerAttackDirection) {
-        case "down":
-          o.pos = {
-            x: this.position.x + this.getDimentions().width / 2,
-            y: this.position.y + this.getDimentions().height,
-          };
-          o.range = { x: 0, y: maxAllowedStepRange };
-          break;
-        case "left":
-          o.pos = {
-            x:
-              this.position.x -
-              this.attack.currentWeapon.get_bulletDimentions().width,
-            y: this.position.y + this.getDimentions().height / 2,
-          };
-          o.range = { x: -maxAllowedStepRange, y: 0 };
-          break;
-        case "right":
-          o.pos = {
-            x: this.position.x + this.getDimentions().width,
-            y: this.position.y + this.getDimentions().height / 2,
-          };
-          o.range = { x: maxAllowedStepRange, y: 0 };
-          break;
-        case "up":
-          o.pos = {
-            x: this.position.x + this.getDimentions().width / 2,
-            y:
-              this.position.y -
-              this.attack.currentWeapon.get_bulletDimentions().height,
-          };
-          o.range = { x: 0, y: -maxAllowedStepRange };
-          break;
+      if (controllerAttackDirection !== "") {
+        if (this.position) {
+          switch (controllerAttackDirection) {
+            case "down":
+              o.pos = {
+                x: this.position.x + this.getDimentions().width / 2,
+                y: this.position.y + this.getDimentions().height,
+              };
+              o.range = { x: 0, y: maxAllowedStepRange };
+              break;
+            case "left":
+              o.pos = {
+                x:
+                  this.position.x -
+                  this.attack.currentWeapon.get_bulletDimentions().width,
+                y: this.position.y + this.getDimentions().height / 2,
+              };
+              o.range = { x: -maxAllowedStepRange, y: 0 };
+              break;
+            case "right":
+              o.pos = {
+                x: this.position.x + this.getDimentions().width,
+                y: this.position.y + this.getDimentions().height / 2,
+              };
+              o.range = { x: maxAllowedStepRange, y: 0 };
+              break;
+            case "up":
+              o.pos = {
+                x: this.position.x + this.getDimentions().width / 2,
+                y:
+                  this.position.y -
+                  this.attack.currentWeapon.get_bulletDimentions().height,
+              };
+              o.range = { x: 0, y: -maxAllowedStepRange };
+              break;
+          }
+        } else {
+          console.log("position is NULL");
+        }
       }
     }
 

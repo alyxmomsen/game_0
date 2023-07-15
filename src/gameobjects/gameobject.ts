@@ -19,6 +19,7 @@ import { Controller } from "../library/controller";
 import { GameObject_part_2 } from "./gameobject-part-2";
 import { Weapon } from "../library/weapon";
 import { Armor } from "../library/armore";
+import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
 export default abstract class GameObject extends GameObject_part_2 {
   /* ====================== options ====================== */
@@ -52,17 +53,21 @@ export default abstract class GameObject extends GameObject_part_2 {
       if (object !== this && !this.isDied) {
         // если объект не является сам собой и если объект не "умер"
 
-        if (
-          this.checkNextPositionColissionWith(
-            object.position,
-            object.getDimentions()
-          )
-        ) {
-          // проверка следующего шага на коллизию
-          // object instanceof SupplyBox ; // не проходит эту проверку
-          // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
+        if (object.position) {
+          if (
+            this.checkNextPositionColissionWith(
+              object.position,
+              object.getDimentions()
+            )
+          ) {
+            // проверка следующего шага на коллизию
+            // object instanceof SupplyBox ; // не проходит эту проверку
+            // в этом цикле можно что то сделать с конкретным объектом на котором произошла коллизия
 
-          isCollision = this.ifCollisionIs_For(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
+            isCollision = this.ifCollisionIs_For(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
+          }
+        } else {
+          console.log("object position is NULL");
         }
       }
     }
@@ -116,8 +121,12 @@ export default abstract class GameObject extends GameObject_part_2 {
       // если на следующем шаге есть коллизия
       // снимаем проверки с других координат отличных от this.position
       // this.movement.currentStepRange = {x:0 , y:0} ;
-      this.movement.targetPosition.x = this.position.x;
-      this.movement.targetPosition.y = this.position.y;
+      if (this.position) {
+        this.movement.targetPosition.x = this.position.x;
+        this.movement.targetPosition.y = this.position.y;
+      } else {
+        console.log("position is NULL");
+      }
     } else {
       this.updatePosition(); // обновляем позицию если нет коллизии на следующем шаге
     }
@@ -171,14 +180,33 @@ export default abstract class GameObject extends GameObject_part_2 {
     }
   }
 
-
-  draw (ctx:CanvasRenderingContext2D) {
-
+  draw(ctx: CanvasRenderingContext2D) {
     ctx.imageSmoothingEnabled = false;
-    ctx.fillStyle = 'black' ;
-    ctx.lineWidth = 2 ;
+    ctx.fillStyle = "white";
+    ctx.lineWidth = 2;
     // ctx.fillRect(this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
-    ctx.strokeRect(this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
+    ctx.strokeStyle = "white";
+
+    if (this.position) {
+      ctx.strokeRect(
+        this.position.x,
+        this.position.y,
+        this.dimentions.width,
+        this.dimentions.height
+      );
+    } else {
+      console.log("position is NULL");
+    }
+
+    const frame: null | {
+      spriteImage: HTMLImageElement;
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    } = this.spriteManager.getFrame(0);
+
+    console.log(frame);
 
     const calculate = function (
       maxBarWide: number,
@@ -205,19 +233,47 @@ export default abstract class GameObject extends GameObject_part_2 {
     } = calculate(this.dimentions.width, this.maxHealth, this.health);
 
     if (currentPercentOfValue < 100) {
-      ctx.fillStyle = "red";
-      ctx.fillRect(this.position.x, this.position.y - 10, currentPercentOfWide, 10);
+      if (this.position) {
+        ctx.fillStyle = "red";
+        ctx.fillRect(
+          this.position.x,
+          this.position.y - 10,
+          currentPercentOfWide,
+          10
+        );
+      } else {
+        console.log("position is NULL");
+      }
     }
 
-    const result = calculate(this.dimentions.width, this.armor.getMaxHaxHealtValue(), this.armor.getHealthValue());
+    const result = calculate(
+      this.dimentions.width,
+      this.armor.getMaxHaxHealtValue(),
+      this.armor.getHealthValue()
+    );
 
     if (result.currentPercentOfValue < 100) {
-      ctx.fillStyle = "green";
-      ctx.fillRect(this.position.x, this.position.y - 20, result.currentPercentOfWide, 10);
+      if (this.position) {
+        ctx.fillStyle = "green";
+        ctx.fillRect(
+          this.position.x,
+          this.position.y - 20,
+          result.currentPercentOfWide,
+          10
+        );
+      } else {
+        console.log("position is NULL");
+      }
     }
 
-    const frame = this.spriteManager.getFrame(this.kind === 'player' ? 1 : 0);
-    ctx.drawImage(frame.src , frame.x , frame.y , 32, 32 , this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
+    if(this.position) {
+
+      if(frame) {
+  
+        ctx.drawImage(frame.spriteImage , frame.x , frame.y , frame.width , frame.height , this.position.x , this.position.y ,this.dimentions.width ,this.dimentions.height);
+      }
+    }
+
 
   }
 
@@ -237,6 +293,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     armor,
     walkStepRangeDelta: stepRangeDelta,
     walkStepRangeDeltaMod: stepRangeDeltaMod,
+    spriteManager,
   }: {
     id: number;
     kind: GameObjectKinds;
@@ -253,6 +310,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     shouldFadeDownStepRate: boolean;
     walkStepRangeDelta: number;
     walkStepRangeDeltaMod: number;
+    spriteManager: SpriteManager_beta;
   }) {
     super();
 
@@ -291,5 +349,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     };
 
     this.controller = new Controller();
+
+    this.spriteManager = spriteManager;
   }
 }

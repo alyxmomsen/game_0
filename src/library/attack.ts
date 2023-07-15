@@ -8,7 +8,7 @@ export class Attack {
   ticker: TickController; // интервал между выстрелами
   direction: Direction; // стартовый вектор начала движения Bullet
   private weapons: Weapon[]; // арсенал (пресеты, другими словами)
-  currentWeapon: Weapon; // в данный момент выбранный пресет
+  currentWeapon: Weapon | null; // в данный момент выбранный пресет
   private ownDamage: Damage; // урон наносимый самим объектом, не путать с уроном Weapon
   private spawnPoint: Position; // точка спауна для объекта аттаки
 
