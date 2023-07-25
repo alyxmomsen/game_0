@@ -72,7 +72,7 @@ export class Player extends GameObject {
     super({
       id,
       kind: "player",
-      maxAllowWalkStepRange: 10,
+      maxAllowWalkStepRange: 12,
       walkStepRangeDelta: 1,
       walkStepRangeDeltaMod: 0,
       walkStepDirectionRange: { x: 0, y: 0 },

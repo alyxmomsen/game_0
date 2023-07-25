@@ -73,23 +73,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
     subjectDimentions: Dimentions
   ) {
     if (this.position) {
-      const xMovingDirection: "right" | "left" | "static" =
-        this.position.x < this.movement.targetPosition.x
-          ? "right"
-          : this.position.x > this.movement.targetPosition.x
-          ? "left"
-          : "static";
-      const yMovingDirection: "down" | "up" | "static" =
-        this.position.y < this.movement.targetPosition.y
-          ? "down"
-          : this.position.y > this.movement.targetPosition.y
-          ? "up"
-          : "static";
-
-      if (this.kind === "player") {
-        console.log(xMovingDirection, yMovingDirection);
-      }
-
+      
       if (
         // is collision on the start point
         this.position.x + this.dimentions.width >= subjectPostion.x &&
@@ -124,46 +108,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
         return true;
       } else {
-        if (xMovingDirection === "right") {
-          // is X-moving-RIGHT
-
-          if (this.position.x > subjectPostion.x + subjectDimentions.width) {
-            // is behind X-start-line
-            return false;
-          } else {
-            if (
-              this.movement.targetPosition.x + this.dimentions.width <
-              subjectPostion.x
-            ) {
-              // is not reach (by X)
-              return false;
-            } else {
-              if (yMovingDirection === "down") {
-                // is Y-moving-DOWN
-
-                if (
-                  this.position.y >
-                  subjectPostion.y + subjectDimentions.height
-                ) {
-                  // is behind Y-start-line
-                  return false;
-                } else {
-                  if (
-                    this.movement.targetPosition.y + this.dimentions.height <
-                    subjectPostion.y
-                  ) {
-                    // is not reach (by Y)
-                    return false;
-                  } else {
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        // check the difficult collision
-
+        
         return false;
       }
     }

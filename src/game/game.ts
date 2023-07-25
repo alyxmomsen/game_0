@@ -303,10 +303,10 @@ export default class Game {
         new Weapon({
           damage: new Damage({ damageClass: "phisical", value: 2 }),
           fireRate: 100, // интервал между выстрелами
-          maxAllowedStepRange: 50, // скорость полета
+          maxAllowedStepRange: 100, // скорость полета
           stepRateFadeDown: true, // будет ли замедляться
           stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
-          bulletDimentions: { width: 100, height: 100 },
+          bulletDimentions: { width: 50, height: 50 },
         }),
       ],
     });
