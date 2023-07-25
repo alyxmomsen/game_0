@@ -19,6 +19,7 @@ import { GameObject_part_2 } from "./gameobject-part-2";
 import { Weapon } from "../library/weapon";
 import { Armor } from "../library/armore";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
+import { calculateCollisionByVector } from "../library/calculateCollisionByVector";
 
 export default abstract class GameObject extends GameObject_part_2 {
   /* ====================== options ====================== */
@@ -58,13 +59,22 @@ export default abstract class GameObject extends GameObject_part_2 {
         // если объект не является сам собой и если объект не "умер"
 
         if (object.position) {
-          if (
-            this.checkNextPositionColissionWith(
-              object.position,
-              object.getDimentions()
-            )
-          ) {
-            collided.push(object);
+          if (this.position) {
+            if (
+              calculateCollisionByVector(
+                {
+                  position: this.position,
+                  dimentions: this.dimentions,
+                  targetPosition: this.movement.targetPosition,
+                },
+                {
+                  position: object.position,
+                  dimentions: object.getDimentions(),
+                }
+              )
+            ) {
+              collided.push(object);
+            }
           }
         } else {
           console.log("object position is NULL");
