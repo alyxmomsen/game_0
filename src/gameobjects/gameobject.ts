@@ -45,14 +45,17 @@ export default abstract class GameObject extends GameObject_part_2 {
     return this.health <= 0 ? true : false;
   }
 
-  checkCollisionsForEveryOne(
-    objects: GameObjectExtendsClasses[]
-  ): GameObjectExtendsClasses[] {
+  checkCollisionsForEveryOne(objects: GameObjectExtendsClasses[]): {
+    collided: GameObjectExtendsClasses[];
+    newTargetPos: Position;
+  } {
     // ecли есть хоть одна коллизия, то вернет true, иначе false
 
     let isCollision = false;
 
     const collided: GameObject[] = [];
+
+    let newTargetPos = { ...this.movement.targetPosition };
 
     for (const object of objects) {
       if (object !== this && !this.isDied) {
@@ -60,19 +63,23 @@ export default abstract class GameObject extends GameObject_part_2 {
 
         if (object.position) {
           if (this.position) {
-            if (
-              calculateCollisionByVector(
-                {
-                  position: this.position,
-                  dimentions: this.dimentions,
-                  targetPosition: this.movement.targetPosition,
-                },
-                {
-                  position: object.position,
-                  dimentions: object.getDimentions(),
-                }
-              )
-            ) {
+            // const colli
+
+            newTargetPos = calculateCollisionByVector(
+              {
+                position: this.position,
+                dimentions: this.dimentions,
+                targetPosition: this.movement.targetPosition,
+              },
+              {
+                position: object.position,
+                dimentions: object.getDimentions(),
+              }
+            );
+
+            this.movement.targetPosition = newTargetPos;
+
+            if (false) {
               collided.push(object);
             }
           }
@@ -82,7 +89,7 @@ export default abstract class GameObject extends GameObject_part_2 {
       }
     }
 
-    return collided;
+    return { collided, newTargetPos };
   }
 
   getAllDamages() {
@@ -118,10 +125,10 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     /* ===================================================== */
 
-    if (collidedObjects.length || isWallsCollision) {
+    if (collidedObjects.collided.length || isWallsCollision) {
       // обработка столкновений
 
-      collidedObjects.forEach((object) => {
+      collidedObjects.collided.forEach((object) => {
         this.collisionHandlerWith(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
       });
 
