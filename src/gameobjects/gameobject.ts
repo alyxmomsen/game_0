@@ -19,6 +19,7 @@ import { GameObject_part_2 } from "./gameobject-part-2";
 import { Weapon } from "../library/weapon";
 import { Armor } from "../library/armore";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
+import { calculateCollisionByVector } from "../library/calculateCollisionByVector";
 
 export default abstract class GameObject extends GameObject_part_2 {
   /* ====================== options ====================== */
@@ -44,27 +45,47 @@ export default abstract class GameObject extends GameObject_part_2 {
     return this.health <= 0 ? true : false;
   }
 
-  checkCollisionsForEveryOne(
-    objects: GameObjectExtendsClasses[]
-  ): GameObjectExtendsClasses[] {
+  checkCollisionsForEveryOne(objects: GameObjectExtendsClasses[]): {
+    collided: GameObjectExtendsClasses[];
+    newTargetPos: Position;
+  } {
     // ecли есть хоть одна коллизия, то вернет true, иначе false
 
     let isCollision = false;
 
     const collided: GameObject[] = [];
 
+    let newTargetPos = { ...this.movement.targetPosition };
+
     for (const object of objects) {
       if (object !== this && !this.isDied) {
         // если объект не является сам собой и если объект не "умер"
 
         if (object.position) {
-          if (
-            this.checkNextPositionColissionWith(
-              object.position,
-              object.getDimentions()
-            )
-          ) {
-            collided.push(object);
+          if (this.position) {
+            // const colli
+
+            newTargetPos = calculateCollisionByVector(
+              {
+                position: this.position,
+                dimentions: this.dimentions,
+                targetPosition: this.movement.targetPosition,
+              },
+              {
+                position: object.position,
+                dimentions: object.getDimentions(),
+              }
+            );
+
+            if(this.movement.targetPosition.x !== newTargetPos.x || this.movement.targetPosition.y !== newTargetPos.y) {
+              console.log('colllision detected');
+            }
+
+            this.movement.targetPosition = newTargetPos;
+
+            if (false) {
+              collided.push(object);
+            }
           }
         } else {
           console.log("object position is NULL");
@@ -72,7 +93,7 @@ export default abstract class GameObject extends GameObject_part_2 {
       }
     }
 
-    return collided;
+    return { collided, newTargetPos };
   }
 
   getAllDamages() {
@@ -108,10 +129,10 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     /* ===================================================== */
 
-    if (collidedObjects.length || isWallsCollision) {
+    if (collidedObjects.collided.length || isWallsCollision) {
       // обработка столкновений
 
-      collidedObjects.forEach((object) => {
+      collidedObjects.collided.forEach((object) => {
         this.collisionHandlerWith(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
       });
 

@@ -73,7 +73,6 @@ export class GameObject_part_2 extends GameObject_part_1 {
     subjectDimentions: Dimentions
   ) {
     if (this.position) {
-      
       if (
         // is collision on the start point
         this.position.x + this.dimentions.width >= subjectPostion.x &&
@@ -94,21 +93,8 @@ export class GameObject_part_2 extends GameObject_part_1 {
         this.movement.targetPosition.y + this.dimentions.height >=
           subjectPostion.y
       ) {
-        calculateCollisionByVector(
-          {
-            position: this.position,
-            dimentions: this.dimentions,
-            targetPosition: this.movement.targetPosition,
-          },
-          {
-            position: subjectPostion,
-            dimentions: subjectDimentions,
-          }
-        );
-
         return true;
       } else {
-        
         return false;
       }
     }
