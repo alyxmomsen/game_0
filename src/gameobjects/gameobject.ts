@@ -19,6 +19,8 @@ import { GameObject_part_2 } from "./gameobject-part-2";
 import { Weapon } from "../library/weapon";
 import { Armor } from "../library/armore";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
+import { calculateCollisionByVector } from "../library/calculateCollisionByVector";
+import Game from "../game/game";
 
 export default abstract class GameObject extends GameObject_part_2 {
   /* ====================== options ====================== */
@@ -44,35 +46,46 @@ export default abstract class GameObject extends GameObject_part_2 {
     return this.health <= 0 ? true : false;
   }
 
-  checkCollisionsForEveryOne(
-    objects: GameObjectExtendsClasses[]
-  ): GameObjectExtendsClasses[] {
-    // ecли есть хоть одна коллизия, то вернет true, иначе false
-
-    let isCollision = false;
-
-    const collided: GameObject[] = [];
+  checkAndHandleCollisionsForEveryOne(objects: GameObjectExtendsClasses[]) {
+    let collisionCheckResult = {
+      position: this.movement.targetPosition,
+      collision: false,
+    };
 
     for (const object of objects) {
       if (object !== this && !this.isDied) {
         // если объект не является сам собой и если объект не "умер"
 
         if (object.position) {
-          if (
-            this.checkNextPositionColissionWith(
-              object.position,
-              object.getDimentions()
-            )
-          ) {
-            collided.push(object);
+          if (this.position) {
+            collisionCheckResult = calculateCollisionByVector(
+              {
+                position: this.position,
+                dimentions: this.dimentions,
+                targetPosition: this.movement.targetPosition,
+              },
+              {
+                position: object.position,
+                dimentions: object.getDimentions(),
+              }
+            );
+
+            if (
+              object.get_theIsRigidBody() === true &&
+              collisionCheckResult.collision
+            ) {
+              this.movement.targetPosition = collisionCheckResult.position;
+            }
+
+            if (collisionCheckResult.collision) {
+              this.collisionHandlerWith(object);
+            }
           }
         } else {
           console.log("object position is NULL");
         }
       }
     }
-
-    return collided;
   }
 
   getAllDamages() {
@@ -86,10 +99,12 @@ export default abstract class GameObject extends GameObject_part_2 {
   update({
     objects,
     fieldDimentions,
+    game,
   }: {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-  }): Bullet | null {
+    game: Game;
+  }) {
     this.getAllDamages(); // обрабатываем полученые уроны
 
     this.isDied = this.isHPisSubZero() ? true : this.isDied; // проверяем this.health на ноль-или-отрицательное-значение
@@ -98,36 +113,28 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     this.updateTargetPosition(); // вычисляем следующую позицию для дальнейшей проверки её
 
-    let collidedObjects = this.checkCollisionsForEveryOne(objects); // проверяем след позицию на коллизию и получаем объекты или пустой массив
-    let isWallsCollision = false;
-
     /* проверяем не столкнулся ли с границей game field */
+    
     if (this.checkCollissionWithFieldLimits({ ...fieldDimentions })) {
-      isWallsCollision = true;
+      
+      if(this.position) {
+
+        this.movement.targetPosition = this.position ;
+      }
+
     }
+    else {
+      
+    }
+    
+    this.checkAndHandleCollisionsForEveryOne(objects); // 
 
     /* ===================================================== */
-
-    if (collidedObjects.length || isWallsCollision) {
-      // обработка столкновений
-
-      collidedObjects.forEach((object) => {
-        this.collisionHandlerWith(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
-      });
-
-      if (this.position) {
-        this.movement.targetPosition.x = this.position.x;
-        this.movement.targetPosition.y = this.position.y;
-      } else {
-        console.log("position is NULL");
-      }
-    }
 
     this.updatePosition(); // обновляем позицию на основании this.movement.targetPosition
 
     /* implementation logic of the "Fire" */
 
-    let isFire = false;
     const controllerAttackDirection = this.controller.getAttackDirectionValue();
     let data: {
       pos: {
@@ -140,44 +147,37 @@ export default abstract class GameObject extends GameObject_part_2 {
       };
     };
 
-    if (this.kind === "player") {
-      // console.log(this.state);
-    }
-
     this.updateState();
 
     if (controllerAttackDirection !== "" && this.attack.currentWeapon) {
       data = this.calculateSpawnPointEndAttackDirectionRangeBy(
         controllerAttackDirection
       );
+
       this.attack.setSpawnPoint(data.pos);
       this.attack.setDirection(data.range);
 
-      isFire = true;
-
-      return !this.isDied && this.attack.ticker.tick() && isFire
-        ? new Bullet({
-            health: 100,
-            id: 0,
-            ownDamage: this.attack.currentWeapon
-              ? { ...this.attack.currentWeapon.get_damage() }
-              : { damageClass: "magic", value: 100 },
-            position: this.attack.getSpawnPoint(),
-            dimentions: this.attack.currentWeapon
-              ? { ...this.attack.currentWeapon.get_bulletDimentions() }
-              : { width: 10, height: 10 },
-            maxAllowWalkStepRange:
-              this.attack.currentWeapon.get_maxAllowedStepRange(),
-            walkStepDirectionRange: { ...this.attack.direction },
-            walkStepRangeDelta: 0.1,
-            walkStepRangeDeltaMod: 0.2,
-            walkStepRateFadeDown: false,
-            walkStepsLimit: 0,
-            isRigidBody: true,
-          })
-        : null;
-    } else {
-      return null;
+      if (!this.isDied && this.attack.ticker.tick()) {
+        game.addBullet({
+          health: 100,
+          id: 0,
+          ownDamage: this.attack.currentWeapon
+            ? { ...this.attack.currentWeapon.get_damage() }
+            : { damageClass: "magic", value: 100 },
+          position: this.attack.getSpawnPoint(),
+          dimentions: this.attack.currentWeapon
+            ? { ...this.attack.currentWeapon.get_bulletDimentions() }
+            : { width: 10, height: 10 },
+          maxAllowWalkStepRange:
+            this.attack.currentWeapon.get_maxAllowedStepRange(),
+          walkStepDirectionRange: { ...this.attack.direction },
+          walkStepRangeDelta: 0.1,
+          walkStepRangeDeltaMod: 0.2,
+          walkStepRateFadeDown: false,
+          walkStepsLimit: 0,
+          isRigidBody: true,
+        });
+      }
     }
   }
 
@@ -303,6 +303,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     walkStepRangeDelta: stepRangeDelta,
     walkStepRangeDeltaMod: stepRangeDeltaMod,
     spriteManager,
+    isRigidBody,
   }: {
     id: number;
     kind: GameObjectKinds;
@@ -363,5 +364,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     this.spriteManager = spriteManager;
 
     this.state = "stand";
+
+    this.isRigidBody = isRigidBody;
   }
 }

@@ -1,80 +1,314 @@
+import { Position } from "./types";
 
 export function calculateCollisionByVector(
-  objA: {
+  movingObject: {
     position: { x: number; y: number };
     dimentions: { width: number; height: number };
     targetPosition: { x: number; y: number };
   },
-  objB: {
+  stationaryObject: {
     position: { x: number; y: number };
     dimentions: { width: number; height: number };
   }
-) {
+): { position: Position; collision: boolean } {
+  const deltaX = movingObject.targetPosition.x - movingObject.position.x;
+  const deltaY = movingObject.targetPosition.y - movingObject.position.y;
 
-  const deltaByX = objA.targetPosition.x - objA.position.x;
-  const deltaByY = objA.targetPosition.y - objA.position.y;
+  let collision = false;
 
+  // Check if the objects overlap
   if (
-    objB.position.x + objB.dimentions.width >=
-      (deltaByX > 0 ? objA.position.x : objA.targetPosition.x) &&
-    objB.position.x <=
-      objA[deltaByX > 0 ? "targetPosition" : "position"].x +
-        objA.dimentions.width &&
-    objB.position.y + objB.dimentions.height >=
-      objA[deltaByY > 0 ? "targetPosition" : "position"].y &&
-    objB.position.y <=
-      objA[deltaByY > 0 ? "targetPosition" : "position"].y +
-        objA.dimentions.height
+    (deltaX > 0
+      ? stationaryObject.position.x + stationaryObject.dimentions.width >=
+          movingObject.position.x &&
+        stationaryObject.position.x <=
+          movingObject.targetPosition.x + movingObject.dimentions.width
+      : stationaryObject.position.x <=
+          movingObject.position.x + movingObject.dimentions.width &&
+        stationaryObject.position.x + stationaryObject.dimentions.width >=
+          movingObject.targetPosition.x) &&
+    (deltaY > 0
+      ? stationaryObject.position.y + stationaryObject.dimentions.height >=
+          movingObject.position.y &&
+        stationaryObject.position.y <=
+          movingObject.targetPosition.y + movingObject.dimentions.height
+      : stationaryObject.position.y <=
+          movingObject.position.y + movingObject.dimentions.height &&
+        stationaryObject.position.y + stationaryObject.dimentions.height >=
+          movingObject.targetPosition.y)
   ) {
-    console.log("! in the box !");
+    // Collision detected
+
+    // Calculate collision depth in the x and y directions
+
+    const collisionDepth = {
+      x:
+        deltaX !== 0
+          ? movingObject.targetPosition.x +
+            (deltaX > 0 ? movingObject.dimentions.width : 0) -
+            (stationaryObject.position.x +
+              (deltaX > 0 ? 0 : stationaryObject.dimentions.width))
+          : 0,
+      y:
+        deltaY !== 0
+          ? movingObject.targetPosition.y +
+            (deltaY > 0 ? movingObject.dimentions.height : 0) -
+            (stationaryObject.position.y +
+              (deltaY > 0 ? 0 : stationaryObject.dimentions.height))
+          : 0,
+    };
+
+    // Define test movement vectors
+    let testMovementVector1 = { x: 0, y: 0 };
+    let testMovementVector2 = { x: 0, y: 0 };
+
+    if (collisionDepth.x === 0 && collisionDepth.y === 0) {
+      // No collision depth in any direction
+
+      testMovementVector1.x = 0;
+      testMovementVector1.y = 0;
+
+      testMovementVector2 = testMovementVector1;
+    } else if (collisionDepth.x !== 0 && collisionDepth.y === 0) {
+      // Collision depth in the x direction only
+
+      testMovementVector1.x =
+        deltaX > 0
+          ? collisionDepth.x > 0
+            ? deltaX - collisionDepth.x
+            : 0
+          : collisionDepth.x < 0
+          ? deltaX - collisionDepth.x
+          : 0;
+
+      testMovementVector1.y = 0;
+      testMovementVector2 = testMovementVector1;
+      console.log("x");
+    } else if (collisionDepth.x === 0 && collisionDepth.y !== 0) {
+      // Collision depth in the y direction only
+      testMovementVector1.y =
+        deltaY > 0
+          ? collisionDepth.y > 0
+            ? deltaY - collisionDepth.y
+            : 0
+          : collisionDepth.y < 0
+          ? deltaY - collisionDepth.y
+          : 0;
+      testMovementVector1.x = 0;
+
+      testMovementVector2 = testMovementVector1;
+      console.log("y");
+    } else if (collisionDepth.x !== 0 && collisionDepth.y !== 0) {
+      // Collision depth in both x and y directions
+      if (deltaX > 0 && deltaY > 0) {
+        // Calculate test movement vector for x direction
+
+        testMovementVector1.x =
+          deltaX - collisionDepth.x > 0
+            ? deltaY - collisionDepth.y > 0
+              ? /**/ deltaX - collisionDepth.x /**/
+              : deltaX - collisionDepth.x
+            : deltaY - collisionDepth.y > 0
+            ? deltaX
+            : 0;
+        testMovementVector1.y =
+          deltaY - collisionDepth.y > 0
+            ? deltaX - collisionDepth.x <= 0
+              ? deltaY - collisionDepth.y
+              : 0
+            : deltaY;
+
+        // Calculate test movement vector for y direction
+
+        testMovementVector2.y =
+          deltaY - collisionDepth.y > 0
+            ? deltaX - collisionDepth.x > 0
+              ? /**/ deltaY - collisionDepth.y /**/
+              : deltaY - collisionDepth.y
+            : deltaX - collisionDepth.x > 0
+            ? deltaY
+            : 0;
+        testMovementVector2.x =
+          deltaX - collisionDepth.x > 0
+            ? deltaY - collisionDepth.y > 0
+              ? deltaX
+              : deltaX - collisionDepth.x
+            : deltaX;
+      } else if (deltaX > 0 && deltaY < 0) {
+        // Calculate test movement vector for x direction
+
+        testMovementVector1.x =
+          deltaX - collisionDepth.x > 0
+            ? deltaY - collisionDepth.y < 0
+              ? /**/ deltaX - collisionDepth.x /**/
+              : deltaX - collisionDepth.x
+            : deltaY - collisionDepth.y < 0
+            ? deltaX
+            : 0;
+        testMovementVector1.y =
+          deltaY - collisionDepth.y < 0
+            ? deltaX - collisionDepth.x <= 0
+              ? deltaY - collisionDepth.y
+              : 0
+            : deltaY;
+
+        // Calculate test movement vector for y direction
+
+        testMovementVector2.y =
+          deltaY - collisionDepth.y < 0
+            ? deltaX - collisionDepth.x > 0
+              ? /**/ deltaY - collisionDepth.y /**/
+              : deltaY - collisionDepth.y
+            : deltaX - collisionDepth.x > 0
+            ? deltaY
+            : 0;
+        testMovementVector2.x =
+          deltaX - collisionDepth.x > 0
+            ? deltaY - collisionDepth.y < 0
+              ? deltaX
+              : deltaX - collisionDepth.x
+            : deltaX;
+      } else if (deltaX < 0 && deltaY > 0) {
+        // Calculate test movement vector for x direction
+
+        testMovementVector1.x =
+          deltaX - collisionDepth.x < 0
+            ? deltaY - collisionDepth.y > 0
+              ? /**/ deltaX - collisionDepth.x /**/
+              : deltaX - collisionDepth.x
+            : deltaY - collisionDepth.y > 0
+            ? deltaX
+            : 0;
+        testMovementVector1.y =
+          deltaY - collisionDepth.y > 0
+            ? deltaX - collisionDepth.x >= 0
+              ? deltaY - collisionDepth.y
+              : 0
+            : deltaY;
+
+        // Calculate test movement vector for y direction
+
+        testMovementVector2.y =
+          deltaY - collisionDepth.y > 0
+            ? deltaX - collisionDepth.x < 0
+              ? /**/ deltaY - collisionDepth.y /**/
+              : deltaY - collisionDepth.y
+            : deltaX - collisionDepth.x < 0
+            ? deltaY
+            : 0;
+        testMovementVector2.x =
+          deltaX - collisionDepth.x < 0
+            ? deltaY - collisionDepth.y > 0
+              ? deltaX
+              : deltaX - collisionDepth.x
+            : deltaX;
+      } else if (deltaX < 0 && deltaY < 0) {
+        // Calculate test movement vector for x direction
+
+        testMovementVector1.x =
+          deltaX - collisionDepth.x < 0
+            ? deltaY - collisionDepth.y < 0
+              ? /**/ deltaX - collisionDepth.x /**/
+              : deltaX - collisionDepth.x
+            : deltaY - collisionDepth.y < 0
+            ? deltaX
+            : 0;
+        testMovementVector1.y =
+          deltaY - collisionDepth.y < 0
+            ? deltaX - collisionDepth.x >= 0
+              ? deltaY - collisionDepth.y
+              : 0
+            : deltaY;
+
+        // Calculate test movement vector for y direction
+
+        testMovementVector2.y =
+          deltaY - collisionDepth.y < 0
+            ? deltaX - collisionDepth.x < 0
+              ? /**/ deltaY - collisionDepth.y /**/
+              : deltaY - collisionDepth.y
+            : deltaX - collisionDepth.x < 0
+            ? deltaY
+            : 0;
+        testMovementVector2.x =
+          deltaX - collisionDepth.x < 0
+            ? deltaY - collisionDepth.y < 0
+              ? deltaX
+              : deltaX - collisionDepth.x
+            : deltaX;
+      }
+    }
+
+    // console.log('dived : ' , dived);
+
+    let finalMovement: /* false | */ Position = /* false */ testMovementVector1;
+
+    // if (
+    //   testMovementVector1.x <=
+    //     stationaryObject.position.x + stationaryObject.dimentions.width &&
+    //   testMovementVector1.x + movingObject.dimentions.width >=
+    //     stationaryObject.position.x &&
+    //   testMovementVector1.y <=
+    //     stationaryObject.position.y + stationaryObject.dimentions.height &&
+    //   testMovementVector1.y + movingObject.dimentions.height >=
+    //     stationaryObject.position.y
+    // ) {
+
+    //   alert()
+    //   finalMovement = testMovementVector1;
+    // } else if (
+    //   testMovementVector2.x <=
+    //     stationaryObject.position.x + stationaryObject.dimentions.width &&
+    //   testMovementVector2.x + movingObject.dimentions.width >=
+    //     stationaryObject.position.x &&
+    //   testMovementVector2.y <=
+    //     stationaryObject.position.y + stationaryObject.dimentions.height &&
+    //   testMovementVector2.y + movingObject.dimentions.height >=
+    //     stationaryObject.position.y
+    // ) {
+
+    //   alert()
+    //   finalMovement = testMovementVector2;
+    // }
+
+    // Adjust the position of the moving object based on the finalMovement vector
+
+    const n = 0.01;
 
     if (
-      objB.position.x <= objA.position.x + objA.dimentions.width &&
-      objB.position.x + objB.dimentions.width >= objA.position.x &&
-      objB.position.y <= objA.position.y + objA.dimentions.height &&
-      objB.position.y + objB.dimentions.height >= objA.position.y
+      testMovementVector1.x !== movingObject.targetPosition.x ||
+      testMovementVector1.y !== movingObject.targetPosition.y
     ) {
-      // definitely Collision
-      console.log("in the object A's box");
+      console.log("collision is exist");
+      collision = true;
+    }
+
+    // collision = 9
+
+    if (true) {
+      return {
+        position: {
+          x:
+            movingObject.position.x +
+            (deltaX > 0
+              ? finalMovement.x - n
+              : deltaX < 0
+              ? finalMovement.x + n
+              : 0),
+          y:
+            movingObject.position.y +
+            (deltaY > 0
+              ? finalMovement.y - n
+              : deltaY < 0
+              ? finalMovement.y + n
+              : 0),
+        },
+        collision,
+      };
     } else {
-      let newX = objA.targetPosition.x;
-      let newY = objA.targetPosition.y;
-
-      if (deltaByX !== 0) {
-        // delta X is NOT Zero
-        objA.position.x + (deltaByX > 0 ? objA.dimentions.width : 0);
-        objB.position.x + (deltaByX > 0 ? 0 : objB.dimentions.width);
-
-        newX =
-          objB.position.x +
-          (deltaByX > 0 ? 0 : objB.dimentions.width) -
-          objA.position.x +
-          (deltaByX > 0 ? objA.dimentions.width : 0);
-      } else {
-
-      }
-
-      if (deltaByY !== 0) {
-        // delta X is NOT Zero
-        objA.position.y + (deltaByY > 0 ? objA.dimentions.height : 0);
-        objB.position.y + (deltaByY > 0 ? 0 : objB.dimentions.height);
-
-        newY =
-          objB.position.x +
-          (deltaByX > 0 ? 0 : objB.dimentions.width) -
-          objA.position.x +
-          (deltaByX > 0 ? objA.dimentions.width : 0);
-      } else {
-
-      }
-
-      console.log(newX , newY);
-
-      return { x: newX, y: newY };
+      return { position: movingObject.targetPosition, collision };
     }
   } else {
-    // collision is NOT
-    return objA.targetPosition;
+    return { position: movingObject.targetPosition, collision };
   }
-
 }

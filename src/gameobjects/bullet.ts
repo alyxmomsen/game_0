@@ -12,6 +12,7 @@ import ric3 from "./../images/riccochet_3.mp3";
 import ric4 from "./../images/riccochet_4.mp3";
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
+import Game from "../game/game";
 
 export class Bullet extends GameObject {
   audio: HTMLAudioElement;
@@ -65,10 +66,12 @@ export class Bullet extends GameObject {
   update({
     objects,
     fieldDimentions,
+    game,
   }: {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-  }): null | Bullet {
+    game: Game;
+  }) {
     // если пуля не движется , то она удаляется из игры
     if (
       this.movement.currentStepRange.x === 0 &&
@@ -77,7 +80,7 @@ export class Bullet extends GameObject {
       this.isDied = true;
     }
 
-    return super.update({ objects, fieldDimentions });
+    super.update({ objects, fieldDimentions, game });
   }
 
   constructor({

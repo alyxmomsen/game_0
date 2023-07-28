@@ -1,3 +1,4 @@
+import Game from "../game/game";
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
 import { SpriteManager } from "../library/sprite-manager";
@@ -27,11 +28,18 @@ export class SupplyBox extends GameObject {
 
   worldLimitCollision_handler(): void {}
 
-  update({ fieldDimentions }: { fieldDimentions: Dimentions }): null | Bullet {
-    return super.update({
+  update({
+    fieldDimentions,
+    game,
+  }: {
+    fieldDimentions: Dimentions;
+    game: Game;
+  }) {
+    super.update({
       fieldDimentions,
       // keys: [],
       objects: [],
+      game,
     });
   }
 

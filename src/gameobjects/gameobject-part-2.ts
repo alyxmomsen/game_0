@@ -15,6 +15,10 @@ import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 export class GameObject_part_2 extends GameObject_part_1 {
+  get_theIsRigidBody() {
+    return this.isRigidBody;
+  }
+
   getDimentions() {
     return { ...this.dimentions };
   }
@@ -73,7 +77,6 @@ export class GameObject_part_2 extends GameObject_part_1 {
     subjectDimentions: Dimentions
   ) {
     if (this.position) {
-      
       if (
         // is collision on the start point
         this.position.x + this.dimentions.width >= subjectPostion.x &&
@@ -94,21 +97,8 @@ export class GameObject_part_2 extends GameObject_part_1 {
         this.movement.targetPosition.y + this.dimentions.height >=
           subjectPostion.y
       ) {
-        calculateCollisionByVector(
-          {
-            position: this.position,
-            dimentions: this.dimentions,
-            targetPosition: this.movement.targetPosition,
-          },
-          {
-            position: subjectPostion,
-            dimentions: subjectDimentions,
-          }
-        );
-
         return true;
       } else {
-        
         return false;
       }
     }
@@ -128,7 +118,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
       this.movement.targetPosition.y + this.dimentions.height >= height ||
       this.movement.targetPosition.y < 0
     ) {
-      // console.log(this.position , this.movement.targetPosition , width , height);
+      
 
       return true;
     } else {
@@ -151,8 +141,9 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
   updatePosition() {
     if (this.position) {
-      this.position.x = this.movement.targetPosition.x;
-      this.position.y = this.movement.targetPosition.y;
+
+      this.position = {...this.movement.targetPosition} ;
+
     } else {
       console.log("position is NULL");
     }

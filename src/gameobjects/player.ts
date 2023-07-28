@@ -12,6 +12,7 @@ import skeletonSpriteIdle from "./../images/spites/Enemy/Skeleton Crew/Skeleton 
 import skeletonSpriteRun from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet.png";
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
+import Game from "../game/game";
 
 export class Player extends GameObject {
   collisionHandlerWith(
@@ -42,11 +43,13 @@ export class Player extends GameObject {
     keys,
     objects,
     fieldDimentions,
+    game,
   }: {
     keys: string[];
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-  }): null | Bullet {
+    game: Game;
+  }) {
     this.damaged.forEach((damage) => {
       this.getDamage(damage.value);
     });
@@ -54,9 +57,10 @@ export class Player extends GameObject {
 
     this.controller.updateByKeys(keys);
 
-    return super.update({
+    super.update({
       objects,
       fieldDimentions,
+      game,
     });
   }
 

@@ -16,6 +16,7 @@ import { SupplyBox } from "./supply-box";
 import sprite from "./../images/spites/Enemy/Orc Crew/Orc - Warrior/Idle/Idle-Sheet.png";
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
+import Game from "../game/game";
 
 // частный случай GameObject
 export class Enemy extends GameObject {
@@ -38,15 +39,18 @@ export class Enemy extends GameObject {
   update({
     objects,
     fieldDimentions,
+    game,
   }: {
     objects: GameObjectExtendsClasses[];
     fieldDimentions: Dimentions;
-  }): null | Bullet {
+    game: Game;
+  }) {
     this.controller.autoUpdatePer(1000);
 
-    return super.update({
+    super.update({
       objects,
       fieldDimentions,
+      game,
     });
   }
 
