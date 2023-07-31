@@ -17,14 +17,14 @@ import "./styles/main.css";
 
   const canvas = document.querySelector("canvas");
 
-  const gameFieldResolution = { horizontal: 30, vertical: 20 };
+  const gameFieldResolution = { horizontal: 50, vertical: 50 };
 
   let theGame: Game | null;
 
   theGame = canvas
     ? new Game({
         fieldResolution: gameFieldResolution,
-        gameCellDimentions: { width: 50, height: 50 },
+        gameCellDimentions: { width: 100, height: 100 },
         canvas,
       })
     : null;

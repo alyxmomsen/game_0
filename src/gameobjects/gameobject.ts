@@ -114,20 +114,15 @@ export default abstract class GameObject extends GameObject_part_2 {
     this.updateTargetPosition(); // вычисляем следующую позицию для дальнейшей проверки её
 
     /* проверяем не столкнулся ли с границей game field */
-    
+
     if (this.checkCollissionWithFieldLimits({ ...fieldDimentions })) {
-      
-      if(this.position) {
-
-        this.movement.targetPosition = this.position ;
+      if (this.position) {
+        this.movement.targetPosition = this.position;
       }
+    } else {
+    }
 
-    }
-    else {
-      
-    }
-    
-    this.checkAndHandleCollisionsForEveryOne(objects); // 
+    this.checkAndHandleCollisionsForEveryOne(objects); //
 
     /* ===================================================== */
 
@@ -181,7 +176,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D, viewPort: { x: number; y: number }) {
     ctx.imageSmoothingEnabled = false;
     ctx.fillStyle = "white";
     ctx.lineWidth = 2;
@@ -190,8 +185,8 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     if (this.position) {
       ctx.strokeRect(
-        this.position.x,
-        this.position.y,
+        this.position.x - viewPort.x,
+        this.position.y - viewPort.y,
         this.dimentions.width,
         this.dimentions.height
       );
@@ -239,8 +234,8 @@ export default abstract class GameObject extends GameObject_part_2 {
       if (this.position) {
         ctx.fillStyle = "red";
         ctx.fillRect(
-          this.position.x,
-          this.position.y - 10,
+          (this.position.x - viewPort.x),
+          (this.position.y - viewPort.y) - 10,
           currentPercentOfWide,
           10
         );
@@ -259,8 +254,8 @@ export default abstract class GameObject extends GameObject_part_2 {
       if (this.position) {
         ctx.fillStyle = "green";
         ctx.fillRect(
-          this.position.x,
-          this.position.y - 20,
+          (this.position.x - viewPort.x),
+          (this.position.y - viewPort.y) - 20,
           result.currentPercentOfWide,
           10
         );
@@ -277,8 +272,8 @@ export default abstract class GameObject extends GameObject_part_2 {
           frame.y,
           frame.width,
           frame.height,
-          this.position.x,
-          this.position.y,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y,
           this.dimentions.width,
           this.dimentions.height
         );

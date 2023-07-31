@@ -84,15 +84,15 @@ export default class Game {
       newEnemy = new Enemy({
         id: 0,
         position: {
-          x: Math.floor(Math.random() * this.calculateFieldDimentions().width),
-          y: Math.floor(Math.random() * this.calculateFieldDimentions().height),
+          x: Math.floor(Math.random() * (this.calculateFieldDimentions().width - 200)),
+          y: Math.floor(Math.random() * (this.calculateFieldDimentions().height - 200)),
         },
         weapons: [
           new Weapon({
             bulletDimentions: { width: 50, height: 50 },
             damage: { damageClass: "magic", value: 50 },
             fireRate: Math.floor(Math.random() * 900) + 100,
-            maxAllowedStepRange: 10,
+            maxAllowedStepRange: 50,
             stepRateFadeDown: false,
             stepsLimit: 0,
           }),
@@ -173,14 +173,23 @@ export default class Game {
     const keys = this.keysManager.getPressedKeys();
     const fieldDimentions = this.calculateFieldDimentions();
 
+    if (this.player.position) {
+      this.viewPort.autoFocuTo(
+        this.player.position,
+        this.player.getDimentions(),
+        {
+          width:1920,
+          height:1080,
+        }
+      );
+    }
+
     this.player.update({
       keys,
       objects: [...this.enemies, ...this.supplyBoxes],
       fieldDimentions,
       game: this,
     });
-
-    
 
     this.enemies.forEach((enemy) => {
       enemy.update({
@@ -206,7 +215,6 @@ export default class Game {
         game: this,
       });
     });
-
     this.supplyBoxes = this.supplyBoxes.filter((elem) => !elem.isDied);
 
     if (this.supplyBoxCreatingTicker.tick() && this.supplyBoxes.length < 3) {
@@ -225,14 +233,19 @@ export default class Game {
     }
 
     if (true && this.creatorEnemyTicker.tick()) {
-      const newEnemy = this.createEnemyRandomly(1); // генерит если в массиве меньше чем Аргумент
+      const newEnemy = this.createEnemyRandomly(3); // генерит если в массиве меньше чем Аргумент
       if (newEnemy) {
         this.enemies.push(newEnemy);
       }
     }
 
     this.viewPort.updatePositionMoveStepRangeByKeys(keys);
+
     this.viewPort.updatePosition();
+  }
+
+  renderPlayerStats(values: string[]) {
+    this.UIManager.renderPlayerStats(values);
   }
 
   public render() {
@@ -249,39 +262,34 @@ export default class Game {
           0,
           60,
           63,
-          j * 200 + this.viewPort.position.x,
-          i * 200 + this.viewPort.position.y,
-          200,
-          200
-        );
-
-        this.UIManager.drawSprite(
-          background,
-          160,
-          0,
-          60,
-          63,
-          j * 200 + this.viewPort.position.x,
-          i * 200 + this.viewPort.position.y,
-          200,
-          200
+          j * this.field.gameCellDimentions.width - this.viewPort.position.x,
+          i * this.field.gameCellDimentions.height - this.viewPort.position.y,
+          this.field.gameCellDimentions.width,
+          this.field.gameCellDimentions.height
         );
       }
     }
 
-    this.player.draw(this.UIManager.ctx);
+    this.player.draw(this.UIManager.ctx, this.viewPort.position);
 
     this.bullets.forEach((bullet) => {
-      bullet.draw(this.UIManager.ctx);
+      bullet.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
     this.enemies.forEach((enemy) => {
-      enemy.draw(this.UIManager.ctx);
+      enemy.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
     this.supplyBoxes.forEach((supplyBox) => {
-      supplyBox.draw(this.UIManager.ctx);
+      supplyBox.draw(this.UIManager.ctx, this.viewPort.position);
     });
+
+    this.renderPlayerStats(
+      [
+        `HEALTH :  ${this.player.getHealth().toLocaleString()}` , 
+        `ARMOR : ${this.player.armor.getHealthValue()}` ,
+      ]
+    );
   }
 
   constructor({
@@ -320,7 +328,7 @@ export default class Game {
         new Weapon({
           damage: new Damage({ damageClass: "phisical", value: 2 }),
           fireRate: 100, // интервал между выстрелами
-          maxAllowedStepRange: 100, // скорость полета
+          maxAllowedStepRange: 40, // скорость полета
           stepRateFadeDown: true, // будет ли замедляться
           stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
           bulletDimentions: { width: 50, height: 50 },
@@ -328,20 +336,10 @@ export default class Game {
       ],
     });
 
-    // for (let i = 0; i < 1; i++) {
-    //   this.enemies.push(
-    //     new Enemy({
-    //       id: 0,
-    //       position: { x: Math.floor(Math.random() * this.field.dimentions.width), y: Math.floor(Math.random() * this.field.dimentions.height) },
-    //       weapons: [],
-    //     })
-    //   );
-    // }
-
     this.UIManager = new UIManager({
       canvas,
-      canvasHeight: 9 * 120,
-      canvasWidth: 16 * 120,
+      canvasWidth: 1920,
+      canvasHeight: 1080,
       gameCellDimentions,
     });
 

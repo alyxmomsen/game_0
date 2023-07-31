@@ -118,8 +118,6 @@ export class GameObject_part_2 extends GameObject_part_1 {
       this.movement.targetPosition.y + this.dimentions.height >= height ||
       this.movement.targetPosition.y < 0
     ) {
-      
-
       return true;
     } else {
       return false;
@@ -141,9 +139,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
   updatePosition() {
     if (this.position) {
-
-      this.position = {...this.movement.targetPosition} ;
-
+      this.position = { ...this.movement.targetPosition };
     } else {
       console.log("position is NULL");
     }

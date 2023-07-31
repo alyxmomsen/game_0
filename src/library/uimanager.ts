@@ -26,6 +26,18 @@ export class UIManager {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
+  renderPlayerStats(values: string[]) {
+
+    values.forEach((stat , i) => {
+      this.ctx.font = "48px serif";
+      this.ctx.fillStyle = "whitesmoke";
+      this.ctx.fillText(stat, 100, (i * 50) + 100);
+    });
+
+
+    
+  }
+
   constructor({
     canvas,
     canvasWidth,
@@ -40,8 +52,6 @@ export class UIManager {
     this.canvas = canvas;
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-    // canvas.style.width = "800px";
-    // canvas.style.height = "600px";
     const ctx = canvas.getContext("2d");
 
     if (ctx) {

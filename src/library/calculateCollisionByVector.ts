@@ -83,7 +83,7 @@ export function calculateCollisionByVector(
 
       testMovementVector1.y = 0;
       testMovementVector2 = testMovementVector1;
-      console.log("x");
+      // console.log("x");
     } else if (collisionDepth.x === 0 && collisionDepth.y !== 0) {
       // Collision depth in the y direction only
       testMovementVector1.y =
@@ -97,7 +97,7 @@ export function calculateCollisionByVector(
       testMovementVector1.x = 0;
 
       testMovementVector2 = testMovementVector1;
-      console.log("y");
+      // console.log("y");
     } else if (collisionDepth.x !== 0 && collisionDepth.y !== 0) {
       // Collision depth in both x and y directions
       if (deltaX > 0 && deltaY > 0) {
@@ -239,37 +239,43 @@ export function calculateCollisionByVector(
       }
     }
 
-    // console.log('dived : ' , dived);
+    // console.log(movingObject.position.x + testMovementVector1.x ,movingObject.position.y + testMovementVector1.y , stationaryObject.position.x , stationaryObject.position.y);
 
-    let finalMovement: /* false | */ Position = /* false */ testMovementVector1;
+    let finalMovement: /* false | */ Position = /* false */ testMovementVector2;
 
-    // if (
-    //   testMovementVector1.x <=
-    //     stationaryObject.position.x + stationaryObject.dimentions.width &&
-    //   testMovementVector1.x + movingObject.dimentions.width >=
-    //     stationaryObject.position.x &&
-    //   testMovementVector1.y <=
-    //     stationaryObject.position.y + stationaryObject.dimentions.height &&
-    //   testMovementVector1.y + movingObject.dimentions.height >=
-    //     stationaryObject.position.y
-    // ) {
-
-    //   alert()
-    //   finalMovement = testMovementVector1;
-    // } else if (
-    //   testMovementVector2.x <=
-    //     stationaryObject.position.x + stationaryObject.dimentions.width &&
-    //   testMovementVector2.x + movingObject.dimentions.width >=
-    //     stationaryObject.position.x &&
-    //   testMovementVector2.y <=
-    //     stationaryObject.position.y + stationaryObject.dimentions.height &&
-    //   testMovementVector2.y + movingObject.dimentions.height >=
-    //     stationaryObject.position.y
-    // ) {
-
-    //   alert()
-    //   finalMovement = testMovementVector2;
-    // }
+    if (
+      movingObject.position.x + testMovementVector1.x <=
+        stationaryObject.position.x + stationaryObject.dimentions.width &&
+      movingObject.position.x +
+        testMovementVector1.x +
+        movingObject.dimentions.width >=
+        stationaryObject.position.x &&
+      movingObject.position.y + testMovementVector1.y <=
+        stationaryObject.position.y + stationaryObject.dimentions.height &&
+      movingObject.position.y +
+        testMovementVector1.y +
+        movingObject.dimentions.height >=
+        stationaryObject.position.y
+    ) {
+      console.log("test 1");
+      finalMovement = testMovementVector1;
+    } else if (
+      stationaryObject.position.x + testMovementVector2.x <=
+        stationaryObject.position.x + stationaryObject.dimentions.width &&
+      stationaryObject.position.x +
+        testMovementVector2.x +
+        movingObject.dimentions.width >=
+        stationaryObject.position.x &&
+      stationaryObject.position.y + testMovementVector2.y <=
+        stationaryObject.position.y + stationaryObject.dimentions.height &&
+      stationaryObject.position.y +
+        testMovementVector2.y +
+        movingObject.dimentions.height >=
+        stationaryObject.position.y
+    ) {
+      console.log("test 2");
+      finalMovement = testMovementVector2;
+    }
 
     // Adjust the position of the moving object based on the finalMovement vector
 
@@ -279,13 +285,10 @@ export function calculateCollisionByVector(
       testMovementVector1.x !== movingObject.targetPosition.x ||
       testMovementVector1.y !== movingObject.targetPosition.y
     ) {
-      console.log("collision is exist");
       collision = true;
     }
 
-    // collision = 9
-
-    if (true) {
+    if (collision) {
       return {
         position: {
           x:
