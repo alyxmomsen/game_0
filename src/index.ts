@@ -8,6 +8,11 @@ import { Player } from "./gameobjects/player";
 import { LinkedList } from "./library/linked-list";
 import "./styles/main.css";
 
+import data from './data.json';
+
+// data ;
+console.log(data);
+
 (function () {
   const root = document.querySelector<HTMLElement>(".root");
   const gameFieldHTMLContainer =

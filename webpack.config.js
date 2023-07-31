@@ -42,6 +42,11 @@ module.exports = {
           outputPath: "assets/audio/", // Путь для сохранения файлов MP3
         },
       },
+      /* {
+        test: /\.json$/,
+        type: 'json',
+        use: 'json-loader'
+      }, */
     ],
   },
   mode: "production",
