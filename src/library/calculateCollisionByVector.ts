@@ -10,7 +10,6 @@ export function calculateCollisionByVector(
     position: { x: number; y: number };
     dimentions: { width: number; height: number };
   }
-
 ): { position: Position; collision: boolean } {
   const deltaX = movingObject.targetPosition.x - movingObject.position.x;
   const deltaY = movingObject.targetPosition.y - movingObject.position.y;

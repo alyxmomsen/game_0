@@ -28,6 +28,7 @@ export class UIManager {
 
   renderPlayerStats(values: string[]) {
     values.forEach((stat, i) => {
+      this.ctx.globalAlpha = 1 ;
       this.ctx.font = "48px serif";
       this.ctx.fillStyle = "whitesmoke";
       this.ctx.fillText(stat, 100, i * 50 + 100);

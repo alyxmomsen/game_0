@@ -23,17 +23,13 @@ export class Enemy extends GameObject {
   collisionHandlerWith(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
   ): void {
-    if(object) {
+    if (object) {
+    } else {
+      this.movement.currentStepRange = { x: 0, y: 0 };
 
-    }
-    else {
-      this.movement.currentStepRange = {x:0 , y:0} ;
-      
-      if(this.position) {
-        
-        this.movement.targetPosition = {...this.position} ;
+      if (this.position) {
+        this.movement.targetPosition = { ...this.position };
       }
-
     }
   }
 

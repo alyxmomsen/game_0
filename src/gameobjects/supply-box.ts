@@ -9,6 +9,9 @@ import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
 import { Player } from "./player";
 
+
+import sapplyBoxIMG from "./../images/spites/Environment/Dungeon Prison/Assets/Props.png"
+
 export class SupplyBox extends GameObject {
   content: SupplyBoxContent;
 
@@ -53,7 +56,7 @@ export class SupplyBox extends GameObject {
       walkStepDirectionRange: { x: 0, y: 0 },
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
-      color: "orange",
+      color: "grey",
       position,
       dimentions: { width: 160, height: 160 },
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
@@ -63,7 +66,14 @@ export class SupplyBox extends GameObject {
         health: Math.floor(Math.random() * 10000),
         dempher: Math.floor(Math.random() * 99) + 1,
       }),
-      spriteManager: new SpriteManager_beta([]),
+      spriteManager: new SpriteManager_beta([{
+        src:sapplyBoxIMG , 
+        width:20 ,
+        height:20 ,
+        stepRange:1 ,
+        maxAllowFrames:1 ,
+        firstFramePosition:{x:-2 ,y:10}
+      }]),
       isRigidBody: false,
     });
 

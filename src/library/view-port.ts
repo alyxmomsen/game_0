@@ -72,7 +72,7 @@ export class ViewPort {
     dimentions: Dimentions,
     canvasDimentions: Dimentions
   ) {
-    const range = { x: 2.5, y: 2.5 };
+    const range = { x: 2, y: 2 };
 
     const stopingDelta = { x: 1.2, y: 1.2 };
 

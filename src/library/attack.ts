@@ -24,7 +24,9 @@ export class Attack {
   setCurrentWeaponByDefault() {
     if (this.weapons.length) {
       this.currentWeaponID = 0;
-      this.ticker.setTickInterval(this.weapons[this.currentWeaponID].get_FireRate());
+      this.ticker.setTickInterval(
+        this.weapons[this.currentWeaponID].get_FireRate()
+      );
     } else {
       this.currentWeaponID = -1; // означает что нету оружия или не установлено
     }
@@ -64,8 +66,9 @@ export class Attack {
             : 0
           : 0;
 
-      this.ticker = new TickController(this.weapons[this.currentWeaponID].get_FireRate());
-
+      this.ticker = new TickController(
+        this.weapons[this.currentWeaponID].get_FireRate()
+      );
     }
 
     console.log("changed ", this.currentWeaponID, this.weapons.length);
@@ -76,12 +79,11 @@ export class Attack {
   }
 
   getCurrentWeaponName() {
-
     const curWeaponID = this.get_currentWeaponID();
 
-
-
-    return curWeaponID !== undefined ? this.weapons[curWeaponID].getProps().title : "";
+    return curWeaponID !== undefined
+      ? this.weapons[curWeaponID].getProps().title
+      : "";
   }
 
   setOwnDamge(value: number) {

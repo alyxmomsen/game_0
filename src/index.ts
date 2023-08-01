@@ -17,7 +17,7 @@ import "./styles/main.css";
 
   const canvas = document.querySelector("canvas");
 
-  const gameFieldResolution = { horizontal: 15, vertical: 15 };
+  const gameFieldResolution = { horizontal: 20, vertical: 20 };
 
   let theGame: Game | null;
 

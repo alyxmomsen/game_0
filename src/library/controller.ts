@@ -22,30 +22,24 @@ export class Controller {
 
   fire: boolean;
 
+  private changeWeapon: { keyState: boolean; state: boolean };
 
-  private changeWeapon:{keyState:boolean , state:boolean} ;
-
-  resetTheKeyChangeWeaponState () {
-    this.changeWeapon.state = false ;
+  resetTheKeyChangeWeaponState() {
+    this.changeWeapon.state = false;
   }
 
   updateByKeys(keys: string[]) {
-
-
     /* state switcher */
-    const enterKey = keys.includes('Enter') ;
-
+    const enterKey = keys.includes("Enter");
 
     // если предыдущее состояние было "false" то set "true"
-    if(this.changeWeapon.keyState === false && enterKey === true) {
-      this.changeWeapon.state = enterKey ;
-      this.changeWeapon.keyState = enterKey ;
-    }
-    else if (enterKey === false) {
+    if (this.changeWeapon.keyState === false && enterKey === true) {
+      this.changeWeapon.state = enterKey;
+      this.changeWeapon.keyState = enterKey;
+    } else if (enterKey === false) {
       // "false" в любом случае
-      this.changeWeapon.state = enterKey ;
-      this.changeWeapon.keyState = enterKey ;
-
+      this.changeWeapon.state = enterKey;
+      this.changeWeapon.keyState = enterKey;
     }
     /* =============== */
 
@@ -77,8 +71,8 @@ export class Controller {
     }
   }
 
-  get_keys () {
-    return {changeWeapon:this.changeWeapon} ;
+  get_keys() {
+    return { changeWeapon: this.changeWeapon };
   }
 
   autoUpdatePer(seconds: number) {
@@ -130,6 +124,6 @@ export class Controller {
 
     this.ticker = new TickController(1000);
 
-    this.changeWeapon = {keyState:false , state:false} ;
+    this.changeWeapon = { keyState: false, state: false };
   }
 }

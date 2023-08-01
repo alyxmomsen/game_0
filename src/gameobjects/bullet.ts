@@ -14,6 +14,9 @@ import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import Game from "../game/game";
 
+
+import bulletIMG from "./../images/spites/Weapons/Bone/Bone.png" ;
+
 export class Bullet extends GameObject {
   audio: HTMLAudioElement;
 
@@ -21,10 +24,7 @@ export class Bullet extends GameObject {
     object: Bullet | GameObject | Enemy | Player | SupplyBox
   ): void {
     // this.isDied = true ;
-    if(object) {
-      
-      
-      
+    if (object) {
       const calculeteStepRange = Math.abs(
         Math.abs(this.movement.currentStepRange.x) -
           Math.abs(this.movement.currentStepRange.y)
@@ -38,29 +38,21 @@ export class Bullet extends GameObject {
 
       this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 3;
       this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 3;
-  
+
       if (this.movement.currentStepRange.y === 0) {
         this.movement.currentStepRange.y =
           Math.floor(Math.random() * this.movement.currentStepRange.x) *
           [1, -1][Math.floor(Math.random() * 2)];
       }
-  
+
       if (this.movement.currentStepRange.x === 0) {
         this.movement.currentStepRange.x =
           Math.floor(Math.random() * this.movement.currentStepRange.y) *
           [1, -1][Math.floor(Math.random() * 2)];
       }
-
-    }
-    else {
+    } else {
       /// for example its walls
-  
-      
-
     }
-    
-
-
 
     // return true;
   }
@@ -143,7 +135,14 @@ export class Bullet extends GameObject {
         health: Math.floor(Math.random() * 10000),
         dempher: Math.floor(Math.random() * 99) + 1,
       }),
-      spriteManager: new SpriteManager_beta([]),
+      spriteManager: new SpriteManager_beta([{
+        src:bulletIMG ,
+        width:11 , 
+        height:11 ,
+        firstFramePosition: {x:51, y:3} ,
+        maxAllowFrames:1 ,
+        stepRange:1 ,
+      }]),
       isRigidBody,
     });
   }

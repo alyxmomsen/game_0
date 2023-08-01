@@ -32,6 +32,7 @@ import bkg from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png"
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
 import playerWeapon from "../weapon-sets.json";
+import Obstacle from "../gameobjects/obstacle";
 
 console.log(playerWeapon);
 
@@ -46,14 +47,10 @@ sprite.src = knightIdleSprite;
 /* ===================== */
 
 export default class Game {
-  // protected changeweaponaticker = new TickController(5000);
-
   protected state: 0 | 1;
   protected spriteManager: SpriteManager_beta;
 
   /* test ^^^^ */
-
-  protected handleTicker = new TickController(1000);
 
   protected audio: HTMLAudioElement;
   /* ---------------------- */
@@ -82,6 +79,8 @@ export default class Game {
   protected gameObjects: GameObject[];
   protected bullets: Bullet[];
   protected supplyBoxes: SupplyBox[];
+
+  protected obstacles: Obstacle[];
 
   /* ======================== */
 
@@ -121,17 +120,6 @@ export default class Game {
     this.creatorEnemyTicker.setTickInterval(Math.floor(Math.random() * 5000));
 
     return newEnemy;
-  }
-
-  protected sortSpawnQueue() {
-    this.spawnQueue.forEach((objectToSpawn) => {
-      if (objectToSpawn instanceof Bullet) {
-        this.bullets.push(objectToSpawn);
-      } else if (objectToSpawn instanceof Enemy) {
-        this.enemies.push(objectToSpawn);
-      } else if (objectToSpawn instanceof SupplyBox) {
-      }
-    });
   }
 
   public addBullet({
@@ -194,22 +182,22 @@ export default class Game {
         this.player.position,
         this.player.getDimentions(),
         {
-          width: 1920,
-          height: 1080,
+          width: 1920 / 2,
+          height: 1080 / 4,
         }
       );
     }
 
     this.player.update({
       keys,
-      objects: [...this.enemies, ...this.supplyBoxes],
+      objects: [...this.enemies, ...this.supplyBoxes, ...this.obstacles],
       fieldDimentions,
       game: this,
     });
 
     this.enemies.forEach((enemy) => {
       enemy.update({
-        objects: [this.player],
+        objects: [this.player , ...this.obstacles],
         fieldDimentions,
         game: this,
       });
@@ -218,7 +206,7 @@ export default class Game {
 
     this.bullets.forEach((bullet) => {
       bullet.update({
-        objects: [...this.enemies, this.player],
+        objects: [...this.enemies, this.player, ...this.obstacles],
         fieldDimentions,
         game: this,
       });
@@ -258,8 +246,6 @@ export default class Game {
     this.viewPort.updatePositionMoveStepRangeByKeys(keys);
 
     this.viewPort.updatePosition();
-
-    
   }
 
   renderPlayerStats(values: string[]) {
@@ -288,6 +274,10 @@ export default class Game {
       }
     }
 
+    this.obstacles.forEach((obstacle) => {
+      obstacle.draw(this.UIManager.ctx, this.viewPort.position);
+    });
+
     this.player.draw(this.UIManager.ctx, this.viewPort.position);
 
     this.bullets.forEach((bullet) => {
@@ -311,7 +301,6 @@ export default class Game {
 
   constructor({
     fieldResolution,
-
     canvas,
     gameCellDimentions,
   }: {
@@ -320,21 +309,33 @@ export default class Game {
     gameCellDimentions: Dimentions;
   }) {
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
-
     this.creatorEnemyTicker = new TickController(1000);
     this.supplyBoxCreatingTicker = new TickController(10000);
 
+    this.obstacles = [];
     this.supplyBoxes = [];
     this.enemies = [];
     this.bullets = [];
-
     this.field = {
       // разрешение игрового поля и размеры ячейки игрового поля
       resolution: fieldResolution, // разрешение
       gameCellDimentions, // размер ячейки
     };
 
-    this.spawnQueue = []; // массив объектов (пока что Bullet) подлежащие добавлению в массив объектов для дальнейшей итерации в игр/м. цикле
+    for (let i = 0; i < 10; i++) {
+      this.obstacles.push(
+        new Obstacle({
+          position: {
+            x:
+              Math.floor(Math.random() * fieldResolution.horizontal) *
+              gameCellDimentions.width,
+            y:
+              Math.floor(Math.random() * fieldResolution.vertical) *
+              gameCellDimentions.height,
+          },
+        })
+      );
+    }
 
     // создаем игрока
     this.player = new Player({
@@ -342,8 +343,6 @@ export default class Game {
       position: { x: 6, y: 6 },
       weapons: [],
     });
-
-    // const x = playerWeapon.regular ;
 
     this.player.addWeapon(playerWeapon.regular); // добавляем оружие из JSON файла
     this.player.addWeapon(playerWeapon.boosted); // добавляем оружие из JSON файла
@@ -364,8 +363,6 @@ export default class Game {
     this.audio.muted = false;
 
     this.viewPort = new ViewPort();
-
-    // this.controller = new GameController ();
 
     // this.audio.play();
 
@@ -396,13 +393,5 @@ export default class Game {
     //     stepRange: 64,
     //   },
     // ]);
-
-    this.state = 0;
-
-    window.onclick = () => {
-      this.state = this.state ? 0 : 1;
-    };
-
-    console.log(this.field, this.UIManager.canvas);
   }
 }

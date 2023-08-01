@@ -28,7 +28,7 @@ export default abstract class GameObject extends GameObject_part_2 {
 
   abstract collisionHandlerWith(
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
-  ):void;
+  ): void;
 
   abstract totallyIfCollisionIsNot(
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
@@ -70,7 +70,6 @@ export default abstract class GameObject extends GameObject_part_2 {
                 dimentions: object.getDimentions(),
               }
             );
-
 
             if (
               object.get_theIsRigidBody() === true &&
@@ -119,7 +118,6 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     if (this.checkCollissionWithFieldLimits({ ...fieldDimentions })) {
       if (this.position) {
-        
         this.collisionHandlerWith(null);
       }
     } else {
@@ -157,11 +155,9 @@ export default abstract class GameObject extends GameObject_part_2 {
       this.attack.setSpawnPoint(data.pos);
       this.attack.setDirection(data.range);
 
-      if(this.kind === 'player') {
+      if (this.kind === "player") {
         console.log(this.attack.direction);
-
       }
-
 
       if (!this.isDied && this.attack.ticker.tick()) {
         game.addBullet({
@@ -179,21 +175,15 @@ export default abstract class GameObject extends GameObject_part_2 {
           isRigidBody: true,
         });
       }
-
-      
     }
 
-    if(this.controller.get_keys().changeWeapon.state) {
-      
-      console.log('true true');
+    if (this.controller.get_keys().changeWeapon.state) {
+      console.log("true true");
 
       this.changeWeapon();
       this.controller.resetTheKeyChangeWeaponState();
-    }
-    else {
-      
-      console.log('no change');
-
+    } else {
+      console.log("no change");
     }
   }
 
@@ -204,16 +194,16 @@ export default abstract class GameObject extends GameObject_part_2 {
     // ctx.fillRect(this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
     ctx.strokeStyle = "white";
 
-    if (this.position) {
-      ctx.strokeRect(
-        this.position.x - viewPort.x,
-        this.position.y - viewPort.y,
-        this.dimentions.width,
-        this.dimentions.height
-      );
-    } else {
-      console.log("position is NULL");
-    }
+    // if (this.position) {
+    //   ctx.strokeRect(
+    //     this.position.x - viewPort.x,
+    //     this.position.y - viewPort.y,
+    //     this.dimentions.width,
+    //     this.dimentions.height
+    //   );
+    // } else {
+    //   console.log("position is NULL");
+    // }
 
     const frame: null | {
       spriteImage: HTMLImageElement;
