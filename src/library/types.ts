@@ -54,6 +54,8 @@ export type AttackClass = "phisical" | "magic";
 
 export type DamageClass = "phisical" | "magic";
 
+export const validDamageClasses: DamageClass[] = ["magic", "phisical"];
+
 export type UI_stat = {
   linkHTML: {
     value: HTMLElement;

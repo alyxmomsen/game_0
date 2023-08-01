@@ -1,4 +1,4 @@
-import { Position } from "./types";
+import { Dimentions, Position } from "./types";
 
 export class ViewPort {
   position: Position;
@@ -11,10 +11,10 @@ export class ViewPort {
   }
 
   updatePositionMoveStepRangeByKeys(keys: string[]) {
-    const moveLeft = keys.includes("j");
-    const moveRight = keys.includes("l");
-    const moveUp = keys.includes("i");
-    const moveDown = keys.includes("k");
+    const moveLeft = keys.includes("l");
+    const moveRight = keys.includes("j");
+    const moveUp = keys.includes("k");
+    const moveDown = keys.includes("i");
 
     const DELTA = 0.01;
 
@@ -67,7 +67,88 @@ export class ViewPort {
     }
   }
 
-  autoFocuTo() {}
+  autoFocuTo(
+    position: Position,
+    dimentions: Dimentions,
+    canvasDimentions: Dimentions
+  ) {
+    const range = { x: 2.5, y: 2.5 };
+
+    const stopingDelta = { x: 1.2, y: 1.2 };
+
+    const forcageDelta = { x: 1.5, y: 1.5 };
+
+    if (
+      position.x >
+      this.position.x +
+        canvasDimentions.width / 2 +
+        canvasDimentions.width / range.x
+    ) {
+      this.positionMoveStepRange.x += forcageDelta.x;
+    } else if (
+      position.x + dimentions.width <=
+        this.position.x +
+          canvasDimentions.width / 2 +
+          canvasDimentions.width / range.x &&
+      position.x >=
+        this.position.x +
+          canvasDimentions.width / 2 -
+          canvasDimentions.width / range.x
+    ) {
+      this.positionMoveStepRange.x +=
+        this.positionMoveStepRange.x > 0
+          ? this.positionMoveStepRange.x - stopingDelta.x > 0
+            ? -stopingDelta.x
+            : 0
+          : this.positionMoveStepRange.x + stopingDelta.x < 0
+          ? stopingDelta.x
+          : 0;
+
+      // this.positionMoveStepRange.x = 0;
+    } else if (
+      position.x <
+      this.position.x +
+        (canvasDimentions.width / 2 - canvasDimentions.width / range.x)
+    ) {
+      this.positionMoveStepRange.x -= forcageDelta.x;
+    }
+
+    if (
+      position.y >
+      this.position.y +
+        canvasDimentions.height / 2 +
+        canvasDimentions.height / range.y
+    ) {
+      this.positionMoveStepRange.y += forcageDelta.y;
+    } else if (
+      position.y <=
+        this.position.y +
+          canvasDimentions.height / 2 +
+          canvasDimentions.height / range.y &&
+      position.y >=
+        this.position.y +
+          canvasDimentions.height / 2 -
+          canvasDimentions.height / range.y
+    ) {
+      this.positionMoveStepRange.y +=
+        this.positionMoveStepRange.y > 0
+          ? this.positionMoveStepRange.y - stopingDelta.y > 0
+            ? -stopingDelta.y
+            : 0
+          : this.positionMoveStepRange.y + stopingDelta.y < 0
+          ? stopingDelta.y
+          : 0;
+
+      // this.positionMoveStepRange.x = 0;
+    } else if (
+      position.y <
+      this.position.y +
+        canvasDimentions.height / 2 -
+        canvasDimentions.height / range.y
+    ) {
+      this.positionMoveStepRange.y -= forcageDelta.y;
+    }
+  }
 
   constructor() {
     this.position = { x: 0, y: 0 };

@@ -1,0 +1,20 @@
+{
+  "regular": {
+    "title": "pistoletto",
+    "damage": { "damageClass": "phisical", "value": 5 },
+    "fireRate": 200,
+    "maxAllowedStepRange": 30,
+    "stepRateFadeDown": true,
+    "stepsLimit": 0,
+    "bulletDimentions": { "width": 50, "height": 50 }
+  },
+  "boosted": {
+    "title": "automatic gun",
+    "damage": { "damageClass": "phisical", "value": 100 },
+    "fireRate": 50,
+    "maxAllowedStepRange": 100,
+    "stepRateFadeDown": true,
+    "stepsLimit": 0,
+    "bulletDimentions": { "width": 50, "height": 50 }
+  }
+}

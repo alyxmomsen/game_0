@@ -12,42 +12,57 @@ import ric3 from "./../images/riccochet_3.mp3";
 import ric4 from "./../images/riccochet_4.mp3";
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
+import Game from "../game/game";
 
 export class Bullet extends GameObject {
   audio: HTMLAudioElement;
 
   collisionHandlerWith(
     object: Bullet | GameObject | Enemy | Player | SupplyBox
-  ): boolean {
+  ): void {
     // this.isDied = true ;
+    if(object) {
+      
+      
+      
+      const calculeteStepRange = Math.abs(
+        Math.abs(this.movement.currentStepRange.x) -
+          Math.abs(this.movement.currentStepRange.y)
+      );
+      // console.log(calculeteStepRange * this.attack.getOwnDamage());
 
-    const calculeteStepRange = Math.abs(
-      Math.abs(this.movement.currentStepRange.x) -
-        Math.abs(this.movement.currentStepRange.y)
-    );
-    // console.log(calculeteStepRange * this.attack.getOwnDamage());
+      this.attackTo(object, {
+        damageClass: "magic",
+        value: this.attack.getOwnDamage() * calculeteStepRange,
+      });
 
-    this.attackTo(object, {
-      damageClass: "magic",
-      value: this.attack.getOwnDamage() * calculeteStepRange,
-    });
+      this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 3;
+      this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 3;
+  
+      if (this.movement.currentStepRange.y === 0) {
+        this.movement.currentStepRange.y =
+          Math.floor(Math.random() * this.movement.currentStepRange.x) *
+          [1, -1][Math.floor(Math.random() * 2)];
+      }
+  
+      if (this.movement.currentStepRange.x === 0) {
+        this.movement.currentStepRange.x =
+          Math.floor(Math.random() * this.movement.currentStepRange.y) *
+          [1, -1][Math.floor(Math.random() * 2)];
+      }
 
-    this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 3;
-    this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 3;
-
-    if (this.movement.currentStepRange.y === 0) {
-      this.movement.currentStepRange.y =
-        Math.floor(Math.random() * this.movement.currentStepRange.x) *
-        [1, -1][Math.floor(Math.random() * 2)];
     }
+    else {
+      /// for example its walls
+  
+      
 
-    if (this.movement.currentStepRange.x === 0) {
-      this.movement.currentStepRange.x =
-        Math.floor(Math.random() * this.movement.currentStepRange.y) *
-        [1, -1][Math.floor(Math.random() * 2)];
     }
+    
 
-    return true;
+
+
+    // return true;
   }
 
   totallyIfCollisionIsNot(
@@ -65,10 +80,12 @@ export class Bullet extends GameObject {
   update({
     objects,
     fieldDimentions,
+    game,
   }: {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-  }): null | Bullet {
+    game: Game;
+  }) {
     // если пуля не движется , то она удаляется из игры
     if (
       this.movement.currentStepRange.x === 0 &&
@@ -77,7 +94,7 @@ export class Bullet extends GameObject {
       this.isDied = true;
     }
 
-    return super.update({ objects, fieldDimentions });
+    super.update({ objects, fieldDimentions, game });
   }
 
   constructor({

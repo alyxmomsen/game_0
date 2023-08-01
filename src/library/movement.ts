@@ -7,7 +7,7 @@ export class Movement {
   lastMoveTimestamp: number;
   maxAllowedSteps: number;
   shouldDecreaseStepRate: boolean;
-  targetPosition: Position;
+  public targetPosition: Position;
   currentStepRange: { x: number; y: number };
   stepRangeDelta: number; // дельта скорости
   // increaseStepRa

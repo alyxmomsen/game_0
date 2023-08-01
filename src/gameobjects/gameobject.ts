@@ -10,6 +10,7 @@ import {
   GameObjectExtendsClasses,
   GameObjectKinds,
   Position,
+  validDamageClasses,
 } from "../library/types";
 
 import { GameObject_Part_3 } from "./gameobject-part-3";
@@ -20,13 +21,14 @@ import { Weapon } from "../library/weapon";
 import { Armor } from "../library/armore";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import { calculateCollisionByVector } from "../library/calculateCollisionByVector";
+import Game from "../game/game";
 
 export default abstract class GameObject extends GameObject_part_2 {
   /* ====================== options ====================== */
 
   abstract collisionHandlerWith(
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
-  ): boolean;
+  ):void;
 
   abstract totallyIfCollisionIsNot(
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
@@ -45,17 +47,11 @@ export default abstract class GameObject extends GameObject_part_2 {
     return this.health <= 0 ? true : false;
   }
 
-  checkCollisionsForEveryOne(objects: GameObjectExtendsClasses[]): {
-    collided: GameObjectExtendsClasses[];
-    newTargetPos: Position;
-  } {
-    // ecли есть хоть одна коллизия, то вернет true, иначе false
-
-    let isCollision = false;
-
-    const collided: GameObject[] = [];
-
-    let newTargetPos = { ...this.movement.targetPosition };
+  checkAndHandleCollisionsForEveryOne(objects: GameObjectExtendsClasses[]) {
+    let collisionCheckResult = {
+      position: this.movement.targetPosition,
+      collision: false,
+    };
 
     for (const object of objects) {
       if (object !== this && !this.isDied) {
@@ -63,9 +59,7 @@ export default abstract class GameObject extends GameObject_part_2 {
 
         if (object.position) {
           if (this.position) {
-            // const colli
-
-            newTargetPos = calculateCollisionByVector(
+            collisionCheckResult = calculateCollisionByVector(
               {
                 position: this.position,
                 dimentions: this.dimentions,
@@ -77,14 +71,16 @@ export default abstract class GameObject extends GameObject_part_2 {
               }
             );
 
-            if(this.movement.targetPosition.x !== newTargetPos.x || this.movement.targetPosition.y !== newTargetPos.y) {
-              console.log('colllision detected');
+
+            if (
+              object.get_theIsRigidBody() === true &&
+              collisionCheckResult.collision
+            ) {
+              this.movement.targetPosition = collisionCheckResult.position;
             }
 
-            this.movement.targetPosition = newTargetPos;
-
-            if (false) {
-              collided.push(object);
+            if (collisionCheckResult.collision) {
+              this.collisionHandlerWith(object);
             }
           }
         } else {
@@ -92,8 +88,6 @@ export default abstract class GameObject extends GameObject_part_2 {
         }
       }
     }
-
-    return { collided, newTargetPos };
   }
 
   getAllDamages() {
@@ -107,10 +101,12 @@ export default abstract class GameObject extends GameObject_part_2 {
   update({
     objects,
     fieldDimentions,
+    game,
   }: {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
     fieldDimentions: Dimentions;
-  }): Bullet | null {
+    game: Game;
+  }) {
     this.getAllDamages(); // обрабатываем полученые уроны
 
     this.isDied = this.isHPisSubZero() ? true : this.isDied; // проверяем this.health на ноль-или-отрицательное-значение
@@ -119,36 +115,24 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     this.updateTargetPosition(); // вычисляем следующую позицию для дальнейшей проверки её
 
-    let collidedObjects = this.checkCollisionsForEveryOne(objects); // проверяем след позицию на коллизию и получаем объекты или пустой массив
-    let isWallsCollision = false;
-
     /* проверяем не столкнулся ли с границей game field */
+
     if (this.checkCollissionWithFieldLimits({ ...fieldDimentions })) {
-      isWallsCollision = true;
+      if (this.position) {
+        
+        this.collisionHandlerWith(null);
+      }
+    } else {
     }
+
+    this.checkAndHandleCollisionsForEveryOne(objects); //
 
     /* ===================================================== */
-
-    if (collidedObjects.collided.length || isWallsCollision) {
-      // обработка столкновений
-
-      collidedObjects.collided.forEach((object) => {
-        this.collisionHandlerWith(object); // абстрактный метод возвращает выполняет каки-то действия и подтверждает (или нет) коллизию
-      });
-
-      if (this.position) {
-        this.movement.targetPosition.x = this.position.x;
-        this.movement.targetPosition.y = this.position.y;
-      } else {
-        console.log("position is NULL");
-      }
-    }
 
     this.updatePosition(); // обновляем позицию на основании this.movement.targetPosition
 
     /* implementation logic of the "Fire" */
 
-    let isFire = false;
     const controllerAttackDirection = this.controller.getAttackDirectionValue();
     let data: {
       pos: {
@@ -161,48 +145,59 @@ export default abstract class GameObject extends GameObject_part_2 {
       };
     };
 
-    if (this.kind === "player") {
-      // console.log(this.state);
-    }
-
     this.updateState();
 
-    if (controllerAttackDirection !== "" && this.attack.currentWeapon) {
+    const currentWeapon = this.attack.get_currentWeapon();
+
+    if (controllerAttackDirection !== "" && currentWeapon) {
       data = this.calculateSpawnPointEndAttackDirectionRangeBy(
         controllerAttackDirection
       );
+
       this.attack.setSpawnPoint(data.pos);
       this.attack.setDirection(data.range);
 
-      isFire = true;
+      if(this.kind === 'player') {
+        console.log(this.attack.direction);
 
-      return !this.isDied && this.attack.ticker.tick() && isFire
-        ? new Bullet({
-            health: 100,
-            id: 0,
-            ownDamage: this.attack.currentWeapon
-              ? { ...this.attack.currentWeapon.get_damage() }
-              : { damageClass: "magic", value: 100 },
-            position: this.attack.getSpawnPoint(),
-            dimentions: this.attack.currentWeapon
-              ? { ...this.attack.currentWeapon.get_bulletDimentions() }
-              : { width: 10, height: 10 },
-            maxAllowWalkStepRange:
-              this.attack.currentWeapon.get_maxAllowedStepRange(),
-            walkStepDirectionRange: { ...this.attack.direction },
-            walkStepRangeDelta: 0.1,
-            walkStepRangeDeltaMod: 0.2,
-            walkStepRateFadeDown: false,
-            walkStepsLimit: 0,
-            isRigidBody: true,
-          })
-        : null;
-    } else {
-      return null;
+      }
+
+
+      if (!this.isDied && this.attack.ticker.tick()) {
+        game.addBullet({
+          health: 100,
+          id: 0,
+          ownDamage: currentWeapon.get_damage(),
+          position: this.attack.getSpawnPoint(),
+          dimentions: currentWeapon.get_bulletDimentions(),
+          maxAllowWalkStepRange: currentWeapon.get_maxAllowedStepRange(),
+          walkStepDirectionRange: { ...this.attack.direction },
+          walkStepRangeDelta: 0.1,
+          walkStepRangeDeltaMod: 0.2,
+          walkStepRateFadeDown: false,
+          walkStepsLimit: 0,
+          isRigidBody: true,
+        });
+      }
+
+      
+    }
+
+    if(this.controller.get_keys().changeWeapon.state) {
+      
+      console.log('true true');
+
+      this.changeWeapon();
+      this.controller.resetTheKeyChangeWeaponState();
+    }
+    else {
+      
+      console.log('no change');
+
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D, viewPort: { x: number; y: number }) {
     ctx.imageSmoothingEnabled = false;
     ctx.fillStyle = "white";
     ctx.lineWidth = 2;
@@ -211,8 +206,8 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     if (this.position) {
       ctx.strokeRect(
-        this.position.x,
-        this.position.y,
+        this.position.x - viewPort.x,
+        this.position.y - viewPort.y,
         this.dimentions.width,
         this.dimentions.height
       );
@@ -260,8 +255,8 @@ export default abstract class GameObject extends GameObject_part_2 {
       if (this.position) {
         ctx.fillStyle = "red";
         ctx.fillRect(
-          this.position.x,
-          this.position.y - 10,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y - 10,
           currentPercentOfWide,
           10
         );
@@ -280,8 +275,8 @@ export default abstract class GameObject extends GameObject_part_2 {
       if (this.position) {
         ctx.fillStyle = "green";
         ctx.fillRect(
-          this.position.x,
-          this.position.y - 20,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y - 20,
           result.currentPercentOfWide,
           10
         );
@@ -298,8 +293,8 @@ export default abstract class GameObject extends GameObject_part_2 {
           frame.y,
           frame.width,
           frame.height,
-          this.position.x,
-          this.position.y,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y,
           this.dimentions.width,
           this.dimentions.height
         );
@@ -324,6 +319,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     walkStepRangeDelta: stepRangeDelta,
     walkStepRangeDeltaMod: stepRangeDeltaMod,
     spriteManager,
+    isRigidBody,
   }: {
     id: number;
     kind: GameObjectKinds;
@@ -344,6 +340,8 @@ export default abstract class GameObject extends GameObject_part_2 {
     isRigidBody: boolean;
   }) {
     super();
+
+    this.validDamageClasses = validDamageClasses;
 
     this.movement = new Movement({
       maxWalkSteps: walkStepsLimit,
@@ -384,5 +382,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     this.spriteManager = spriteManager;
 
     this.state = "stand";
+
+    this.isRigidBody = isRigidBody;
   }
 }

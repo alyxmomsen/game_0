@@ -16,13 +16,25 @@ import { SupplyBox } from "./supply-box";
 import sprite from "./../images/spites/Enemy/Orc Crew/Orc - Warrior/Idle/Idle-Sheet.png";
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
+import Game from "../game/game";
 
 // частный случай GameObject
 export class Enemy extends GameObject {
   collisionHandlerWith(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
-  ): boolean {
-    return true;
+  ): void {
+    if(object) {
+
+    }
+    else {
+      this.movement.currentStepRange = {x:0 , y:0} ;
+      
+      if(this.position) {
+        
+        this.movement.targetPosition = {...this.position} ;
+      }
+
+    }
   }
 
   totallyIfCollisionIsNot(
@@ -38,15 +50,18 @@ export class Enemy extends GameObject {
   update({
     objects,
     fieldDimentions,
+    game,
   }: {
     objects: GameObjectExtendsClasses[];
     fieldDimentions: Dimentions;
-  }): null | Bullet {
+    game: Game;
+  }) {
     this.controller.autoUpdatePer(1000);
 
-    return super.update({
+    super.update({
       objects,
       fieldDimentions,
+      game,
     });
   }
 
