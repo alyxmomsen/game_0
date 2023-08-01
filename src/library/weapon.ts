@@ -16,6 +16,10 @@ export class Weapon {
     return this.fireRate;
   }
 
+  get_title() {
+    return this.title;
+  }
+
   get_bulletDimentions() {
     return { ...this.bulletDimentions };
   }
@@ -28,6 +32,16 @@ export class Weapon {
     return this.maxAllowedStepRange;
   }
 
+  getProps() {
+    return {
+      id: this.id,
+      title: this.title,
+      damage: this.damage,
+      fireRate: this.fireRate,
+      maxAllowedStepRange: this.maxAllowedStepRange,
+    };
+  }
+
   constructor({
     damage,
     fireRate,
@@ -35,6 +49,7 @@ export class Weapon {
     stepRateFadeDown,
     stepsLimit,
     bulletDimentions,
+    title,
   }: {
     damage: Damage;
     fireRate: number;
@@ -42,6 +57,7 @@ export class Weapon {
     stepRateFadeDown: boolean;
     stepsLimit: number;
     bulletDimentions: Dimentions;
+    title: string;
   }) {
     this.damage = damage;
     this.fireRate = fireRate;
@@ -49,5 +65,6 @@ export class Weapon {
     this.stepRateFadeDown = stepRateFadeDown;
     this.stepsLimit = stepsLimit;
     this.bulletDimentions = bulletDimentions;
+    this.title = title;
   }
 }

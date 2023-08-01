@@ -6,9 +6,18 @@ import { TickController } from "../library/main";
 import { Movement } from "../library/movement";
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
-import { Dimentions, GameObjectKinds, PersonStates } from "../library/types";
+import {
+  DamageClass,
+  Dimentions,
+  GameObjectKinds,
+  PersonStates,
+  validDamageClasses,
+} from "../library/types";
+import { Weapon } from "../library/weapon";
 
 export class GameObject_part_1 {
+  protected validDamageClasses: DamageClass[];
+
   protected isRigidBody: boolean; // плотный ли объект (учитыывется при столкновениях)
   protected weight: number; // учитывается при столкновениях и инерции, например
 

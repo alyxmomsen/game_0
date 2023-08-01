@@ -9,7 +9,12 @@ import { GameObjectHTMLs } from "../library/game-object-htmls";
 import { GameController } from "../library/gameController";
 import KeysManager from "../library/keysManager";
 import { TickController } from "../library/main";
-import { Dimentions, Direction, Position } from "../library/types";
+import {
+  Dimentions,
+  Direction,
+  Position,
+  validDamageClasses,
+} from "../library/types";
 import { UIManager } from "../library/uimanager";
 import { ViewPort } from "../library/view-port";
 import { Weapon } from "../library/weapon";
@@ -26,6 +31,10 @@ import KnightRunSprite from "./../images/spites/Heroes/Knight/Run/Run-Sheet.png"
 import bkg from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
+import playerWeapon from "../weapon-sets.json";
+
+console.log(playerWeapon);
+
 /* ====== Sprites ====== */
 const img1 = new Image();
 const img2 = new Image();
@@ -37,6 +46,8 @@ sprite.src = knightIdleSprite;
 /* ===================== */
 
 export default class Game {
+  // protected changeweaponaticker = new TickController(5000);
+
   protected state: 0 | 1;
   protected spriteManager: SpriteManager_beta;
 
@@ -84,17 +95,22 @@ export default class Game {
       newEnemy = new Enemy({
         id: 0,
         position: {
-          x: Math.floor(Math.random() * (this.calculateFieldDimentions().width - 200)),
-          y: Math.floor(Math.random() * (this.calculateFieldDimentions().height - 200)),
+          x: Math.floor(
+            Math.random() * (this.calculateFieldDimentions().width - 200)
+          ),
+          y: Math.floor(
+            Math.random() * (this.calculateFieldDimentions().height - 200)
+          ),
         },
         weapons: [
           new Weapon({
             bulletDimentions: { width: 50, height: 50 },
-            damage: { damageClass: "magic", value: 50 },
+            damage: { damageClass: "magic", value: 5 },
             fireRate: Math.floor(Math.random() * 900) + 100,
-            maxAllowedStepRange: 50,
+            maxAllowedStepRange: 20,
             stepRateFadeDown: false,
             stepsLimit: 0,
+            title: "somthing",
           }),
         ],
       });
@@ -178,8 +194,8 @@ export default class Game {
         this.player.position,
         this.player.getDimentions(),
         {
-          width:1920,
-          height:1080,
+          width: 1920,
+          height: 1080,
         }
       );
     }
@@ -242,6 +258,8 @@ export default class Game {
     this.viewPort.updatePositionMoveStepRangeByKeys(keys);
 
     this.viewPort.updatePosition();
+
+    
   }
 
   renderPlayerStats(values: string[]) {
@@ -284,12 +302,11 @@ export default class Game {
       supplyBox.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
-    this.renderPlayerStats(
-      [
-        `HEALTH :  ${this.player.getHealth().toLocaleString()}` , 
-        `ARMOR : ${this.player.armor.getHealthValue()}` ,
-      ]
-    );
+    this.renderPlayerStats([
+      `HEALTH :  ${this.player.getHealth().toLocaleString()}`,
+      `ARMOR : ${this.player.armor.getHealthValue()}`,
+      `weapon : ${this.player.get_AttackStats()}`,
+    ]);
   }
 
   constructor({
@@ -323,18 +340,16 @@ export default class Game {
     this.player = new Player({
       id: 0,
       position: { x: 6, y: 6 },
-      // даем игроку арсенал
-      weapons: [
-        new Weapon({
-          damage: new Damage({ damageClass: "phisical", value: 2 }),
-          fireRate: 100, // интервал между выстрелами
-          maxAllowedStepRange: 40, // скорость полета
-          stepRateFadeDown: true, // будет ли замедляться
-          stepsLimit: 0, // остановится ли после колличества указанных шагов (если "0", то не остановится вовсе)
-          bulletDimentions: { width: 50, height: 50 },
-        }),
-      ],
+      weapons: [],
     });
+
+    // const x = playerWeapon.regular ;
+
+    this.player.addWeapon(playerWeapon.regular); // добавляем оружие из JSON файла
+    this.player.addWeapon(playerWeapon.boosted); // добавляем оружие из JSON файла
+    this.player.setWeapon(); // устанавливаем текущее оружие
+
+    console.log(this.player);
 
     this.UIManager = new UIManager({
       canvas,

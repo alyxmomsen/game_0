@@ -10,7 +10,7 @@
     "typeRoots": ["node_modules/@types", "src/types"],
     "lib": ["esnext", "DOM"],
     "resolveJsonModule": true,
-    "strictNullChecks": true , 
+    "strictNullChecks": true,
     "allowSyntheticDefaultImports": true /* !!! */
   }
 }

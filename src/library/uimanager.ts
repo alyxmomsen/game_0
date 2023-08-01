@@ -27,15 +27,11 @@ export class UIManager {
   }
 
   renderPlayerStats(values: string[]) {
-
-    values.forEach((stat , i) => {
+    values.forEach((stat, i) => {
       this.ctx.font = "48px serif";
       this.ctx.fillStyle = "whitesmoke";
-      this.ctx.fillText(stat, 100, (i * 50) + 100);
+      this.ctx.fillText(stat, 100, i * 50 + 100);
     });
-
-
-    
   }
 
   constructor({

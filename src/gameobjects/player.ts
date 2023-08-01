@@ -17,16 +17,20 @@ import Game from "../game/game";
 export class Player extends GameObject {
   collisionHandlerWith(
     object: Player | GameObject | Enemy | Bullet | SupplyBox
-  ): boolean {
+  ):void {
     // console.log(this.movement.currentStepRange.x , this.movement.currentStepRange.y);
 
-    if (object instanceof SupplyBox) {
-      object.isDied = true;
-      this.increaseHealth(500);
-      return false;
-    } else {
-      return true;
+    if(object) {
+      
+      if (object instanceof SupplyBox) {
+        object.isDied = true;
+        this.increaseHealth(500);
+        
+      } else {
+        
+      }
     }
+
   }
 
   totallyIfCollisionIsNot(

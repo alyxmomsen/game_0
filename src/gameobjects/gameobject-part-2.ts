@@ -7,6 +7,7 @@ import {
   PersonStates,
   Position,
 } from "../library/types";
+import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
@@ -15,6 +16,49 @@ import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 export class GameObject_part_2 extends GameObject_part_1 {
+  addWeapon(weapon: {
+    title: string;
+    damage: { damageClass: string; value: number };
+    fireRate: number;
+    maxAllowedStepRange: number;
+    stepRateFadeDown: boolean;
+    stepsLimit: number;
+    bulletDimentions: { width: number; height: number };
+  }) {
+    const damageClass = weapon.damage.damageClass;
+
+    let d: "phisical" | "magic";
+
+    if (
+      /* this.validDamageClasses.includes(playerWeapon.damage.damageClass) */
+      weapon.damage.damageClass === "phisical" ||
+      weapon.damage.damageClass === "magic"
+    ) {
+      const newWeapon = new Weapon({
+        ...{
+          damage: {
+            damageClass: weapon.damage.damageClass,
+            value: weapon.damage.value,
+          },
+        },
+        ...{
+          bulletDimentions: weapon.bulletDimentions,
+          fireRate: weapon.fireRate,
+          maxAllowedStepRange: weapon.maxAllowedStepRange,
+          stepRateFadeDown: weapon.stepRateFadeDown,
+          stepsLimit: weapon.stepsLimit,
+          title: weapon.title,
+        },
+      });
+
+      this.attack.addWeapon(newWeapon);
+    }
+  }
+
+  setWeapon() {
+    this.attack.setCurrentWeaponByDefault();
+  }
+
   get_theIsRigidBody() {
     return this.isRigidBody;
   }
@@ -48,6 +92,10 @@ export class GameObject_part_2 extends GameObject_part_1 {
 
   getOwnDamageValue() {}
 
+  get_AttackStats() {
+    return this.attack.getCurrentWeaponName();
+  }
+
   getHealth() {
     return this.health;
   }
@@ -55,6 +103,10 @@ export class GameObject_part_2 extends GameObject_part_1 {
   increaseHealth(value: number) {
     this.health += value;
     this.maxHealth = this.health;
+  }
+
+  changeWeapon() {
+    this.attack.changeCurrentWeapon();
   }
 
   geTheValueDamage() {}
@@ -175,9 +227,11 @@ export class GameObject_part_2 extends GameObject_part_1 {
       range: { x: 0, y: 0 },
     };
 
-    if (this.attack.currentWeapon) {
+    const currWeapon = this.attack.get_currentWeapon();
+
+    if (currWeapon) {
       const maxAllowedStepRange =
-        this.attack.currentWeapon.get_maxAllowedStepRange();
+        currWeapon.get_maxAllowedStepRange();
 
       if (controllerAttackDirection !== "") {
         if (this.position) {
@@ -193,7 +247,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
               o.pos = {
                 x:
                   this.position.x -
-                  (this.attack.currentWeapon.get_bulletDimentions().width +
+                  (currWeapon.get_bulletDimentions().width +
                     SHIFT),
                 y: this.position.y + this.getDimentions().height / 2,
               };
@@ -211,7 +265,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
                 x: this.position.x + this.getDimentions().width / 2,
                 y:
                   this.position.y -
-                  (this.attack.currentWeapon.get_bulletDimentions().height +
+                  (currWeapon.get_bulletDimentions().height +
                     SHIFT),
               };
               o.range = { x: 0, y: -maxAllowedStepRange };

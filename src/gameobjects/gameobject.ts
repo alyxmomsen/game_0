@@ -10,6 +10,7 @@ import {
   GameObjectExtendsClasses,
   GameObjectKinds,
   Position,
+  validDamageClasses,
 } from "../library/types";
 
 import { GameObject_Part_3 } from "./gameobject-part-3";
@@ -27,7 +28,7 @@ export default abstract class GameObject extends GameObject_part_2 {
 
   abstract collisionHandlerWith(
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
-  ): boolean;
+  ):void;
 
   abstract totallyIfCollisionIsNot(
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
@@ -117,7 +118,8 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     if (this.checkCollissionWithFieldLimits({ ...fieldDimentions })) {
       if (this.position) {
-        this.movement.targetPosition = this.position;
+        
+        this.collisionHandlerWith(null);
       }
     } else {
     }
@@ -144,7 +146,9 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     this.updateState();
 
-    if (controllerAttackDirection !== "" && this.attack.currentWeapon) {
+    const currentWeapon = this.attack.get_currentWeapon();
+
+    if (controllerAttackDirection !== "" && currentWeapon) {
       data = this.calculateSpawnPointEndAttackDirectionRangeBy(
         controllerAttackDirection
       );
@@ -152,19 +156,20 @@ export default abstract class GameObject extends GameObject_part_2 {
       this.attack.setSpawnPoint(data.pos);
       this.attack.setDirection(data.range);
 
+      if(this.kind === 'player') {
+        console.log(this.attack.direction);
+
+      }
+
+
       if (!this.isDied && this.attack.ticker.tick()) {
         game.addBullet({
           health: 100,
           id: 0,
-          ownDamage: this.attack.currentWeapon
-            ? { ...this.attack.currentWeapon.get_damage() }
-            : { damageClass: "magic", value: 100 },
+          ownDamage: currentWeapon.get_damage(),
           position: this.attack.getSpawnPoint(),
-          dimentions: this.attack.currentWeapon
-            ? { ...this.attack.currentWeapon.get_bulletDimentions() }
-            : { width: 10, height: 10 },
-          maxAllowWalkStepRange:
-            this.attack.currentWeapon.get_maxAllowedStepRange(),
+          dimentions: currentWeapon.get_bulletDimentions(),
+          maxAllowWalkStepRange: currentWeapon.get_maxAllowedStepRange(),
           walkStepDirectionRange: { ...this.attack.direction },
           walkStepRangeDelta: 0.1,
           walkStepRangeDeltaMod: 0.2,
@@ -173,6 +178,21 @@ export default abstract class GameObject extends GameObject_part_2 {
           isRigidBody: true,
         });
       }
+
+      
+    }
+
+    if(this.controller.get_keys().changeWeapon.state) {
+      
+      console.log('true true');
+
+      this.changeWeapon();
+      this.controller.resetTheKeyChangeWeaponState();
+    }
+    else {
+      
+      console.log('no change');
+
     }
   }
 
@@ -234,8 +254,8 @@ export default abstract class GameObject extends GameObject_part_2 {
       if (this.position) {
         ctx.fillStyle = "red";
         ctx.fillRect(
-          (this.position.x - viewPort.x),
-          (this.position.y - viewPort.y) - 10,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y - 10,
           currentPercentOfWide,
           10
         );
@@ -254,8 +274,8 @@ export default abstract class GameObject extends GameObject_part_2 {
       if (this.position) {
         ctx.fillStyle = "green";
         ctx.fillRect(
-          (this.position.x - viewPort.x),
-          (this.position.y - viewPort.y) - 20,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y - 20,
           result.currentPercentOfWide,
           10
         );
@@ -319,6 +339,8 @@ export default abstract class GameObject extends GameObject_part_2 {
     isRigidBody: boolean;
   }) {
     super();
+
+    this.validDamageClasses = validDamageClasses;
 
     this.movement = new Movement({
       maxWalkSteps: walkStepsLimit,

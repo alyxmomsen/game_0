@@ -22,7 +22,33 @@ export class Controller {
 
   fire: boolean;
 
+
+  private changeWeapon:{keyState:boolean , state:boolean} ;
+
+  resetTheKeyChangeWeaponState () {
+    this.changeWeapon.state = false ;
+  }
+
   updateByKeys(keys: string[]) {
+
+
+    /* state switcher */
+    const enterKey = keys.includes('Enter') ;
+
+
+    // если предыдущее состояние было "false" то set "true"
+    if(this.changeWeapon.keyState === false && enterKey === true) {
+      this.changeWeapon.state = enterKey ;
+      this.changeWeapon.keyState = enterKey ;
+    }
+    else if (enterKey === false) {
+      // "false" в любом случае
+      this.changeWeapon.state = enterKey ;
+      this.changeWeapon.keyState = enterKey ;
+
+    }
+    /* =============== */
+
     const w = keys.includes("w");
     const s = keys.includes("s");
     const a = keys.includes("a");
@@ -49,6 +75,10 @@ export class Controller {
     } else {
       this.attack = "";
     }
+  }
+
+  get_keys () {
+    return {changeWeapon:this.changeWeapon} ;
   }
 
   autoUpdatePer(seconds: number) {
@@ -99,5 +129,7 @@ export class Controller {
     this.fire = false;
 
     this.ticker = new TickController(1000);
+
+    this.changeWeapon = {keyState:false , state:false} ;
   }
 }

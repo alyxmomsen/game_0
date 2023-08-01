@@ -8,11 +8,6 @@ import { Player } from "./gameobjects/player";
 import { LinkedList } from "./library/linked-list";
 import "./styles/main.css";
 
-import data from './data.json';
-
-// data ;
-console.log(data);
-
 (function () {
   const root = document.querySelector<HTMLElement>(".root");
   const gameFieldHTMLContainer =
@@ -22,7 +17,7 @@ console.log(data);
 
   const canvas = document.querySelector("canvas");
 
-  const gameFieldResolution = { horizontal: 50, vertical: 50 };
+  const gameFieldResolution = { horizontal: 15, vertical: 15 };
 
   let theGame: Game | null;
 

@@ -19,36 +19,50 @@ export class Bullet extends GameObject {
 
   collisionHandlerWith(
     object: Bullet | GameObject | Enemy | Player | SupplyBox
-  ): boolean {
+  ): void {
     // this.isDied = true ;
+    if(object) {
+      
+      
+      
+      const calculeteStepRange = Math.abs(
+        Math.abs(this.movement.currentStepRange.x) -
+          Math.abs(this.movement.currentStepRange.y)
+      );
+      // console.log(calculeteStepRange * this.attack.getOwnDamage());
 
-    const calculeteStepRange = Math.abs(
-      Math.abs(this.movement.currentStepRange.x) -
-        Math.abs(this.movement.currentStepRange.y)
-    );
-    // console.log(calculeteStepRange * this.attack.getOwnDamage());
+      this.attackTo(object, {
+        damageClass: "magic",
+        value: this.attack.getOwnDamage() * calculeteStepRange,
+      });
 
-    this.attackTo(object, {
-      damageClass: "magic",
-      value: this.attack.getOwnDamage() * calculeteStepRange,
-    });
+      this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 3;
+      this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 3;
+  
+      if (this.movement.currentStepRange.y === 0) {
+        this.movement.currentStepRange.y =
+          Math.floor(Math.random() * this.movement.currentStepRange.x) *
+          [1, -1][Math.floor(Math.random() * 2)];
+      }
+  
+      if (this.movement.currentStepRange.x === 0) {
+        this.movement.currentStepRange.x =
+          Math.floor(Math.random() * this.movement.currentStepRange.y) *
+          [1, -1][Math.floor(Math.random() * 2)];
+      }
 
-    this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 3;
-    this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 3;
-
-    if (this.movement.currentStepRange.y === 0) {
-      this.movement.currentStepRange.y =
-        Math.floor(Math.random() * this.movement.currentStepRange.x) *
-        [1, -1][Math.floor(Math.random() * 2)];
     }
+    else {
+      /// for example its walls
+  
+      
 
-    if (this.movement.currentStepRange.x === 0) {
-      this.movement.currentStepRange.x =
-        Math.floor(Math.random() * this.movement.currentStepRange.y) *
-        [1, -1][Math.floor(Math.random() * 2)];
     }
+    
 
-    return true;
+
+
+    // return true;
   }
 
   totallyIfCollisionIsNot(
