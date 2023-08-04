@@ -17,7 +17,7 @@ export class Attack {
   private weapons: Weapon[]; // арсенал (пресеты, другими словами)
   // currentWeapon: Weapon | null; // в данный момент выбранный пресет
   private ownDamage: Damage; // урон наносимый самим объектом, не путать с уроном Weapon
-  private spawnPoint: Position; // точка спауна для объекта аттаки
+  private spawnPoint: Position | null; // точка спауна для объекта аттаки
   private currentWeaponID: number;
 
   // доработать. пока что выберает первое оружие (пресет настроек) из массива пресетов
@@ -94,8 +94,8 @@ export class Attack {
     return this.ownDamage.value;
   }
 
-  getSpawnPoint() {
-    return { ...this.spawnPoint };
+  getSpawnPoint(): Position | null {
+    return this.spawnPoint ? { ...this.spawnPoint } : null;
   }
 
   setSpawnPoint({ x, y }: Position) {
@@ -118,12 +118,12 @@ export class Attack {
   }: {
     ownDamage: Damage;
     weapons: Weapon[];
-    spawnPoint: Position;
+    spawnPoint: Position | null;
   }) {
     this.ownDamage = ownDamage;
     this.weapons = weapons; // получение арсенала
     this.direction = { x: 0, y: 0 };
-    this.spawnPoint = spawnPoint;
+    this.spawnPoint = spawnPoint ? spawnPoint : null;
     this.ticker = new TickController(1000);
     this.setCurrentWeaponByDefault();
 

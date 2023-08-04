@@ -33,6 +33,7 @@ import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
 import playerWeapon from "../weapon-sets.json";
 import Obstacle from "../gameobjects/obstacle";
+import Room from "../gameobjects/room";
 
 console.log(playerWeapon);
 
@@ -47,7 +48,10 @@ sprite.src = knightIdleSprite;
 /* ===================== */
 
 export default class Game {
-  protected state: 0 | 1;
+  protected currentRoom: number;
+
+  protected rooms: Room[];
+
   protected spriteManager: SpriteManager_beta;
 
   /* test ^^^^ */
@@ -70,7 +74,6 @@ export default class Game {
       height: number;
     };
   };
-  protected weapons: Weapon[];
 
   protected spawnQueue: (Enemy | Bullet | SupplyBox)[];
 
@@ -128,7 +131,9 @@ export default class Game {
     dimentions,
     maxAllowWalkStepRange,
     walkStepDirectionRange,
+    roomID,
   }: {
+    roomID: number;
     health: number;
     id: number;
     ownDamage: Damage;
@@ -142,7 +147,7 @@ export default class Game {
     walkStepsLimit: number;
     isRigidBody: boolean;
   }) {
-    this.bullets.push(
+    this.rooms[0].insertGameObject(
       new Bullet({
         health: 100,
         id: 0,
@@ -158,6 +163,23 @@ export default class Game {
         isRigidBody: true,
       })
     );
+
+    // this.bullets.push(
+    //   new Bullet({
+    //     health: 100,
+    //     id: 0,
+    //     ownDamage,
+    //     position,
+    //     dimentions,
+    //     maxAllowWalkStepRange,
+    //     walkStepDirectionRange,
+    //     walkStepRangeDelta: 0.1,
+    //     walkStepRangeDeltaMod: 0.2,
+    //     walkStepRateFadeDown: false,
+    //     walkStepsLimit: 0,
+    //     isRigidBody: true,
+    //   })
+    // );
   }
 
   protected calculateFieldDimentions() {
@@ -175,7 +197,7 @@ export default class Game {
   public update() {
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
-    const fieldDimentions = this.calculateFieldDimentions();
+    // const fieldDimentions = this.calculateFieldDimentions();
 
     if (this.player.position) {
       this.viewPort.autoFocuTo(
@@ -190,61 +212,70 @@ export default class Game {
 
     this.player.update({
       keys,
-      objects: [...this.enemies, ...this.supplyBoxes, ...this.obstacles],
-      fieldDimentions,
+      objects: [
+        ...this.rooms[0].get_enemies(),
+        ...this.rooms[0].get_supplyBoxes(),
+        ...this.rooms[0].get_obstacles(),
+      ],
+      fieldDimentions: this.rooms[0].get_dimetions(),
       game: this,
     });
 
-    this.enemies.forEach((enemy) => {
+    this.rooms[0].get_enemies().forEach((enemy) => {
       enemy.update({
-        objects: [this.player , ...this.obstacles],
-        fieldDimentions,
+        objects: [this.player, ...this.rooms[0].get_obstacles()],
+        fieldDimentions: this.rooms[0].get_dimetions(),
         game: this,
       });
     });
-    this.enemies = this.enemies.filter((enemy) => !enemy.isDied);
+    this.rooms[0].removeEnemiesThatIsDied();
 
-    this.bullets.forEach((bullet) => {
+    this.rooms[0].get_bullets().forEach((bullet) => {
       bullet.update({
-        objects: [...this.enemies, this.player, ...this.obstacles],
-        fieldDimentions,
+        objects: [
+          ...this.rooms[0].get_enemies(),
+          this.player,
+          ...this.rooms[0].get_obstacles(),
+        ],
+        fieldDimentions: this.rooms[0].get_dimetions(),
         game: this,
       });
     });
-    this.bullets = this.bullets.filter((elem) => !elem.isDied);
+    
+    this.rooms[0].removeBulletsThatIsDied();
+    // this.bullets = this.bullets.filter((elem) => !elem.isDied);
 
-    this.supplyBoxes.forEach((supBox) => {
-      supBox.update({
-        fieldDimentions,
-        game: this,
-      });
-    });
-    this.supplyBoxes = this.supplyBoxes.filter((elem) => !elem.isDied);
+    // this.rooms[0].get_supplyBoxes().forEach((supBox) => {
+    //   supBox.update({
+    //     fieldDimentions:this.rooms[0].get_dimetions(),
+    //     game: this,
+    //   });
+    // });
+    // this.supplyBoxes = this.supplyBoxes.filter((elem) => !elem.isDied);
 
-    if (this.supplyBoxCreatingTicker.tick() && this.supplyBoxes.length < 3) {
-      this.supplyBoxes.push(
-        new SupplyBox({
-          position: {
-            x: Math.floor(
-              Math.random() * this.calculateFieldDimentions().width
-            ),
-            y: Math.floor(
-              Math.random() * this.calculateFieldDimentions().height
-            ),
-          },
-        })
-      );
-    }
+    // if (this.supplyBoxCreatingTicker.tick() && this.supplyBoxes.length < 3) {
+    //   this.supplyBoxes.push(
+    //     new SupplyBox({
+    //       position: {
+    //         x: Math.floor(
+    //           Math.random() * this.calculateFieldDimentions().width
+    //         ),
+    //         y: Math.floor(
+    //           Math.random() * this.calculateFieldDimentions().height
+    //         ),
+    //       },
+    //     })
+    //   );
+    // }
 
-    if (true && this.creatorEnemyTicker.tick()) {
-      const newEnemy = this.createEnemyRandomly(3); // генерит если в массиве меньше чем Аргумент
-      if (newEnemy) {
-        this.enemies.push(newEnemy);
-      }
-    }
+    // if (true && this.creatorEnemyTicker.tick()) {
+    //   const newEnemy = this.createEnemyRandomly(3); // генерит если в массиве меньше чем Аргумент
+    //   if (newEnemy) {
+    //     this.enemies.push(newEnemy);
+    //   }
+    // }
 
     this.viewPort.updatePositionMoveStepRangeByKeys(keys);
-
     this.viewPort.updatePosition();
   }
 
@@ -258,53 +289,67 @@ export default class Game {
     const background = new Image();
     background.src = bkg;
 
-    for (let i = 0; i < this.field.resolution.vertical; i++) {
-      for (let j = 0; j < this.field.resolution.horizontal; j++) {
+    for (
+      let i = 0;
+      i <
+      this.rooms[0].getFieldDimentions().height /
+        this.UIManager.gameCellDimentions.height;
+      i++
+    ) {
+      for (
+        let j = 0;
+        j <
+        this.rooms[0].getFieldDimentions().width /
+          this.UIManager.gameCellDimentions.width;
+        j++
+      ) {
         this.UIManager.ctx.drawImage(
           background,
           160,
           0,
           60,
           63,
-          j * this.field.gameCellDimentions.width - this.viewPort.position.x,
-          i * this.field.gameCellDimentions.height - this.viewPort.position.y,
-          this.field.gameCellDimentions.width,
-          this.field.gameCellDimentions.height
+          j * this.UIManager.gameCellDimentions.width -
+            this.viewPort.position.x,
+          i * this.UIManager.gameCellDimentions.height -
+            this.viewPort.position.y,
+          this.UIManager.gameCellDimentions.width,
+          this.UIManager.gameCellDimentions.height
         );
       }
     }
 
-    this.obstacles.forEach((obstacle) => {
+    this.rooms[0].get_obstacles().forEach((obstacle) => {
       obstacle.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
     this.player.draw(this.UIManager.ctx, this.viewPort.position);
 
-    this.bullets.forEach((bullet) => {
+    this.rooms[0].get_bullets().forEach((bullet) => {
       bullet.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
-    this.enemies.forEach((enemy) => {
+    this.rooms[0].get_enemies().forEach((enemy) => {
       enemy.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
-    this.supplyBoxes.forEach((supplyBox) => {
-      supplyBox.draw(this.UIManager.ctx, this.viewPort.position);
-    });
+    // this.supplyBoxes.forEach((supplyBox) => {
+    //   supplyBox.draw(this.UIManager.ctx, this.viewPort.position);
+    // });
 
-    this.renderPlayerStats([
-      `HEALTH :  ${this.player.getHealth().toLocaleString()}`,
-      `ARMOR : ${this.player.armor.getHealthValue()}`,
-      `weapon : ${this.player.get_AttackStats()}`,
-    ]);
+    // this.renderPlayerStats([
+    //   `HEALTH :  ${this.player.getHealth().toLocaleString()}`,
+    //   `ARMOR : ${this.player.armor.getHealthValue()}`,
+    //   `weapon : ${this.player.get_AttackStats()}`,
+    // ]);
   }
 
   constructor({
-    fieldResolution,
+    // fieldResolution,
     canvas,
     gameCellDimentions,
   }: {
-    fieldResolution: { horizontal: number; vertical: number }; // размеры поля
+    // fieldResolution: { horizontal: number; vertical: number }; // размеры поля
     canvas: HTMLCanvasElement;
     gameCellDimentions: Dimentions;
   }) {
@@ -312,30 +357,16 @@ export default class Game {
     this.creatorEnemyTicker = new TickController(1000);
     this.supplyBoxCreatingTicker = new TickController(10000);
 
-    this.obstacles = [];
-    this.supplyBoxes = [];
-    this.enemies = [];
-    this.bullets = [];
-    this.field = {
-      // разрешение игрового поля и размеры ячейки игрового поля
-      resolution: fieldResolution, // разрешение
-      gameCellDimentions, // размер ячейки
-    };
+    // create lobby room
 
-    for (let i = 0; i < 10; i++) {
-      this.obstacles.push(
-        new Obstacle({
-          position: {
-            x:
-              Math.floor(Math.random() * fieldResolution.horizontal) *
-              gameCellDimentions.width,
-            y:
-              Math.floor(Math.random() * fieldResolution.vertical) *
-              gameCellDimentions.height,
-          },
-        })
-      );
-    }
+    const lobbyRoom = new Room({
+      params: {
+        gameCell: { dimetions: gameCellDimentions },
+        resolution: { horizontal: 20, vertical: 20 },
+      } , 
+    } , true) ;
+    this.rooms = [lobbyRoom];
+    lobbyRoom.initRoom();
 
     // создаем игрока
     this.player = new Player({
@@ -348,7 +379,7 @@ export default class Game {
     this.player.addWeapon(playerWeapon.boosted); // добавляем оружие из JSON файла
     this.player.setWeapon(); // устанавливаем текущее оружие
 
-    console.log(this.player);
+    // console.log(this.player);
 
     this.UIManager = new UIManager({
       canvas,
@@ -370,28 +401,5 @@ export default class Game {
       this.audio.muted = false;
       // this.audio.play();
     });
-
-    // const spr2 = new Image();
-    // spr2.src = knightIdleSprite;
-    // const run = new Image();
-    // run.src = KnightRunSprite;
-    // this.spriteManager = new SpriteManager_beta([
-    //   {
-    //     src: spr2,
-    //     firstFramePosition: { x: 0, y: 0 },
-    //     height: 32,
-    //     width: 32,
-    //     maxAllowFrames: 4,
-    //     stepRange: 32,
-    //   },
-    //   {
-    //     src: run,
-    //     firstFramePosition: { x: 18, y: 33 },
-    //     height: 33,
-    //     width: 33,
-    //     maxAllowFrames: 6,
-    //     stepRange: 64,
-    //   },
-    // ]);
   }
 }

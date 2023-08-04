@@ -106,6 +106,12 @@ export default abstract class GameObject extends GameObject_part_2 {
     fieldDimentions: Dimentions;
     game: Game;
   }) {
+    // const date = new Date () ;
+    // const seconds_started = Date.now();
+    // const  miliseconds_started = date.getMilliseconds();
+    // const started_str = `${seconds_started}${miliseconds_started}` ;
+    // const started = Number(started_str) ;
+
     this.getAllDamages(); // обрабатываем полученые уроны
 
     this.isDied = this.isHPisSubZero() ? true : this.isDied; // проверяем this.health на ноль-или-отрицательное-значение
@@ -155,16 +161,17 @@ export default abstract class GameObject extends GameObject_part_2 {
       this.attack.setSpawnPoint(data.pos);
       this.attack.setDirection(data.range);
 
-      if (this.kind === "player") {
-        console.log(this.attack.direction);
-      }
+      // if (this.kind === "player") {
+      //   console.log(this.attack.direction);
+      // }
 
-      if (!this.isDied && this.attack.ticker.tick()) {
+      const bulletSpawnPoint = this.attack.getSpawnPoint();
+      if (!this.isDied && this.attack.ticker.tick() && bulletSpawnPoint) {
         game.addBullet({
           health: 100,
           id: 0,
           ownDamage: currentWeapon.get_damage(),
-          position: this.attack.getSpawnPoint(),
+          position: bulletSpawnPoint,
           dimentions: currentWeapon.get_bulletDimentions(),
           maxAllowWalkStepRange: currentWeapon.get_maxAllowedStepRange(),
           walkStepDirectionRange: { ...this.attack.direction },
@@ -173,6 +180,7 @@ export default abstract class GameObject extends GameObject_part_2 {
           walkStepRateFadeDown: false,
           walkStepsLimit: 0,
           isRigidBody: true,
+          roomID: 0, /// !!!!!!!!!!! warning
         });
       }
     }
@@ -185,6 +193,13 @@ export default abstract class GameObject extends GameObject_part_2 {
     } else {
       console.log("no change");
     }
+
+    // const seconds_finished = Date.now();
+    // const  miliseconds_finished = date.getMilliseconds();
+    // const finished_str = `${seconds_finished}${miliseconds_finished}` ;
+    // const finished = Number(finished_str) ;
+
+    // console.log(finished - started);
   }
 
   draw(ctx: CanvasRenderingContext2D, viewPort: { x: number; y: number }) {
@@ -317,7 +332,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     walkStepDirectionRange: { x: number; y: number };
     walkStepsLimit: number;
     color: string;
-    position: Position;
+    position: Position | null;
     dimentions: Dimentions;
     ownDamage: Damage;
     health: number;
@@ -336,7 +351,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     this.movement = new Movement({
       maxWalkSteps: walkStepsLimit,
       shouldFadeDownStepRate,
-      nextPosition: { ...position },
+      nextPosition: position === null ? { x: 0, y: 0 } : { ...position },
       stepRange: walkStepRange,
       maxAllowStepRange: maxAllowWalkStepRange,
       stepRangeDelta,
@@ -345,11 +360,15 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     this.dimentions = { ...dimentions };
 
-    this.position = { ...position };
+    // this.position = { ...position };
+
+    // const pos = position ;
+    this.position = position ? { ...position } : null;
+
     this.attack = new Attack({
       ownDamage,
       weapons,
-      spawnPoint: { ...this.position },
+      spawnPoint: this.position ? { ...this.position } : null,
     });
     this.armor = armor;
     this.damaged = [];

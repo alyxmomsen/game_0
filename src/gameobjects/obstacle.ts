@@ -8,7 +8,7 @@ import GameObject from "./gameobject";
 import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
-import obstacleIMG from './../images/spites/Environment/Green Woods/Assets/Props.png';
+import obstacleIMG from "./../images/spites/Environment/Green Woods/Assets/Props.png";
 
 export default class Obstacle extends GameObject {
   collisionHandlerWith(
@@ -25,7 +25,7 @@ export default class Obstacle extends GameObject {
 
   worldLimitCollision_handler(): void {}
 
-  constructor({ position }: { position: Position }) {
+  constructor({ position }: { position: Position | null }) {
     super({
       id: 0,
       kind: "obstacle",
@@ -45,7 +45,16 @@ export default class Obstacle extends GameObject {
         health: 999,
         dempher: 100,
       }),
-      spriteManager: new SpriteManager_beta([{src:obstacleIMG ,firstFramePosition:{x:81 , y:1} , height:30 , width:30,maxAllowFrames:1 , stepRange:1}]),
+      spriteManager: new SpriteManager_beta([
+        {
+          src: obstacleIMG,
+          firstFramePosition: { x: 81, y: 1 },
+          height: 30,
+          width: 30,
+          maxAllowFrames: 1,
+          stepRange: 1,
+        },
+      ]),
       isRigidBody: true,
     });
   }

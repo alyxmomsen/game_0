@@ -9,8 +9,7 @@ import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
 import { Player } from "./player";
 
-
-import sapplyBoxIMG from "./../images/spites/Environment/Dungeon Prison/Assets/Props.png"
+import sapplyBoxIMG from "./../images/spites/Environment/Dungeon Prison/Assets/Props.png";
 
 export class SupplyBox extends GameObject {
   content: SupplyBoxContent;
@@ -66,14 +65,16 @@ export class SupplyBox extends GameObject {
         health: Math.floor(Math.random() * 10000),
         dempher: Math.floor(Math.random() * 99) + 1,
       }),
-      spriteManager: new SpriteManager_beta([{
-        src:sapplyBoxIMG , 
-        width:20 ,
-        height:20 ,
-        stepRange:1 ,
-        maxAllowFrames:1 ,
-        firstFramePosition:{x:-2 ,y:10}
-      }]),
+      spriteManager: new SpriteManager_beta([
+        {
+          src: sapplyBoxIMG,
+          width: 20,
+          height: 20,
+          stepRange: 1,
+          maxAllowFrames: 1,
+          firstFramePosition: { x: -2, y: 10 },
+        },
+      ]),
       isRigidBody: false,
     });
 
