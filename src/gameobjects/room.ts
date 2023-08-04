@@ -21,6 +21,13 @@ class Field {
 }
 
 export default class Room {
+
+
+  private static allIDs:number[] = [] ;
+
+  protected id:number ;
+
+
   protected isLobby: boolean;
 
   protected enemies: Enemy[];
@@ -158,6 +165,34 @@ export default class Room {
     }
   }
 
+  setID () {
+
+    let newID = 0 ;
+
+    if(this.isLobby) {
+      this.id = newID ;
+      Room.allIDs.push(newID);
+    }
+    else {
+
+      let isMatch = false ;
+      
+      do {
+        isMatch = Room.allIDs.includes(newID);
+
+        if(isMatch) {
+          newID++ ;
+        }
+        else {
+          this.id = newID ;
+          Room.allIDs.push(newID);
+          break ;
+        }
+        
+      } while (true) ;
+    }
+  }
+
   constructor(
     field: {
       params: {
@@ -167,7 +202,11 @@ export default class Room {
     },
     isLobby:boolean = false 
   ) {
+
+    
     this.isLobby = isLobby;
+
+    this.setID();
 
     this.field = new Field(field.params);
 

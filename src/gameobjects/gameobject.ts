@@ -191,7 +191,7 @@ export default abstract class GameObject extends GameObject_part_2 {
       this.changeWeapon();
       this.controller.resetTheKeyChangeWeaponState();
     } else {
-      console.log("no change");
+      // console.log("no change");
     }
 
     // const seconds_finished = Date.now();

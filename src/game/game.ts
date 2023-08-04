@@ -48,6 +48,9 @@ sprite.src = knightIdleSprite;
 /* ===================== */
 
 export default class Game {
+
+  roomChangeTickController = new TickController(2000);
+
   protected currentRoom: Room;
 
   protected rooms: Room[];
@@ -252,8 +255,6 @@ export default class Game {
     });
     this.currentRoom.removeSuplBoxesThatIsDied();
 
-
-
     const supBoxes = this.currentRoom.get_supplyBoxes() ;
     if (this.supplyBoxCreatingTicker.tick() && supBoxes.length < 3) {
 
@@ -261,15 +262,27 @@ export default class Game {
       
     }
 
-    // if (true && this.creatorEnemyTicker.tick()) {
-    //   const newEnemy = this.createEnemyRandomly(3); // генерит если в массиве меньше чем Аргумент
-    //   if (newEnemy) {
-    //     this.enemies.push(newEnemy);
-    //   }
-    // }
-
     this.viewPort.updatePositionMoveStepRangeByKeys(keys);
     this.viewPort.updatePosition();
+
+
+    if(this.roomChangeTickController.tick()) {
+
+      console.log(this.rooms.length) ;
+
+      const numberOfRooms = this.rooms.length ;
+
+      if(numberOfRooms > 1) {
+
+        for (const room of this.rooms ) {
+          if(room !== this.currentRoom) {
+            this.currentRoom = room ;
+            break ;
+          }
+        }
+      }
+    }
+
   }
 
   renderPlayerStats(values: string[]) {
@@ -359,7 +372,18 @@ export default class Game {
     this.rooms = [lobbyRoom];
     lobbyRoom.initRoom();
 
+
+    
     this.currentRoom = lobbyRoom ; // устанавливаем текущую комнату
+    
+    this.rooms.push(new Room({
+      params: {
+        gameCell: { dimetions: gameCellDimentions },
+        resolution: { horizontal: 20, vertical: 20 },
+      } , 
+    }));
+
+    console.log(this.rooms);
 
     // создаем игрока
     this.player = new Player({
