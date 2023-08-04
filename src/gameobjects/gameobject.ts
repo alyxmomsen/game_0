@@ -194,16 +194,16 @@ export default abstract class GameObject extends GameObject_part_2 {
     // ctx.fillRect(this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
     ctx.strokeStyle = "white";
 
-    // if (this.position) {
-    //   ctx.strokeRect(
-    //     this.position.x - viewPort.x,
-    //     this.position.y - viewPort.y,
-    //     this.dimentions.width,
-    //     this.dimentions.height
-    //   );
-    // } else {
-    //   console.log("position is NULL");
-    // }
+    if (this.position) {
+      ctx.strokeRect(
+        this.position.x - viewPort.x,
+        this.position.y - viewPort.y,
+        this.dimentions.width,
+        this.dimentions.height
+      );
+    } else {
+      console.log("position is NULL");
+    }
 
     const frame: null | {
       spriteImage: HTMLImageElement;

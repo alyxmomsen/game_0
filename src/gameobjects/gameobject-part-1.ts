@@ -16,11 +16,15 @@ import {
 import { Weapon } from "../library/weapon";
 
 export class GameObject_part_1 {
-  protected validDamageClasses: DamageClass[];
 
-  protected isRigidBody: boolean; // плотный ли объект (учитыывется при столкновениях)
   protected weight: number; // учитывается при столкновениях и инерции, например
+  private mood:any ; // спонтанность атак, for example 
+  private relationship:any ; // друг , враг , for example
+  private hunger:any ;  // влияет на health
+  private fatigue:any ; // усталость влияет на скорость и голод
 
+  protected validDamageClasses: DamageClass[];
+  protected isRigidBody: boolean; // плотный ли объект (учитыывется при столкновениях)
   protected state: PersonStates;
 
   spriteManager: SpriteManager_beta;
