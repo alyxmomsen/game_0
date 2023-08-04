@@ -32,7 +32,7 @@ import bkg from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png"
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
 import playerWeapon from "../weapon-sets.json";
-import Obstacle from "../gameobjects/obstacle";
+
 import Room from "../gameobjects/room";
 
 console.log(playerWeapon);
@@ -48,7 +48,6 @@ sprite.src = knightIdleSprite;
 /* ===================== */
 
 export default class Game {
-
   roomChangeTickController = new TickController(2000);
 
   protected currentRoom: Room;
@@ -81,52 +80,11 @@ export default class Game {
   protected spawnQueue: (Enemy | Bullet | SupplyBox)[];
 
   protected player: Player; // объект игрока
-  protected enemies: Enemy[];
-  protected gameObjects: GameObject[];
-  protected bullets: Bullet[];
-  protected supplyBoxes: SupplyBox[];
-
-  protected obstacles: Obstacle[];
 
   /* ======================== */
 
   protected viewPort: ViewPort;
   protected controller: GameController;
-
-  protected createEnemyRandomly(len: number = 0) {
-    let newEnemy: Enemy | null = null;
-
-    if (this.enemies.length < len) {
-      newEnemy = new Enemy({
-        id: 0,
-        position: {
-          x: Math.floor(
-            Math.random() * (this.calculateFieldDimentions().width - 200)
-          ),
-          y: Math.floor(
-            Math.random() * (this.calculateFieldDimentions().height - 200)
-          ),
-        },
-        weapons: [
-          new Weapon({
-            bulletDimentions: { width: 50, height: 50 },
-            damage: { damageClass: "magic", value: 5 },
-            fireRate: Math.floor(Math.random() * 900) + 100,
-            maxAllowedStepRange: 20,
-            stepRateFadeDown: false,
-            stepsLimit: 0,
-            title: "somthing",
-          }),
-        ],
-      });
-
-      console.log("enemy created", newEnemy);
-    }
-
-    this.creatorEnemyTicker.setTickInterval(Math.floor(Math.random() * 5000));
-
-    return newEnemy;
-  }
 
   public addBullet({
     ownDamage,
@@ -166,49 +124,19 @@ export default class Game {
         isRigidBody: true,
       })
     );
-
-    // this.bullets.push(
-    //   new Bullet({
-    //     health: 100,
-    //     id: 0,
-    //     ownDamage,
-    //     position,
-    //     dimentions,
-    //     maxAllowWalkStepRange,
-    //     walkStepDirectionRange,
-    //     walkStepRangeDelta: 0.1,
-    //     walkStepRangeDeltaMod: 0.2,
-    //     walkStepRateFadeDown: false,
-    //     walkStepsLimit: 0,
-    //     isRigidBody: true,
-    //   })
-    // );
-  }
-
-  protected calculateFieldDimentions() {
-    let width: number;
-    let height: number;
-
-    width =
-      this.field.resolution.horizontal * this.field.gameCellDimentions.width;
-    height =
-      this.field.resolution.vertical * this.field.gameCellDimentions.height;
-
-    return { width, height };
   }
 
   public update() {
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
-    // const fieldDimentions = this.calculateFieldDimentions();
 
     if (this.player.position) {
       this.viewPort.autoFocuTo(
         this.player.position,
         this.player.getDimentions(),
         {
-          width: 1920 / 2,
-          height: 1080 / 4,
+          width: this.UIManager.canvas.width,
+          height: this.UIManager.canvas.height,
         }
       );
     }
@@ -219,6 +147,7 @@ export default class Game {
         ...this.currentRoom.get_enemies(),
         ...this.currentRoom.get_supplyBoxes(),
         ...this.currentRoom.get_obstacles(),
+        ...this.currentRoom.get_doors(),
       ],
       fieldDimentions: this.currentRoom.get_dimetions(),
       game: this,
@@ -244,45 +173,46 @@ export default class Game {
         game: this,
       });
     });
-    
     this.currentRoom.removeBulletsThatIsDied();
 
     this.currentRoom.get_supplyBoxes().forEach((supBox) => {
       supBox.update({
-        fieldDimentions:this.currentRoom.get_dimetions(),
+        fieldDimentions: this.currentRoom.get_dimetions(),
         game: this,
       });
     });
     this.currentRoom.removeSuplBoxesThatIsDied();
 
-    const supBoxes = this.currentRoom.get_supplyBoxes() ;
-    if (this.supplyBoxCreatingTicker.tick() && supBoxes.length < 3) {
+    this.currentRoom.get_doors().forEach((door) => {
+      door.update({
+        fieldDimentions: this.currentRoom.get_dimetions(),
+        game: this,
+        objects: [],
+      });
+    });
 
-      this.currentRoom.insertGameObject(new SupplyBox({position:null}));
-      
+    const supBoxes = this.currentRoom.get_supplyBoxes();
+    if (this.supplyBoxCreatingTicker.tick() && supBoxes.length < 3) {
+      this.currentRoom.insertGameObject(new SupplyBox({ position: null }));
     }
 
     this.viewPort.updatePositionMoveStepRangeByKeys(keys);
     this.viewPort.updatePosition();
 
+    // if (this.roomChangeTickController.tick()) {
+    //   console.log(this.rooms.length);
 
-    if(this.roomChangeTickController.tick()) {
+    //   const numberOfRooms = this.rooms.length;
 
-      console.log(this.rooms.length) ;
-
-      const numberOfRooms = this.rooms.length ;
-
-      if(numberOfRooms > 1) {
-
-        for (const room of this.rooms ) {
-          if(room !== this.currentRoom) {
-            this.currentRoom = room ;
-            break ;
-          }
-        }
-      }
-    }
-
+    //   if (numberOfRooms > 1) {
+    //     for (const room of this.rooms) {
+    //       if (room !== this.currentRoom) {
+    //         this.currentRoom = room;
+    //         break;
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   renderPlayerStats(values: string[]) {
@@ -325,6 +255,10 @@ export default class Game {
       }
     }
 
+    this.currentRoom.get_doors().forEach((door) => {
+      door.draw(this.UIManager.ctx, this.viewPort.position);
+    });
+
     this.currentRoom.get_obstacles().forEach((obstacle) => {
       obstacle.draw(this.UIManager.ctx, this.viewPort.position);
     });
@@ -350,6 +284,17 @@ export default class Game {
     ]);
   }
 
+  changeCurrentRoom(roomID: number) {
+    for (const room of this.rooms) {
+      if (room.getID() === roomID) {
+        this.currentRoom = room;
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   constructor({
     canvas,
     gameCellDimentions,
@@ -363,25 +308,18 @@ export default class Game {
 
     // create the lobby room
 
-    const lobbyRoom = new Room({
-      params: {
-        gameCell: { dimetions: gameCellDimentions },
-        resolution: { horizontal: 20, vertical: 20 },
-      } , 
-    } , true) ;
+    const lobbyRoom = new Room(
+      {dimesions:gameCellDimentions} ,
+      true
+    );
     this.rooms = [lobbyRoom];
     lobbyRoom.initRoom();
 
+    this.currentRoom = lobbyRoom; // устанавливаем текущую комнату
 
-    
-    this.currentRoom = lobbyRoom ; // устанавливаем текущую комнату
-    
-    this.rooms.push(new Room({
-      params: {
-        gameCell: { dimetions: gameCellDimentions },
-        resolution: { horizontal: 20, vertical: 20 },
-      } , 
-    }));
+    this.rooms.push(
+      new Room({dimesions:gameCellDimentions})
+    );
 
     console.log(this.rooms);
 
@@ -390,6 +328,10 @@ export default class Game {
       id: 0,
       position: { x: 6, y: 6 },
       weapons: [],
+      dimentions: {
+        width: gameCellDimentions.width - 0.5,
+        height: gameCellDimentions.height - 0.5,
+      },
     });
 
     this.player.addWeapon(playerWeapon.regular); // добавляем оружие из JSON файла
@@ -400,8 +342,8 @@ export default class Game {
 
     this.UIManager = new UIManager({
       canvas,
-      canvasWidth: 1920,
-      canvasHeight: 1080,
+      canvasWidth: 1920 / 1.5,
+      canvasHeight: 1080 / 1.5,
       gameCellDimentions,
     });
 

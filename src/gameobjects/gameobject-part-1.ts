@@ -9,6 +9,7 @@ import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import {
   DamageClass,
   Dimentions,
+  Direction_stringType,
   GameObjectKinds,
   PersonStates,
   validDamageClasses,
@@ -47,6 +48,11 @@ export class GameObject_part_1 {
   };
 
   controller: Controller;
+
+  theStates: {
+    movement: "static" | "moving";
+    direction: { x: "left" | "static" | "right"; y: "up" | "static" | "down" };
+  };
 
   constructor() {}
 }

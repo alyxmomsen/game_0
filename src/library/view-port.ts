@@ -76,24 +76,14 @@ export class ViewPort {
 
     const stopingDelta = { x: 1.2, y: 1.2 };
 
-    const forcageDelta = { x: 1.5, y: 1.5 };
+    const forcageDelta = { x: 0.2, y: 0.2 };
 
-    if (
-      position.x >
-      this.position.x +
-        canvasDimentions.width / 2 +
-        canvasDimentions.width / range.x
-    ) {
+    if (position.x > this.position.x + canvasDimentions.width / 2 + 100) {
       this.positionMoveStepRange.x += forcageDelta.x;
     } else if (
       position.x + dimentions.width <=
-        this.position.x +
-          canvasDimentions.width / 2 +
-          canvasDimentions.width / range.x &&
-      position.x >=
-        this.position.x +
-          canvasDimentions.width / 2 -
-          canvasDimentions.width / range.x
+        this.position.x + canvasDimentions.width / 2 + 100 &&
+      position.x >= this.position.x + canvasDimentions.width / 2 - 100
     ) {
       this.positionMoveStepRange.x +=
         this.positionMoveStepRange.x > 0
@@ -107,28 +97,16 @@ export class ViewPort {
       // this.positionMoveStepRange.x = 0;
     } else if (
       position.x <
-      this.position.x +
-        (canvasDimentions.width / 2 - canvasDimentions.width / range.x)
+      this.position.x + (canvasDimentions.width / 2 - 100)
     ) {
       this.positionMoveStepRange.x -= forcageDelta.x;
     }
 
-    if (
-      position.y >
-      this.position.y +
-        canvasDimentions.height / 2 +
-        canvasDimentions.height / range.y
-    ) {
+    if (position.y > this.position.y + canvasDimentions.height / 2) {
       this.positionMoveStepRange.y += forcageDelta.y;
     } else if (
-      position.y <=
-        this.position.y +
-          canvasDimentions.height / 2 +
-          canvasDimentions.height / range.y &&
-      position.y >=
-        this.position.y +
-          canvasDimentions.height / 2 -
-          canvasDimentions.height / range.y
+      position.y <= this.position.y + canvasDimentions.height / 2 &&
+      position.y >= this.position.y + canvasDimentions.height / 2 - 100
     ) {
       this.positionMoveStepRange.y +=
         this.positionMoveStepRange.y > 0
@@ -142,9 +120,7 @@ export class ViewPort {
       // this.positionMoveStepRange.x = 0;
     } else if (
       position.y <
-      this.position.y +
-        canvasDimentions.height / 2 -
-        canvasDimentions.height / range.y
+      this.position.y + canvasDimentions.height / 2 - 100
     ) {
       this.positionMoveStepRange.y -= forcageDelta.y;
     }

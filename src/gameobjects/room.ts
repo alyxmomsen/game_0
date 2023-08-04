@@ -1,5 +1,6 @@
-import { Dimentions, GameObjectExtendsClasses } from "../library/types";
+import { Dimentions as Dimensions, GameObjectExtendsClasses } from "../library/types";
 import { Weapon } from "../library/weapon";
+import Door from "./door";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
 import Obstacle from "./obstacle";
@@ -8,53 +9,53 @@ import { SupplyBox } from "./supply-box";
 
 class Field {
   params: {
-    gameCell: { dimetions: Dimentions };
-    resolution: { vertical: number; horizontal: number };
+    gameCell: { dimesions: Dimensions };
+    dimentions:Dimensions|undefined ;
   };
 
+
+
   constructor(params: {
-    gameCell: { dimetions: Dimentions };
-    resolution: { vertical: number; horizontal: number };
+    gameCell: { dimesions: Dimensions };
   }) {
-    this.params = params;
+    this.params = {gameCell:params.gameCell , dimentions:undefined};
   }
 }
 
 export default class Room {
+  private static allIDs: number[] = [];
 
-
-  private static allIDs:number[] = [] ;
-
-  protected id:number ;
-
+  protected id: number;
 
   protected isLobby: boolean;
 
+  protected doors: Door[];
   protected enemies: Enemy[];
   protected obstacles: Obstacle[];
   protected supplyBoxes: SupplyBox[];
   protected bullets: Bullet[];
 
-  protected dimentions: Dimentions;
+  protected dimentions: Dimensions;
 
   protected field: Field;
 
   insertGameObject(object: GameObjectExtendsClasses) {
-
     if (object instanceof Enemy) {
       this.enemies.push(object);
     } else if (object instanceof Obstacle) {
       this.obstacles.push(object);
     } else if (object instanceof SupplyBox) {
-      
-
       const fieldParams = this.get_fieldParams();
 
       object.position = {
-        x:Math.floor(Math.random() * fieldParams.resolution.horizontal) * fieldParams.gameCell.dimetions.width  ,
-        y:Math.floor(Math.random() * fieldParams.resolution.vertical) * fieldParams.gameCell.dimetions.height  ,
-      }
-      
+        x:
+          Math.floor(Math.random() * 1000/* fieldParams.resolution.horizontal */) *
+          fieldParams.gameCell.dimesions.width,
+        y:
+          Math.floor(Math.random() * 1000/* fieldParams.resolution.vertical */) *
+          fieldParams.gameCell.dimesions.height,
+      };
+
       this.supplyBoxes.push(object);
     } else if (object instanceof Bullet) {
       this.bullets.push(object);
@@ -82,6 +83,14 @@ export default class Room {
     return this.supplyBoxes;
   }
 
+  get_doors() {
+    return this.doors;
+  }
+
+  getID() {
+    return this.id;
+  }
+
   removeObjetsThatIsDied(obj: GameObjectExtendsClasses[]) {
     obj.filter((obj) => {
       return obj.isDied === true ? true : false;
@@ -97,56 +106,89 @@ export default class Room {
   }
 
   removeSuplBoxesThatIsDied() {
-    this.supplyBoxes = this.supplyBoxes.filter((supBox) => supBox.isDied !== true);
+    this.supplyBoxes = this.supplyBoxes.filter(
+      (supBox) => supBox.isDied !== true
+    );
   }
-
 
   getFieldDimentions() {
     return {
       width:
-        this.field.params.resolution.horizontal *
-        this.field.params.gameCell.dimetions.width,
+        10/* this.field.params.resolution.horizontal */ *
+        this.field.params.gameCell.dimesions.width,
       height:
-        this.field.params.resolution.vertical *
-        this.field.params.gameCell.dimetions.height,
+        10/* this.field.params.resolution.vertical */ *
+        this.field.params.gameCell.dimesions.height,
     };
   }
 
-
-  get_fieldParams () {
-    return {...this.field.params} ;
+  get_fieldParams() {
+    return { ...this.field.params };
   }
 
   initRoom() {
+
+    this.obstacles.push(new Obstacle({
+      position:{
+        x:0 , y:0
+      }
+    }));
+
+    // create obstacles
     for (let i = 0; i < 10; i++) {
       this.obstacles.push(
         new Obstacle({
           position: {
             x:
               Math.floor(
-                Math.random() * this.field.params.resolution.horizontal
-              ) * this.field.params.gameCell.dimetions.width,
+                 Math.random() * 10/* this.field.params.resolution.horizontal */ 
+              ) * this.field.params.gameCell.dimesions.width,
             y:
               Math.floor(
-                Math.random() * this.field.params.resolution.vertical
-              ) * this.field.params.gameCell.dimetions.height,
+                 Math.random() * 10/*this.field.params.resolution.vertical */
+              ) * this.field.params.gameCell.dimesions.height,
           },
         })
       );
     }
 
+    // create these doors
+
+    for (let i = 0; i < 4; i++) {
+      const newDoor = new Door({
+        position: {
+          x:
+            Math.floor(
+              Math.random() * 10/*  this.field.params.resolution.horizontal */
+            ) * this.field.params.gameCell.dimesions.width,
+          y:
+           Math.floor(Math.random() * 10/*this.field.params.resolution.vertical*/)  *
+            this.field.params.gameCell.dimesions.height,
+        },
+        dimentions: {
+          width: this.field.params.gameCell.dimesions.width * 2,
+          height: this.field.params.gameCell.dimesions.height * 2,
+        } ,
+        roomID: i,
+      });
+
+      this.doors.push(newDoor);
+    }
+
+    // create enemies
     for (let i = 0; i < 3; i++) {
       const newEnemy = new Enemy({
         id: 0,
         position: {
           x:
             Math.floor(
-              Math.random() * this.field.params.resolution.horizontal
-            ) * this.field.params.gameCell.dimetions.width,
+               Math.random() *10/* this.field.params.resolution.horizontal */
+            ) * this.field.params.gameCell.dimesions.width ,
           y:
-            Math.floor(Math.random() * this.field.params.resolution.vertical) *
-            this.field.params.gameCell.dimetions.height,
+           Math.floor(Math.random() *10)/* this.field.params.resolution.vertical */ *
+            this.field.params.gameCell.dimesions.height,
         },
+        dimentions: this.field.params.gameCell.dimesions,
         weapons: [
           new Weapon({
             bulletDimentions: { width: 50, height: 50 },
@@ -159,69 +201,49 @@ export default class Room {
           }),
         ],
       });
-
       this.enemies.push(newEnemy);
       console.log("enemy created", newEnemy);
     }
   }
 
-  setID () {
+  setID() {
+    let newID = 0;
 
-    let newID = 0 ;
-
-    if(this.isLobby) {
-      this.id = newID ;
+    if (this.isLobby) {
+      this.id = newID;
       Room.allIDs.push(newID);
-    }
-    else {
+    } else {
+      let isMatch = false;
 
-      let isMatch = false ;
-      
       do {
         isMatch = Room.allIDs.includes(newID);
 
-        if(isMatch) {
-          newID++ ;
-        }
-        else {
-          this.id = newID ;
+        if (isMatch) {
+          newID++;
+        } else {
+          this.id = newID;
           Room.allIDs.push(newID);
-          break ;
+          break;
         }
-        
-      } while (true) ;
+      } while (true);
     }
   }
 
   constructor(
-    field: {
-      params: {
-        gameCell: { dimetions: Dimentions };
-        resolution: { vertical: number; horizontal: number };
-      };
-    },
-    isLobby:boolean = false 
+    gameCell: { dimesions: Dimensions } ,
+    isLobby: boolean = false
   ) {
-
-    
     this.isLobby = isLobby;
 
     this.setID();
 
-    this.field = new Field(field.params);
+    this.field = new Field({gameCell});
 
+    this.doors = [];
     this.obstacles = [];
     this.enemies = [];
     this.bullets = [];
     this.supplyBoxes = [];
 
-    this.dimentions = {
-      width:
-        this.field.params.resolution.horizontal *
-        this.field.params.gameCell.dimetions.width,
-      height:
-        this.field.params.resolution.vertical *
-        this.field.params.gameCell.dimetions.height,
-    };
   }
 }

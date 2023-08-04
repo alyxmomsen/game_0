@@ -10,13 +10,16 @@ import { SupplyBox } from "./supply-box";
 
 import skeletonSpriteIdle from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle-Sheet.png";
 import skeletonSpriteRun from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet.png";
+import skeletonSpirteRun_mirror from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet-mirrior.png" ;
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import Game from "../game/game";
+import Door from "./door";
 
 export class Player extends GameObject {
   collisionHandlerWith(
-    object: Player | GameObject | Enemy | Bullet | SupplyBox
+    object: Player | GameObject | Enemy | Bullet | SupplyBox,
+    game: Game
   ): void {
     // console.log(this.movement.currentStepRange.x , this.movement.currentStepRange.y);
 
@@ -24,7 +27,13 @@ export class Player extends GameObject {
       if (object instanceof SupplyBox) {
         object.isDied = true;
         this.increaseHealth(500);
-      } else {
+      } else if (object instanceof Door) {
+        // меняем текущую комнату
+
+        if (game.changeCurrentRoom(object.roomID)) {
+          this.position = { x: 0, y: 0 };
+          this.movement.targetPosition = { x: 0, y: 0 };
+        }
       }
     }
   }
@@ -68,15 +77,17 @@ export class Player extends GameObject {
     id,
     position,
     weapons,
+    dimentions,
   }: {
     id: number;
     position: Position;
     weapons: Weapon[];
+    dimentions: Dimentions;
   }) {
     super({
       id,
       kind: "player",
-      maxAllowWalkStepRange: 12,
+      maxAllowWalkStepRange: 2,
       walkStepRangeDelta: 1,
       walkStepRangeDeltaMod: 0,
       walkStepDirectionRange: { x: 0, y: 0 },
@@ -84,7 +95,7 @@ export class Player extends GameObject {
       shouldFadeDownStepRate: false,
       color: "green",
       position,
-      dimentions: { width: 150, height: 150 },
+      dimentions,
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons,
       health: 666,

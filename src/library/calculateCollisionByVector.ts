@@ -257,7 +257,7 @@ export function calculateCollisionByVector(
         movingObject.dimentions.height >=
         stationaryObject.position.y
     ) {
-      console.log("test 1");
+      // console.log("test 1");
       finalMovement = testMovementVector1;
     } else if (
       stationaryObject.position.x + testMovementVector2.x <=
@@ -273,7 +273,7 @@ export function calculateCollisionByVector(
         movingObject.dimentions.height >=
         stationaryObject.position.y
     ) {
-      console.log("test 2");
+      // console.log("test 2");
       finalMovement = testMovementVector2;
     }
 

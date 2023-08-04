@@ -65,23 +65,25 @@ export class Enemy extends GameObject {
     id,
     position,
     weapons,
+    dimentions,
   }: {
     id: number;
     position: Position;
     weapons: Weapon[];
+    dimentions: Dimentions;
   }) {
     super({
       color: "#2e3628",
       id,
       kind: "enemy",
-      maxAllowWalkStepRange: 2,
+      maxAllowWalkStepRange: 10,
       walkStepRangeDelta: 2,
       walkStepRangeDeltaMod: 0,
       walkStepDirectionRange: { x: 0, y: 0 },
       walkStepsLimit: 10,
       shouldFadeDownStepRate: false,
       position,
-      dimentions: { width: 200, height: 200 },
+      dimentions,
       ownDamage: new Damage({ damageClass: "phisical", value: 10 }),
       weapons,
       health: Math.floor(Math.random() * 995) + 5 /* 1000 */,

@@ -23,7 +23,6 @@ import "./styles/main.css";
 
   theGame = canvas
     ? new Game({
-        // fieldResolution: gameFieldResolution,
         gameCellDimentions: { width: 100, height: 100 },
         canvas,
       })

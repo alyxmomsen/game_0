@@ -15,7 +15,8 @@ export type GameObjectKinds =
   | "player"
   | "damage-entity"
   | "supply-box"
-  | "obstacle";
+  | "obstacle"
+  | "door";
 
 export type Direction = { x: number; y: number };
 

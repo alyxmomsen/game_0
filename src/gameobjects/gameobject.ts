@@ -27,7 +27,8 @@ export default abstract class GameObject extends GameObject_part_2 {
   /* ====================== options ====================== */
 
   abstract collisionHandlerWith(
-    object: GameObject | Enemy | Player | Bullet | SupplyBox | null
+    object: GameObject | Enemy | Player | Bullet | SupplyBox | null,
+    game: Game
   ): void;
 
   abstract totallyIfCollisionIsNot(
@@ -47,7 +48,10 @@ export default abstract class GameObject extends GameObject_part_2 {
     return this.health <= 0 ? true : false;
   }
 
-  checkAndHandleCollisionsForEveryOne(objects: GameObjectExtendsClasses[]) {
+  checkAndHandleCollisionsForEveryOne(
+    objects: GameObjectExtendsClasses[],
+    game: Game
+  ) {
     let collisionCheckResult = {
       position: this.movement.targetPosition,
       collision: false,
@@ -79,7 +83,7 @@ export default abstract class GameObject extends GameObject_part_2 {
             }
 
             if (collisionCheckResult.collision) {
-              this.collisionHandlerWith(object);
+              this.collisionHandlerWith(object, game);
             }
           }
         } else {
@@ -124,12 +128,12 @@ export default abstract class GameObject extends GameObject_part_2 {
 
     if (this.checkCollissionWithFieldLimits({ ...fieldDimentions })) {
       if (this.position) {
-        this.collisionHandlerWith(null);
+        this.collisionHandlerWith(null, game);
       }
     } else {
     }
 
-    this.checkAndHandleCollisionsForEveryOne(objects); //
+    this.checkAndHandleCollisionsForEveryOne(objects, game); //
 
     /* ===================================================== */
 
@@ -150,6 +154,23 @@ export default abstract class GameObject extends GameObject_part_2 {
     };
 
     this.updateState();
+
+    const stepRange = this.movement.currentStepRange;
+
+    this.theStates = {
+      direction: {
+        x: stepRange.x > 0 ? "right" : stepRange.x < 0 ? "left" : "static",
+        y: stepRange.y > 0 ? "down" : stepRange.y < 0 ? "up" : "static",
+      },
+      movement: stepRange.x !== 0 || stepRange.y !== 0 ? "moving" : "static",
+    };
+
+    // this.kind === 'player' ? console.log(stepRange) : null ;
+    this.kind === "player"
+      ? console.log(
+          `${this.theStates.direction.x} ${this.theStates.direction.y} ${this.theStates.movement}`
+        )
+      : null;
 
     const currentWeapon = this.attack.get_currentWeapon();
 
@@ -210,12 +231,12 @@ export default abstract class GameObject extends GameObject_part_2 {
     ctx.strokeStyle = "white";
 
     if (this.position) {
-      ctx.strokeRect(
-        this.position.x - viewPort.x,
-        this.position.y - viewPort.y,
-        this.dimentions.width,
-        this.dimentions.height
-      );
+      // ctx.strokeRect(
+      //   this.position.x - viewPort.x,
+      //   this.position.y - viewPort.y,
+      //   this.dimentions.width,
+      //   this.dimentions.height
+      // );
     } else {
       console.log("position is NULL");
     }
@@ -291,7 +312,9 @@ export default abstract class GameObject extends GameObject_part_2 {
     }
 
     if (this.position) {
+      
       if (frame) {
+
         ctx.drawImage(
           frame.spriteImage,
           frame.x,
@@ -393,5 +416,10 @@ export default abstract class GameObject extends GameObject_part_2 {
     this.state = "stand";
 
     this.isRigidBody = isRigidBody;
+
+    this.theStates = {
+      direction: { x: "left", y: "down" },
+      movement: "static",
+    };
   }
 }

@@ -45,7 +45,7 @@ export class SupplyBox extends GameObject {
     });
   }
 
-  constructor({ position }: { position: Position|null }) {
+  constructor({ position }: { position: Position | null }) {
     super({
       id: 0,
       kind: "supply-box",
