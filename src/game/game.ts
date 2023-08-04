@@ -48,7 +48,7 @@ sprite.src = knightIdleSprite;
 /* ===================== */
 
 export default class Game {
-  protected currentRoom: number;
+  protected currentRoom: Room;
 
   protected rooms: Room[];
 
@@ -147,7 +147,7 @@ export default class Game {
     walkStepsLimit: number;
     isRigidBody: boolean;
   }) {
-    this.rooms[0].insertGameObject(
+    this.currentRoom.insertGameObject(
       new Bullet({
         health: 100,
         id: 0,
@@ -213,60 +213,53 @@ export default class Game {
     this.player.update({
       keys,
       objects: [
-        ...this.rooms[0].get_enemies(),
-        ...this.rooms[0].get_supplyBoxes(),
-        ...this.rooms[0].get_obstacles(),
+        ...this.currentRoom.get_enemies(),
+        ...this.currentRoom.get_supplyBoxes(),
+        ...this.currentRoom.get_obstacles(),
       ],
-      fieldDimentions: this.rooms[0].get_dimetions(),
+      fieldDimentions: this.currentRoom.get_dimetions(),
       game: this,
     });
 
-    this.rooms[0].get_enemies().forEach((enemy) => {
+    this.currentRoom.get_enemies().forEach((enemy) => {
       enemy.update({
-        objects: [this.player, ...this.rooms[0].get_obstacles()],
-        fieldDimentions: this.rooms[0].get_dimetions(),
+        objects: [this.player, ...this.currentRoom.get_obstacles()],
+        fieldDimentions: this.currentRoom.get_dimetions(),
         game: this,
       });
     });
-    this.rooms[0].removeEnemiesThatIsDied();
+    this.currentRoom.removeEnemiesThatIsDied();
 
-    this.rooms[0].get_bullets().forEach((bullet) => {
+    this.currentRoom.get_bullets().forEach((bullet) => {
       bullet.update({
         objects: [
-          ...this.rooms[0].get_enemies(),
+          ...this.currentRoom.get_enemies(),
           this.player,
-          ...this.rooms[0].get_obstacles(),
+          ...this.currentRoom.get_obstacles(),
         ],
-        fieldDimentions: this.rooms[0].get_dimetions(),
+        fieldDimentions: this.currentRoom.get_dimetions(),
         game: this,
       });
     });
     
-    this.rooms[0].removeBulletsThatIsDied();
-    // this.bullets = this.bullets.filter((elem) => !elem.isDied);
+    this.currentRoom.removeBulletsThatIsDied();
 
-    // this.rooms[0].get_supplyBoxes().forEach((supBox) => {
-    //   supBox.update({
-    //     fieldDimentions:this.rooms[0].get_dimetions(),
-    //     game: this,
-    //   });
-    // });
-    // this.supplyBoxes = this.supplyBoxes.filter((elem) => !elem.isDied);
+    this.currentRoom.get_supplyBoxes().forEach((supBox) => {
+      supBox.update({
+        fieldDimentions:this.currentRoom.get_dimetions(),
+        game: this,
+      });
+    });
+    this.currentRoom.removeSuplBoxesThatIsDied();
 
-    // if (this.supplyBoxCreatingTicker.tick() && this.supplyBoxes.length < 3) {
-    //   this.supplyBoxes.push(
-    //     new SupplyBox({
-    //       position: {
-    //         x: Math.floor(
-    //           Math.random() * this.calculateFieldDimentions().width
-    //         ),
-    //         y: Math.floor(
-    //           Math.random() * this.calculateFieldDimentions().height
-    //         ),
-    //       },
-    //     })
-    //   );
-    // }
+
+
+    const supBoxes = this.currentRoom.get_supplyBoxes() ;
+    if (this.supplyBoxCreatingTicker.tick() && supBoxes.length < 3) {
+
+      this.currentRoom.insertGameObject(new SupplyBox({position:null}));
+      
+    }
 
     // if (true && this.creatorEnemyTicker.tick()) {
     //   const newEnemy = this.createEnemyRandomly(3); // генерит если в массиве меньше чем Аргумент
@@ -292,14 +285,14 @@ export default class Game {
     for (
       let i = 0;
       i <
-      this.rooms[0].getFieldDimentions().height /
+      this.currentRoom.getFieldDimentions().height /
         this.UIManager.gameCellDimentions.height;
       i++
     ) {
       for (
         let j = 0;
         j <
-        this.rooms[0].getFieldDimentions().width /
+        this.currentRoom.getFieldDimentions().width /
           this.UIManager.gameCellDimentions.width;
         j++
       ) {
@@ -319,37 +312,35 @@ export default class Game {
       }
     }
 
-    this.rooms[0].get_obstacles().forEach((obstacle) => {
+    this.currentRoom.get_obstacles().forEach((obstacle) => {
       obstacle.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
     this.player.draw(this.UIManager.ctx, this.viewPort.position);
 
-    this.rooms[0].get_bullets().forEach((bullet) => {
+    this.currentRoom.get_bullets().forEach((bullet) => {
       bullet.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
-    this.rooms[0].get_enemies().forEach((enemy) => {
+    this.currentRoom.get_enemies().forEach((enemy) => {
       enemy.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
-    // this.supplyBoxes.forEach((supplyBox) => {
-    //   supplyBox.draw(this.UIManager.ctx, this.viewPort.position);
-    // });
+    this.currentRoom.get_supplyBoxes().forEach((supplyBox) => {
+      supplyBox.draw(this.UIManager.ctx, this.viewPort.position);
+    });
 
-    // this.renderPlayerStats([
-    //   `HEALTH :  ${this.player.getHealth().toLocaleString()}`,
-    //   `ARMOR : ${this.player.armor.getHealthValue()}`,
-    //   `weapon : ${this.player.get_AttackStats()}`,
-    // ]);
+    this.renderPlayerStats([
+      `HEALTH :  ${this.player.getHealth().toLocaleString()}`,
+      `ARMOR : ${this.player.armor.getHealthValue()}`,
+      `weapon : ${this.player.get_AttackStats()}`,
+    ]);
   }
 
   constructor({
-    // fieldResolution,
     canvas,
     gameCellDimentions,
   }: {
-    // fieldResolution: { horizontal: number; vertical: number }; // размеры поля
     canvas: HTMLCanvasElement;
     gameCellDimentions: Dimentions;
   }) {
@@ -357,7 +348,7 @@ export default class Game {
     this.creatorEnemyTicker = new TickController(1000);
     this.supplyBoxCreatingTicker = new TickController(10000);
 
-    // create lobby room
+    // create the lobby room
 
     const lobbyRoom = new Room({
       params: {
@@ -367,6 +358,8 @@ export default class Game {
     } , true) ;
     this.rooms = [lobbyRoom];
     lobbyRoom.initRoom();
+
+    this.currentRoom = lobbyRoom ; // устанавливаем текущую комнату
 
     // создаем игрока
     this.player = new Player({

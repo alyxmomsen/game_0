@@ -33,11 +33,21 @@ export default class Room {
   protected field: Field;
 
   insertGameObject(object: GameObjectExtendsClasses) {
+
     if (object instanceof Enemy) {
       this.enemies.push(object);
     } else if (object instanceof Obstacle) {
       this.obstacles.push(object);
     } else if (object instanceof SupplyBox) {
+      
+
+      const fieldParams = this.get_fieldParams();
+
+      object.position = {
+        x:Math.floor(Math.random() * fieldParams.resolution.horizontal) * fieldParams.gameCell.dimetions.width  ,
+        y:Math.floor(Math.random() * fieldParams.resolution.vertical) * fieldParams.gameCell.dimetions.height  ,
+      }
+      
       this.supplyBoxes.push(object);
     } else if (object instanceof Bullet) {
       this.bullets.push(object);
@@ -79,6 +89,11 @@ export default class Room {
     this.enemies = this.enemies.filter((enemy) => enemy.isDied !== true);
   }
 
+  removeSuplBoxesThatIsDied() {
+    this.supplyBoxes = this.supplyBoxes.filter((supBox) => supBox.isDied !== true);
+  }
+
+
   getFieldDimentions() {
     return {
       width:
@@ -88,6 +103,11 @@ export default class Room {
         this.field.params.resolution.vertical *
         this.field.params.gameCell.dimetions.height,
     };
+  }
+
+
+  get_fieldParams () {
+    return {...this.field.params} ;
   }
 
   initRoom() {
