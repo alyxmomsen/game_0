@@ -3,7 +3,7 @@ import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
-import { Dimentions, Position, SupplyBoxContent } from "../library/types";
+import { Dimensions, Position, SupplyBoxContent } from "../library/types";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
@@ -34,7 +34,7 @@ export class SupplyBox extends GameObject {
     fieldDimentions,
     game,
   }: {
-    fieldDimentions: Dimentions;
+    fieldDimentions: Dimensions;
     game: Game;
   }) {
     super.update({

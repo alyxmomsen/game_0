@@ -8,7 +8,7 @@ import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import {
   DamageClass,
-  Dimentions,
+  Dimensions,
   Direction_stringType,
   GameObjectKinds,
   PersonStates,
@@ -28,13 +28,14 @@ export class GameObject_part_1 {
   protected state: PersonStates;
 
   spriteManager: SpriteManager_beta;
+  spriteManager_: SpriteManager;
   sprite: HTMLImageElement;
   protected id: number;
   protected damaged: Damage[]; // в данный момент получаемыe уроны
   protected dateOfCreated: number; // дата спауна
   protected color: string;
   protected kind: GameObjectKinds;
-  protected dimentions: Dimentions;
+  protected dimentions: Dimensions;
   position: { x: number; y: number } | null = null;
   protected health: number;
   maxHealth: number;

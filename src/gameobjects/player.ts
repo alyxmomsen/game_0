@@ -1,7 +1,7 @@
 import { Armor } from "../library/armore";
 import { Controller } from "../library/controller";
 import { Damage } from "../library/damage";
-import { Dimentions, GameObjectKinds, Position } from "../library/types";
+import { Dimensions, GameObjectKinds, Position } from "../library/types";
 import { Weapon } from "../library/weapon";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
@@ -10,7 +10,7 @@ import { SupplyBox } from "./supply-box";
 
 import skeletonSpriteIdle from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle-Sheet.png";
 import skeletonSpriteRun from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet.png";
-import skeletonSpirteRun_mirror from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet-mirrior.png" ;
+import skeletonSpirteRun_mirror from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet-mirrior.png";
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import Game from "../game/game";
@@ -56,7 +56,7 @@ export class Player extends GameObject {
   }: {
     keys: string[];
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
-    fieldDimentions: Dimentions;
+    fieldDimentions: Dimensions;
     game: Game;
   }) {
     this.damaged.forEach((damage) => {
@@ -82,7 +82,7 @@ export class Player extends GameObject {
     id: number;
     position: Position;
     weapons: Weapon[];
-    dimentions: Dimentions;
+    dimentions: Dimensions;
   }) {
     super({
       id,

@@ -10,7 +10,7 @@ import { GameController } from "../library/gameController";
 import KeysManager from "../library/keysManager";
 import { TickController } from "../library/main";
 import {
-  Dimentions,
+  Dimensions,
   Direction,
   Position,
   validDamageClasses,
@@ -90,6 +90,7 @@ export default class Game {
     ownDamage,
     position,
     dimentions,
+    weight,
     maxAllowWalkStepRange,
     walkStepDirectionRange,
     roomID,
@@ -99,7 +100,8 @@ export default class Game {
     id: number;
     ownDamage: Damage;
     position: Position;
-    dimentions: Dimentions;
+    dimentions: Dimensions;
+    weight: number;
     maxAllowWalkStepRange: number;
     walkStepDirectionRange: Direction;
     walkStepRangeDelta: number;
@@ -108,7 +110,11 @@ export default class Game {
     walkStepsLimit: number;
     isRigidBody: boolean;
   }) {
-    this.currentRoom.insertGameObject(
+    const gameObjects = this.currentRoom.get_gameObjects();
+
+    const fieldParams = this.field;
+
+    gameObjects.insertGameObject(
       new Bullet({
         health: 100,
         id: 0,
@@ -130,6 +136,10 @@ export default class Game {
     // получение ключей нажатых клавиш
     const keys = this.keysManager.getPressedKeys();
 
+    // const gameObjects = this.
+    const currentMap = this.currentRoom;
+    const currentMapGameObjects = currentMap.get_gameObjects();
+
     if (this.player.position) {
       this.viewPort.autoFocuTo(
         this.player.position,
@@ -144,46 +154,46 @@ export default class Game {
     this.player.update({
       keys,
       objects: [
-        ...this.currentRoom.get_enemies(),
-        ...this.currentRoom.get_supplyBoxes(),
-        ...this.currentRoom.get_obstacles(),
-        ...this.currentRoom.get_doors(),
+        ...currentMapGameObjects.get_enemies(),
+        ...currentMapGameObjects.get_supplyBoxes(),
+        ...currentMapGameObjects.get_obstacles(),
+        ...currentMapGameObjects.get_doors(),
       ],
       fieldDimentions: this.currentRoom.get_dimetions(),
       game: this,
     });
 
-    this.currentRoom.get_enemies().forEach((enemy) => {
+    currentMapGameObjects.get_enemies().forEach((enemy) => {
       enemy.update({
-        objects: [this.player, ...this.currentRoom.get_obstacles()],
+        objects: [this.player, ...currentMapGameObjects.get_obstacles()],
         fieldDimentions: this.currentRoom.get_dimetions(),
         game: this,
       });
     });
-    this.currentRoom.removeEnemiesThatIsDied();
+    currentMapGameObjects.removeEnemiesThatIsDied();
 
-    this.currentRoom.get_bullets().forEach((bullet) => {
+    currentMapGameObjects.get_bullets().forEach((bullet) => {
       bullet.update({
         objects: [
-          ...this.currentRoom.get_enemies(),
+          ...currentMapGameObjects.get_enemies(),
           this.player,
-          ...this.currentRoom.get_obstacles(),
+          ...currentMapGameObjects.get_obstacles(),
         ],
         fieldDimentions: this.currentRoom.get_dimetions(),
         game: this,
       });
     });
-    this.currentRoom.removeBulletsThatIsDied();
+    currentMapGameObjects.removeBulletsThatIsDied();
 
-    this.currentRoom.get_supplyBoxes().forEach((supBox) => {
+    currentMapGameObjects.get_supplyBoxes().forEach((supBox) => {
       supBox.update({
         fieldDimentions: this.currentRoom.get_dimetions(),
         game: this,
       });
     });
-    this.currentRoom.removeSuplBoxesThatIsDied();
+    currentMapGameObjects.removeSuplBoxesThatIsDied();
 
-    this.currentRoom.get_doors().forEach((door) => {
+    currentMapGameObjects.get_doors().forEach((door) => {
       door.update({
         fieldDimentions: this.currentRoom.get_dimetions(),
         game: this,
@@ -191,9 +201,25 @@ export default class Game {
       });
     });
 
-    const supBoxes = this.currentRoom.get_supplyBoxes();
+    const supBoxes = currentMapGameObjects.get_supplyBoxes();
+    const curMapFieldDims = currentMap.get_fieldParams();
     if (this.supplyBoxCreatingTicker.tick() && supBoxes.length < 3) {
-      this.currentRoom.insertGameObject(new SupplyBox({ position: null }));
+      const newSupBox = new SupplyBox({
+        position: {
+          x:
+            Math.floor(
+              Math.random() * 10 /* this.field.params.resolution.horizontal */
+            ) * curMapFieldDims.gameCell.dimensions.width,
+          y:
+            Math.floor(
+              Math.random() * 10 /*this.field.params.resolution.vertical */
+            ) * curMapFieldDims.gameCell.dimensions.height,
+        },
+      });
+
+      currentMapGameObjects.insertGameObject(newSupBox);
+
+      console.log("supBox created", newSupBox.position, curMapFieldDims);
     }
 
     this.viewPort.updatePositionMoveStepRangeByKeys(keys);
@@ -255,25 +281,27 @@ export default class Game {
       }
     }
 
-    this.currentRoom.get_doors().forEach((door) => {
+    const curMapGameObjects = this.currentRoom.get_gameObjects();
+
+    curMapGameObjects.get_doors().forEach((door) => {
       door.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
-    this.currentRoom.get_obstacles().forEach((obstacle) => {
+    curMapGameObjects.get_obstacles().forEach((obstacle) => {
       obstacle.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
     this.player.draw(this.UIManager.ctx, this.viewPort.position);
 
-    this.currentRoom.get_bullets().forEach((bullet) => {
+    curMapGameObjects.get_bullets().forEach((bullet) => {
       bullet.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
-    this.currentRoom.get_enemies().forEach((enemy) => {
+    curMapGameObjects.get_enemies().forEach((enemy) => {
       enemy.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
-    this.currentRoom.get_supplyBoxes().forEach((supplyBox) => {
+    curMapGameObjects.get_supplyBoxes().forEach((supplyBox) => {
       supplyBox.draw(this.UIManager.ctx, this.viewPort.position);
     });
 
@@ -300,7 +328,7 @@ export default class Game {
     gameCellDimentions,
   }: {
     canvas: HTMLCanvasElement;
-    gameCellDimentions: Dimentions;
+    gameCellDimentions: Dimensions;
   }) {
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
     this.creatorEnemyTicker = new TickController(1000);
@@ -308,18 +336,13 @@ export default class Game {
 
     // create the lobby room
 
-    const lobbyRoom = new Map(
-      {dimesions:gameCellDimentions} ,
-      true
-    );
+    const lobbyRoom = new Map({ dimensions: gameCellDimentions }, true);
     this.rooms = [lobbyRoom];
-    lobbyRoom.initRoom();
+    lobbyRoom.initTheMap();
 
     this.currentRoom = lobbyRoom; // устанавливаем текущую комнату
 
-    this.rooms.push(
-      new Map({dimesions:gameCellDimentions})
-    );
+    this.rooms.push(new Map({ dimensions: gameCellDimentions }));
 
     console.log(this.rooms);
 

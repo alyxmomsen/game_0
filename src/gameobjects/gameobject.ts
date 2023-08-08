@@ -6,7 +6,7 @@ import { SupplyBox } from "./supply-box";
 import { Player } from "./player";
 import { Enemy } from "./enemy";
 import {
-  Dimentions,
+  Dimensions,
   GameObjectExtendsClasses,
   GameObjectKinds,
   Position,
@@ -22,6 +22,7 @@ import { Armor } from "../library/armore";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import { calculateCollisionByVector } from "../library/calculateCollisionByVector";
 import Game from "../game/game";
+import { SpriteManager } from "../library/sprite-manager";
 
 export default abstract class GameObject extends GameObject_part_2 {
   /* ====================== options ====================== */
@@ -107,7 +108,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     game,
   }: {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
-    fieldDimentions: Dimentions;
+    fieldDimentions: Dimensions;
     game: Game;
   }) {
     // const date = new Date () ;
@@ -202,6 +203,7 @@ export default abstract class GameObject extends GameObject_part_2 {
           walkStepsLimit: 0,
           isRigidBody: true,
           roomID: 0, /// !!!!!!!!!!! warning
+          weight: currentWeapon.get_weight(),
         });
       }
     }
@@ -312,9 +314,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     }
 
     if (this.position) {
-      
       if (frame) {
-
         ctx.drawImage(
           frame.spriteImage,
           frame.x,
@@ -348,7 +348,8 @@ export default abstract class GameObject extends GameObject_part_2 {
     walkStepRangeDeltaMod: stepRangeDeltaMod,
     spriteManager,
     isRigidBody,
-  }: {
+  }: // spriteManager_ ,
+  {
     id: number;
     kind: GameObjectKinds;
     maxAllowWalkStepRange: number; // макс скорость
@@ -356,7 +357,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     walkStepsLimit: number;
     color: string;
     position: Position | null;
-    dimentions: Dimentions;
+    dimentions: Dimensions;
     ownDamage: Damage;
     health: number;
     weapons: Weapon[];
@@ -365,6 +366,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     walkStepRangeDelta: number;
     walkStepRangeDeltaMod: number;
     spriteManager: SpriteManager_beta;
+    // spriteManager_:SpriteManager ;
     isRigidBody: boolean;
   }) {
     super();
@@ -412,6 +414,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     this.controller = new Controller();
 
     this.spriteManager = spriteManager;
+    // this.spriteManager_ = spriteManager_ ;
 
     this.state = "stand";
 

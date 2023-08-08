@@ -1,4 +1,4 @@
-import { Dimentions, Position } from "./types";
+import { Dimensions, Position } from "./types";
 
 export class ViewPort {
   position: Position;
@@ -69,8 +69,8 @@ export class ViewPort {
 
   autoFocuTo(
     position: Position,
-    dimentions: Dimentions,
-    canvasDimentions: Dimentions
+    dimentions: Dimensions,
+    canvasDimentions: Dimensions
   ) {
     const range = { x: 2, y: 2 };
 

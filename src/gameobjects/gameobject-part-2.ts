@@ -1,7 +1,7 @@
 import { calculateCollisionByVector } from "../library/calculateCollisionByVector";
 import { Damage } from "../library/damage";
 import {
-  Dimentions,
+  Dimensions,
   Direction,
   Direction_stringType,
   PersonStates,
@@ -23,8 +23,11 @@ export class GameObject_part_2 extends GameObject_part_1 {
     maxAllowedStepRange: number;
     stepRateFadeDown: boolean;
     stepsLimit: number;
-    bulletDimentions: { width: number; height: number };
-    impulse:number ;
+    impulse: number;
+    bullet: {
+      dimensions: Dimensions;
+      weight: number;
+    };
   }) {
     const damageClass = weapon.damage.damageClass;
 
@@ -43,13 +46,13 @@ export class GameObject_part_2 extends GameObject_part_1 {
           },
         },
         ...{
-          bulletDimentions: weapon.bulletDimentions,
           fireRate: weapon.fireRate,
           maxAllowedStepRange: weapon.maxAllowedStepRange,
           stepRateFadeDown: weapon.stepRateFadeDown,
           stepsLimit: weapon.stepsLimit,
           title: weapon.title,
-          impulse: weapon.impulse ,
+          impulse: weapon.impulse,
+          bullet: weapon.bullet,
         },
       });
 
@@ -128,7 +131,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
   // проверка на коллизию nextposition с переданными координатами
   checkNextPositionColissionWith(
     subjectPostion: Position,
-    subjectDimentions: Dimentions
+    subjectDimentions: Dimensions
   ) {
     if (this.position) {
       if (
@@ -215,7 +218,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
       this.movement.targetPosition.y =
         this.position.y + this.movement.currentStepRange.y;
     } else {
-      console.log("position is NULL");
+      console.log("position is NULL", this.kind);
     }
   }
 
