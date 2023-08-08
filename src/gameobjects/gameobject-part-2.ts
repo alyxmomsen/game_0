@@ -24,6 +24,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
     stepRateFadeDown: boolean;
     stepsLimit: number;
     bulletDimentions: { width: number; height: number };
+    impulse:number ;
   }) {
     const damageClass = weapon.damage.damageClass;
 
@@ -48,6 +49,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
           stepRateFadeDown: weapon.stepRateFadeDown,
           stepsLimit: weapon.stepsLimit,
           title: weapon.title,
+          impulse: weapon.impulse ,
         },
       });
 
@@ -230,7 +232,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
     const currWeapon = this.attack.get_currentWeapon();
 
     if (currWeapon) {
-      const maxAllowedStepRange = currWeapon.get_maxAllowedStepRange();
+      const impulse = currWeapon.get_impulse();
 
       if (controllerAttackDirection !== "") {
         if (this.position) {
@@ -240,7 +242,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
                 x: this.position.x + this.getDimentions().width / 2,
                 y: this.position.y + this.getDimentions().height + SHIFT,
               };
-              o.range = { x: 0, y: maxAllowedStepRange };
+              o.range = { x: 0, y: impulse };
               break;
             case "left":
               o.pos = {
@@ -249,14 +251,14 @@ export class GameObject_part_2 extends GameObject_part_1 {
                   (currWeapon.get_bulletDimentions().width + SHIFT),
                 y: this.position.y + this.getDimentions().height / 2,
               };
-              o.range = { x: -maxAllowedStepRange, y: 0 };
+              o.range = { x: -impulse, y: 0 };
               break;
             case "right":
               o.pos = {
                 x: this.position.x + this.getDimentions().width + SHIFT,
                 y: this.position.y + this.getDimentions().height / 2,
               };
-              o.range = { x: maxAllowedStepRange, y: 0 };
+              o.range = { x: impulse, y: 0 };
               break;
             case "up":
               o.pos = {
@@ -265,7 +267,7 @@ export class GameObject_part_2 extends GameObject_part_1 {
                   this.position.y -
                   (currWeapon.get_bulletDimentions().height + SHIFT),
               };
-              o.range = { x: 0, y: -maxAllowedStepRange };
+              o.range = { x: 0, y: -impulse };
               break;
           }
         } else {

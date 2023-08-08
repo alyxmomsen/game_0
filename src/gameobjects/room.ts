@@ -198,6 +198,7 @@ export default class Room {
             stepRateFadeDown: false,
             stepsLimit: 0,
             title: "somthing",
+            impulse: 20 ,
           }),
         ],
       });
