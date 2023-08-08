@@ -4,19 +4,25 @@
     "damage": { "damageClass": "phisical", "value": 5 },
     "fireRate": 200,
     "maxAllowedStepRange": 15,
-    "impulse":15 ,
+    "impulse": 15,
     "stepRateFadeDown": true,
     "stepsLimit": 0,
-    "bulletDimentions": { "width": 50, "height": 50 }
+    "bullet": {
+      "weight": 10,
+      "dimensions": { "width": 50, "height": 50 }
+    }
   },
   "boosted": {
     "title": "automatic gun",
     "damage": { "damageClass": "phisical", "value": 100 },
     "fireRate": 50,
     "maxAllowedStepRange": 50,
-    "impulse": 50 ,
+    "impulse": 50,
     "stepRateFadeDown": true,
     "stepsLimit": 0,
-    "bulletDimentions": { "width": 50, "height": 50 }
+    "bullet": {
+      "weight": 10,
+      "dimensions": { "width": 10, "height": 10 }
+    }
   }
 }

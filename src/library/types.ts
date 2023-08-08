@@ -29,25 +29,7 @@ export type Position = {
   y: number;
 };
 
-export type GameObjectConstructor = {
-  id: number;
-  kind: GameObjectKinds;
-  maxAllowWalkStepRange: number; // макс скорость
-  walkStepDirectionRange: { x: number; y: number };
-  walkStepsLimit: number;
-  color: string;
-  position: Position;
-  dimentions: Dimentions;
-  ownDamage: Damage;
-  health: number;
-  weapons: Weapon[];
-  armor: Armor;
-  shouldFadeDownStepRate: boolean;
-  stepRangeDelta: number;
-  stepRangeDeltaMod: number;
-};
-
-export type Dimentions = {
+export type Dimensions = {
   width: number;
   height: number;
 };

@@ -1,4 +1,4 @@
-import { Dimentions, Direction } from "./types";
+import { Dimensions, Direction } from "./types";
 
 export class TickController {
   private lastTickTime: number;

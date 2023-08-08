@@ -1,6 +1,6 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
-import { Dimentions, Direction, Position } from "../library/types";
+import { Dimensions, Direction, Position } from "../library/types";
 import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
 import { Player } from "./player";
@@ -74,7 +74,7 @@ export class Bullet extends GameObject {
     game,
   }: {
     objects: (GameObject | SupplyBox | Player | Enemy | Bullet)[];
-    fieldDimentions: Dimentions;
+    fieldDimentions: Dimensions;
     game: Game;
   }) {
     // если пуля не движется , то она удаляется из игры
@@ -103,7 +103,7 @@ export class Bullet extends GameObject {
     isRigidBody,
   }: {
     position: Position;
-    dimentions: Dimentions;
+    dimentions: Dimensions;
     id: number;
     health: number;
     ownDamage: Damage;

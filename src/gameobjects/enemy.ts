@@ -2,7 +2,7 @@ import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
 import { generateMovementDirection } from "../library/main";
 import {
-  Dimentions,
+  Dimensions,
   Direction_stringType,
   GameObjectExtendsClasses,
   Position,
@@ -49,7 +49,7 @@ export class Enemy extends GameObject {
     game,
   }: {
     objects: GameObjectExtendsClasses[];
-    fieldDimentions: Dimentions;
+    fieldDimentions: Dimensions;
     game: Game;
   }) {
     this.controller.autoUpdatePer(1000);
@@ -70,7 +70,7 @@ export class Enemy extends GameObject {
     id: number;
     position: Position;
     weapons: Weapon[];
-    dimentions: Dimentions;
+    dimentions: Dimensions;
   }) {
     super({
       color: "#2e3628",

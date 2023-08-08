@@ -65,8 +65,10 @@ export class SpriteManager_beta {
     }
   }
 
-
-  arr = [[1, 2] , [3, 5]] ;
+  arr = [
+    [1, 2],
+    [3, 5],
+  ];
 
   constructor(
     assets: {

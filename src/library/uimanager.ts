@@ -1,10 +1,10 @@
-import { Dimentions } from "./types";
+import { Dimensions } from "./types";
 
 export class UIManager {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
 
-  gameCellDimentions: Dimentions;
+  gameCellDimentions: Dimensions;
 
   drawSprite(
     image: CanvasImageSource,
@@ -44,7 +44,7 @@ export class UIManager {
     canvas: HTMLCanvasElement;
     canvasWidth: number;
     canvasHeight: number;
-    gameCellDimentions: Dimentions;
+    gameCellDimentions: Dimensions;
   }) {
     this.canvas = canvas;
     canvas.width = canvasWidth;

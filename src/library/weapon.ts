@@ -1,5 +1,5 @@
 import { Damage } from "./damage";
-import { Dimentions } from "./types";
+import { Dimensions } from "./types";
 
 export class Weapon {
   private id: number; //
@@ -8,16 +8,37 @@ export class Weapon {
   private fireRate: number; // интервал между выстрелами
   private maxAllowedStepRange: number; // интервал между шагами
   private stepRateFadeDown: boolean; // будет ли объект аттаки замедлятся, после выстрела
-  private impulse:number ;
+  private impulse: number;
   private stepsLimit: number;
-  private bulletDimentions: Dimentions;
+  private bulletDimentions: Dimensions;
+  private bullet: {
+    dimensions: Dimensions;
+    weight: number;
+  };
 
-  get_FireRate() {return this.fireRate}
-  get_title() {return this.title}
-  get_bulletDimentions() {return { ...this.bulletDimentions }}
-  get_damage() {return { ...this.damage }}
-  get_maxAllowedStepRange() {return this.maxAllowedStepRange}
-  get_impulse () {return this.impulse} ;
+  get_FireRate() {
+    return this.fireRate;
+  }
+  get_title() {
+    return this.title;
+  }
+  get_bulletDimentions() {
+    return { ...this.bullet.dimensions };
+  }
+
+  get_weight() {
+    return this.bullet.weight;
+  }
+
+  get_damage() {
+    return { ...this.damage };
+  }
+  get_maxAllowedStepRange() {
+    return this.maxAllowedStepRange;
+  }
+  get_impulse() {
+    return this.impulse;
+  }
 
   getProps() {
     return {
@@ -35,16 +56,19 @@ export class Weapon {
     maxAllowedStepRange,
     stepRateFadeDown,
     stepsLimit,
-    bulletDimentions,
+    bullet,
     title,
-    impulse ,
+    impulse,
   }: {
     damage: Damage;
     fireRate: number;
     maxAllowedStepRange: number;
     stepRateFadeDown: boolean;
     stepsLimit: number;
-    bulletDimentions: Dimentions;
+    bullet: {
+      weight: number;
+      dimensions: Dimensions;
+    };
     title: string;
     impulse: number;
   }) {
@@ -53,8 +77,8 @@ export class Weapon {
     this.maxAllowedStepRange = maxAllowedStepRange;
     this.stepRateFadeDown = stepRateFadeDown;
     this.stepsLimit = stepsLimit;
-    this.bulletDimentions = bulletDimentions;
+    this.bullet = bullet;
     this.title = title;
-    this.impulse = impulse ;
+    this.impulse = impulse;
   }
 }

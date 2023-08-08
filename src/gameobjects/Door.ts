@@ -1,7 +1,7 @@
 import { Armor } from "../library/armore";
 import { Damage } from "../library/damage";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
-import { Dimentions, Position } from "../library/types";
+import { Dimensions, Position } from "../library/types";
 import { Bullet } from "./bullet";
 import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
@@ -33,7 +33,7 @@ export default class Door extends GameObject {
     roomID,
   }: {
     position: Position;
-    dimentions: Dimentions;
+    dimentions: Dimensions;
     roomID: number;
   }) {
     super({

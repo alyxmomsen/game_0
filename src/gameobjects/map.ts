@@ -1,4 +1,8 @@
-import { Dimentions as Dimensions, GameObjectExtendsClasses } from "../library/types";
+import {
+  Dimensions,
+  GameObjectExtendsClasses,
+  Position,
+} from "../library/types";
 import { Weapon } from "../library/weapon";
 import Door from "./door";
 import { Bullet } from "./bullet";
@@ -9,65 +13,30 @@ import { SupplyBox } from "./supply-box";
 
 class Field {
   params: {
-    gameCell: { dimesions: Dimensions };
-    dimentions:Dimensions|undefined ;
+    gameCell: { dimensions: Dimensions };
+    dimentions: Dimensions | undefined;
   };
 
+  map: (dataTypes | "r")[][];
 
+  constructor(params: { gameCell: { dimensions: Dimensions } }) {
+    console.log("map created. params: ", params);
 
-  constructor(params: {
-    gameCell: { dimesions: Dimensions };
-  }) {
-    this.params = {gameCell:params.gameCell , dimentions:undefined};
+    this.params = { gameCell: params.gameCell, dimentions: undefined };
+    this.map = [];
+    this.map[0] = [];
+    this.map[0][0] = 0;
   }
 }
 
-export default class Map {
-  private static allIDs: number[] = [];
-
-  protected id: number;
-
-  protected isLobby: boolean;
-
+class GameObjects {
   protected doors: Door[];
   protected enemies: Enemy[];
   protected obstacles: Obstacle[];
   protected supplyBoxes: SupplyBox[];
   protected bullets: Bullet[];
 
-  protected dimentions: Dimensions;
-
-  protected field: Field;
-
-  insertGameObject(object: GameObjectExtendsClasses) {
-    if (object instanceof Enemy) {
-      this.enemies.push(object);
-    } else if (object instanceof Obstacle) {
-      this.obstacles.push(object);
-    } else if (object instanceof SupplyBox) {
-      const fieldParams = this.get_fieldParams();
-
-      object.position = {
-        x:
-          Math.floor(Math.random() * 1000/* fieldParams.resolution.horizontal */) *
-          fieldParams.gameCell.dimesions.width,
-        y:
-          Math.floor(Math.random() * 1000/* fieldParams.resolution.vertical */) *
-          fieldParams.gameCell.dimesions.height,
-      };
-
-      this.supplyBoxes.push(object);
-    } else if (object instanceof Bullet) {
-      this.bullets.push(object);
-    }
-  }
-
-  get_dimetions() {
-    return { ...this.dimentions };
-  }
-
   get_enemies() {
-    // console.log(this.enemies) ;
     return this.enemies;
   }
 
@@ -87,8 +56,18 @@ export default class Map {
     return this.doors;
   }
 
-  getID() {
-    return this.id;
+  insertGameObject(object: GameObjectExtendsClasses) {
+    if (object instanceof Enemy) {
+      this.enemies.push(object);
+    } else if (object instanceof Obstacle) {
+      this.obstacles.push(object);
+    } else if (object instanceof SupplyBox) {
+      this.supplyBoxes.push(object);
+    } else if (object instanceof Bullet) {
+      this.bullets.push(object);
+    } else if (object instanceof Door) {
+      this.doors.push(object);
+    }
   }
 
   removeObjetsThatIsDied(obj: GameObjectExtendsClasses[]) {
@@ -111,14 +90,47 @@ export default class Map {
     );
   }
 
+  constructor() {
+    this.bullets = [];
+    this.enemies = [];
+    this.doors = [];
+    this.supplyBoxes = [];
+    this.obstacles = [];
+  }
+}
+
+type dataTypes = 0 | 1 | 2;
+
+export default class Map {
+  private mapScheme: ("r" | 0 | 1)[][];
+
+  private static allIDs: number[] = [];
+  protected id: number;
+  protected isLobby: boolean;
+  protected gameObjects: GameObjects;
+  protected dimensions: Dimensions;
+  protected field: Field;
+
+  get_gameObjects() {
+    return this.gameObjects;
+  }
+
+  get_dimetions() {
+    return { ...this.dimensions };
+  }
+
+  getID() {
+    return this.id;
+  }
+
   getFieldDimentions() {
     return {
       width:
-        10/* this.field.params.resolution.horizontal */ *
-        this.field.params.gameCell.dimesions.width,
+        10 /* this.field.params.resolution.horizontal */ *
+        this.field.params.gameCell.dimensions.width,
       height:
-        10/* this.field.params.resolution.vertical */ *
-        this.field.params.gameCell.dimesions.height,
+        10 /* this.field.params.resolution.vertical */ *
+        this.field.params.gameCell.dimensions.height,
     };
   }
 
@@ -126,27 +138,19 @@ export default class Map {
     return { ...this.field.params };
   }
 
-  initRoom() {
-
-    this.obstacles.push(new Obstacle({
-      position:{
-        x:0 , y:0
-      }
-    }));
-
+  initTheMap() {
     // create obstacles
+
     for (let i = 0; i < 10; i++) {
-      this.obstacles.push(
+      this.gameObjects.insertGameObject(
         new Obstacle({
           position: {
             x:
-              Math.floor(
-                 Math.random() * 10/* this.field.params.resolution.horizontal */ 
-              ) * this.field.params.gameCell.dimesions.width,
+              Math.floor(Math.random() * 10) *
+              this.field.params.gameCell.dimensions.width,
             y:
-              Math.floor(
-                 Math.random() * 10/*this.field.params.resolution.vertical */
-              ) * this.field.params.gameCell.dimesions.height,
+              Math.floor(Math.random() * 10) *
+              this.field.params.gameCell.dimensions.height,
           },
         })
       );
@@ -155,55 +159,62 @@ export default class Map {
     // create these doors
 
     for (let i = 0; i < 4; i++) {
-      const newDoor = new Door({
-        position: {
-          x:
-            Math.floor(
-              Math.random() * 10/*  this.field.params.resolution.horizontal */
-            ) * this.field.params.gameCell.dimesions.width,
-          y:
-           Math.floor(Math.random() * 10/*this.field.params.resolution.vertical*/)  *
-            this.field.params.gameCell.dimesions.height,
-        },
-        dimentions: {
-          width: this.field.params.gameCell.dimesions.width * 2,
-          height: this.field.params.gameCell.dimesions.height * 2,
-        } ,
-        roomID: i,
-      });
-
-      this.doors.push(newDoor);
+      this.gameObjects.insertGameObject(
+        new Door({
+          position: {
+            x:
+              Math.floor(
+                Math.random() *
+                  10 /*  this.field.params.resolution.horizontal */
+              ) * this.field.params.gameCell.dimensions.width,
+            y:
+              Math.floor(
+                Math.random() * 10 /*this.field.params.resolution.vertical*/
+              ) * this.field.params.gameCell.dimensions.height,
+          },
+          dimentions: {
+            width: this.field.params.gameCell.dimensions.width * 2,
+            height: this.field.params.gameCell.dimensions.height * 2,
+          },
+          roomID: i,
+        })
+      );
     }
 
     // create enemies
     for (let i = 0; i < 3; i++) {
-      const newEnemy = new Enemy({
-        id: 0,
-        position: {
-          x:
-            Math.floor(
-               Math.random() *10/* this.field.params.resolution.horizontal */
-            ) * this.field.params.gameCell.dimesions.width ,
-          y:
-           Math.floor(Math.random() *10)/* this.field.params.resolution.vertical */ *
-            this.field.params.gameCell.dimesions.height,
-        },
-        dimentions: this.field.params.gameCell.dimesions,
-        weapons: [
-          new Weapon({
-            bulletDimentions: { width: 50, height: 50 },
-            damage: { damageClass: "magic", value: 5 },
-            fireRate: Math.floor(Math.random() * 900) + 100,
-            maxAllowedStepRange: 20,
-            stepRateFadeDown: false,
-            stepsLimit: 0,
-            title: "somthing",
-            impulse: 20 ,
-          }),
-        ],
-      });
-      this.enemies.push(newEnemy);
-      console.log("enemy created", newEnemy);
+      this.gameObjects.insertGameObject(
+        new Enemy({
+          id: 0,
+          position: {
+            x:
+              Math.floor(
+                Math.random() * 10 /* this.field.params.resolution.horizontal */
+              ) * this.field.params.gameCell.dimensions.width,
+            y:
+              Math.floor(
+                Math.random() * 10
+              ) /* this.field.params.resolution.vertical */ *
+              this.field.params.gameCell.dimensions.height,
+          },
+          dimentions: this.field.params.gameCell.dimensions,
+          weapons: [
+            new Weapon({
+              damage: { damageClass: "magic", value: 5 },
+              fireRate: Math.floor(Math.random() * 900) + 100,
+              maxAllowedStepRange: 20,
+              stepRateFadeDown: false,
+              stepsLimit: 0,
+              title: "somthing",
+              impulse: 20,
+              bullet: {
+                dimensions: { width: 20, height: 20 },
+                weight: 10,
+              },
+            }),
+          ],
+        })
+      );
     }
   }
 
@@ -230,21 +241,12 @@ export default class Map {
     }
   }
 
-  constructor(
-    gameCell: { dimesions: Dimensions } ,
-    isLobby: boolean = false
-  ) {
+  constructor(gameCell: { dimensions: Dimensions }, isLobby: boolean = false) {
+    this.mapScheme = [];
+
     this.isLobby = isLobby;
-
     this.setID();
-
-    this.field = new Field({gameCell});
-
-    this.doors = [];
-    this.obstacles = [];
-    this.enemies = [];
-    this.bullets = [];
-    this.supplyBoxes = [];
-
+    this.field = new Field({ gameCell });
+    this.gameObjects = new GameObjects();
   }
 }
