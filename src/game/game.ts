@@ -33,7 +33,7 @@ import { SpriteManager_beta } from "../library/sprite-manager-beta";
 
 import playerWeapon from "../weapon-sets.json";
 
-import Room from "../gameobjects/room";
+import Map from "../gameobjects/map";
 
 console.log(playerWeapon);
 
@@ -50,9 +50,9 @@ sprite.src = knightIdleSprite;
 export default class Game {
   roomChangeTickController = new TickController(2000);
 
-  protected currentRoom: Room;
+  protected currentRoom: Map;
 
-  protected rooms: Room[];
+  protected rooms: Map[];
 
   protected spriteManager: SpriteManager_beta;
 
@@ -308,7 +308,7 @@ export default class Game {
 
     // create the lobby room
 
-    const lobbyRoom = new Room(
+    const lobbyRoom = new Map(
       {dimesions:gameCellDimentions} ,
       true
     );
@@ -318,7 +318,7 @@ export default class Game {
     this.currentRoom = lobbyRoom; // устанавливаем текущую комнату
 
     this.rooms.push(
-      new Room({dimesions:gameCellDimentions})
+      new Map({dimesions:gameCellDimentions})
     );
 
     console.log(this.rooms);

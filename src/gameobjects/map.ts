@@ -22,7 +22,7 @@ class Field {
   }
 }
 
-export default class Room {
+export default class Map {
   private static allIDs: number[] = [];
 
   protected id: number;
@@ -212,18 +212,18 @@ export default class Room {
 
     if (this.isLobby) {
       this.id = newID;
-      Room.allIDs.push(newID);
+      Map.allIDs.push(newID);
     } else {
       let isMatch = false;
 
       do {
-        isMatch = Room.allIDs.includes(newID);
+        isMatch = Map.allIDs.includes(newID);
 
         if (isMatch) {
           newID++;
         } else {
           this.id = newID;
-          Room.allIDs.push(newID);
+          Map.allIDs.push(newID);
           break;
         }
       } while (true);
