@@ -167,11 +167,11 @@ export default abstract class GameObject extends GameObject_part_2 {
     };
 
     // this.kind === 'player' ? console.log(stepRange) : null ;
-    this.kind === "player"
-      ? console.log(
-          `${this.theStates.direction.x} ${this.theStates.direction.y} ${this.theStates.movement}`
-        )
-      : null;
+    // this.kind === "player"
+    //   ? console.log(
+    //       `${this.theStates.direction.x} ${this.theStates.direction.y} ${this.theStates.movement}`
+    //     )
+    //   : null;
 
     const currentWeapon = this.attack.get_currentWeapon();
 
@@ -328,6 +328,11 @@ export default abstract class GameObject extends GameObject_part_2 {
         );
       }
     }
+
+    
+
+    
+
   }
 
   constructor({

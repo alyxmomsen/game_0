@@ -14,6 +14,7 @@ import skeletonSpirteRun_mirror from "./../images/spites/Enemy/Skeleton Crew/Ske
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import Game from "../game/game";
+// import Door from "./door";
 import Door from "./door";
 
 export class Player extends GameObject {
@@ -29,10 +30,19 @@ export class Player extends GameObject {
         this.increaseHealth(500);
       } else if (object instanceof Door) {
         // меняем текущую комнату
+        const door = object ;
 
-        if (game.changeCurrentRoom(object.roomID)) {
+        if(door.getMapID() === undefined) {
+          door.initMapID(game.addMap(game.getCurrentRoomID()));
+          console.log('doors map ID : ' , door.getMapID());
+        }
+
+        if (game.changeCurrentRoom(door.getMapID())) {
           this.position = { x: 0, y: 0 };
           this.movement.targetPosition = { x: 0, y: 0 };
+        }
+        else {
+          // alert('no map');
         }
       }
     }

@@ -11,21 +11,28 @@ import Obstacle from "./obstacle";
 import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
+import weapons from "./../weapon-sets.json";
+import WordGen from "../library/word-gen";
+
 class Field {
   params: {
     gameCell: { dimensions: Dimensions };
     dimentions: Dimensions | undefined;
   };
 
-  map: (dataTypes | "r")[][];
+
+  // map: (MapCellContentTypes | "r")[][];
+
 
   constructor(params: { gameCell: { dimensions: Dimensions } }) {
     console.log("map created. params: ", params);
 
     this.params = { gameCell: params.gameCell, dimentions: undefined };
-    this.map = [];
-    this.map[0] = [];
-    this.map[0][0] = 0;
+
+    // this.map = [];
+    // this.map[0] = [];
+    // this.map[0][0] = 'void';
+
   }
 }
 
@@ -99,10 +106,48 @@ class GameObjects {
   }
 }
 
-type dataTypes = 0 | 1 | 2;
+
+type MapCellContentTypes = "void" | "reserved" | "obstacle" | "door";
+
+export class Iterator {
+  private position: Position;
+  private shift: Position;
+  setStartPosition(position: Position) {
+    this.position = position;
+  }
+  getPosition() {
+    return { ...this.position };
+  }
+  setOffset(shift: Position) {
+    this.shift = shift;
+  }
+  getShift() {
+    return { ...this.shift };
+  }
+  calculatePosition() {
+    return {
+      x: this.position.x + this.shift.x,
+      y: this.position.y + this.shift.y,
+    };
+  }
+  constructor() {
+    this.position = { x: 1, y: 1 };
+    this.shift = { x: 0, y: 0 };
+  }
+}
+
+
 
 export default class Map {
-  private mapScheme: ("r" | 0 | 1)[][];
+
+  
+
+  public title:string ;
+
+  private mapCells: MapCellContentTypes[][];
+
+  private objectTypesToGeneatate: MapCellContentTypes[];
+
 
   private static allIDs: number[] = [];
   protected id: number;
@@ -110,6 +155,7 @@ export default class Map {
   protected gameObjects: GameObjects;
   protected dimensions: Dimensions;
   protected field: Field;
+  
 
   get_gameObjects() {
     return this.gameObjects;
@@ -138,83 +184,203 @@ export default class Map {
     return { ...this.field.params };
   }
 
-  initTheMap() {
-    // create obstacles
 
-    for (let i = 0; i < 10; i++) {
-      this.gameObjects.insertGameObject(
-        new Obstacle({
-          position: {
-            x:
-              Math.floor(Math.random() * 10) *
-              this.field.params.gameCell.dimensions.width,
-            y:
-              Math.floor(Math.random() * 10) *
-              this.field.params.gameCell.dimensions.height,
-          },
-        })
-      );
+  checkThatIsThePointVacant({ x, y }: { x: number; y: number }) {
+    if (this.mapCells[y] === undefined) {
+      return true;
+    } else if (this.mapCells[y][x] === undefined) {
+      return true;
     }
+  }
 
-    // create these doors
+  generateObjectType() {
+    const type = Math.floor(Math.random() * this.objectTypesToGeneatate.length);
+    return this.objectTypesToGeneatate[type];
+  }
 
-    for (let i = 0; i < 4; i++) {
-      this.gameObjects.insertGameObject(
-        new Door({
-          position: {
-            x:
-              Math.floor(
-                Math.random() *
-                  10 /*  this.field.params.resolution.horizontal */
-              ) * this.field.params.gameCell.dimensions.width,
-            y:
-              Math.floor(
-                Math.random() * 10 /*this.field.params.resolution.vertical*/
-              ) * this.field.params.gameCell.dimensions.height,
-          },
-          dimentions: {
-            width: this.field.params.gameCell.dimensions.width * 2,
-            height: this.field.params.gameCell.dimensions.height * 2,
-          },
-          roomID: i,
-        })
-      );
+  setPeriphery () {
+    this.mapCells ;
+  }
+
+  setSquare({ x, y }:{ x: number; y: number } , backRoomID:number|undefined) {
+
+    const iter = new Iterator();
+    
+    const handlePosition = () => {};
+
+    const currentStartPointHandler = (ofsetX: number, ofsetY: number) => {
+      let letItGo = true;
+      do {
+        iter.setStartPosition({ x, y });
+        iter.setOffset({ x: ofsetX, y: ofsetY });
+
+        const newObjectType = (x===0 && y===0) ? 'void' : this.generateObjectType();
+        let newObject: GameObjectExtendsClasses | null = null;
+        let newObjectDimensions: Dimensions;
+        let cellDimensions: Dimensions;
+        switch (newObjectType) {
+          case "obstacle":
+            newObject = new Obstacle({ position: null });
+            break;
+          case "door":
+
+            const doors = this.get_gameObjects().get_doors() ;
+            const mapID = (backRoomID === undefined) 
+              ? undefined 
+              : doors.filter(door => door.getMapID() === backRoomID).length > 0 
+                ? undefined 
+                : backRoomID ;
+            
+            
+
+            newObject = new Door({
+              dimentions: this.field.params.gameCell.dimensions,
+              position: { x: 0, y: 0 },
+              mapID ,
+            });
+            break;
+          case "void":
+            // nothing
+            break;
+        }
+
+        const numberOfDoors = this.get_gameObjects().get_doors().length;
+        console.log(numberOfDoors);
+
+        if(numberOfDoors > 3 && newObjectType === 'door') {
+          continue;
+        }
+
+        
+        /* ================================ */
+
+        if (newObject !== null) {
+          newObjectDimensions = newObject.getDimentions();
+          const cell_dimensions = { ...this.field.params.gameCell.dimensions };
+          const cells_of_new_obst: Dimensions = { width: 1, height: 1 }; // default
+
+          // вычисление занимаемых клеток сетки по ширине
+
+          if (newObjectDimensions.width > cell_dimensions.width) {
+            cells_of_new_obst.width = Math.floor(
+              newObjectDimensions.width / cell_dimensions.width
+            );
+            cells_of_new_obst.width +=
+              newObjectDimensions.width % cell_dimensions.width > 0 ? 1 : 0;
+          }
+
+          // вычисление занимаемых клеток сетки по высоте
+
+          if (newObjectDimensions.height > cell_dimensions.height) {
+            cells_of_new_obst.height = Math.floor(
+              newObjectDimensions.height / cell_dimensions.height
+            );
+            cells_of_new_obst.height +=
+              newObjectDimensions.height % cell_dimensions.height > 0 ? 1 : 0;
+          }
+
+          // чекаем , есть ли коллизия
+
+          let collisionIs = false; // default value ('collision is false') ;
+          const savedPos = iter.getPosition(); // сохраняем значение позиции
+          iter.setStartPosition(iter.calculatePosition());
+          for (let shiftY = 0; shiftY < cells_of_new_obst.height; shiftY++) {
+            for (let shiftX = 0; shiftX < cells_of_new_obst.width; shiftX++) {
+              iter.setOffset({ x: shiftX, y: shiftY });
+              if (!this.checkThatIsThePointVacant(iter.calculatePosition())) {
+                collisionIs = true; // collision detected
+                console.log("vacant false");
+              }
+            }
+          }
+
+          iter.setStartPosition(savedPos); // загружаем прежнюю позицию
+          iter.setOffset({ x: ofsetX, y: ofsetY });
+          if (collisionIs === false) {
+            const pos = iter.calculatePosition();
+
+            newObject.position = { x: pos.x * 100, y: pos.y * 100 };
+            this.gameObjects.insertGameObject(newObject);
+
+            iter.setStartPosition(iter.calculatePosition());
+
+            for (let shiftY = 0; shiftY < cells_of_new_obst.height; shiftY++) {
+              for (let shiftX = 0; shiftX < cells_of_new_obst.width; shiftX++) {
+                iter.setOffset({ x: shiftX, y: shiftY });
+
+                const pos = iter.calculatePosition();
+
+                if (this.mapCells[pos.y] === undefined) {
+                  this.mapCells[pos.y] = [];
+                  this.mapCells[pos.y][pos.x] =
+                    shiftX === 0 && shiftY === 0 ? newObjectType : "reserved";
+                } else if (this.mapCells[pos.y][pos.x] === undefined) {
+                  this.mapCells[pos.y][pos.x] =
+                    shiftX === 0 && shiftY === 0 ? newObjectType : "reserved";
+                }
+              }
+            }
+          } else {
+            continue;
+          }
+        } else {
+          const pos = iter.calculatePosition();
+          if (this.mapCells[pos.y] === undefined) {
+            this.mapCells[pos.y] = [];
+            this.mapCells[pos.y][pos.x] = "reserved";
+          } else if (this.mapCells[pos.y][pos.x] === undefined) {
+            this.mapCells[pos.y][pos.x] = "reserved";
+          }
+        }
+
+        letItGo = false;
+      } while (letItGo);
+    };
+
+    for (let shiftY = 0; shiftY < 3; shiftY++) {
+      for (let shiftX = 0; shiftX < 3; shiftX++) {
+        currentStartPointHandler(shiftX, shiftY);
+      }
+
     }
+  }
+
+  initTheMap(fromRoomId:number|undefined) {
+    this.setSquare({ x: 0, y: 0 } , fromRoomId);
+    this.setSquare({ x: 0, y: 3 } , fromRoomId);
+    this.setSquare({ x: 0, y: 6 } , fromRoomId);
+    this.setSquare({ x: 3, y: 0 } , fromRoomId);
+    this.setSquare({ x: 3, y: 3 } , fromRoomId);
+    this.setSquare({ x: 3, y: 6 } , fromRoomId);
+    this.setSquare({ x: 6, y: 0 } , fromRoomId);
+    this.setSquare({ x: 6, y: 3 } , fromRoomId);
+    this.setSquare({ x: 6, y: 6 } , fromRoomId);
 
     // create enemies
     for (let i = 0; i < 3; i++) {
-      this.gameObjects.insertGameObject(
-        new Enemy({
-          id: 0,
-          position: {
-            x:
-              Math.floor(
-                Math.random() * 10 /* this.field.params.resolution.horizontal */
-              ) * this.field.params.gameCell.dimensions.width,
-            y:
-              Math.floor(
-                Math.random() * 10
-              ) /* this.field.params.resolution.vertical */ *
-              this.field.params.gameCell.dimensions.height,
-          },
-          dimentions: this.field.params.gameCell.dimensions,
-          weapons: [
-            new Weapon({
-              damage: { damageClass: "magic", value: 5 },
-              fireRate: Math.floor(Math.random() * 900) + 100,
-              maxAllowedStepRange: 20,
-              stepRateFadeDown: false,
-              stepsLimit: 0,
-              title: "somthing",
-              impulse: 20,
-              bullet: {
-                dimensions: { width: 20, height: 20 },
-                weight: 10,
-              },
-            }),
-          ],
-        })
-      );
+      const newEnemy = new Enemy({
+        id: 0,
+        position: {
+          x:
+            Math.floor(
+              Math.random() * 10 /* this.field.params.resolution.horizontal */
+            ) * this.field.params.gameCell.dimensions.width,
+          y:
+            Math.floor(
+              Math.random() * 10
+            ) /* this.field.params.resolution.vertical */ *
+            this.field.params.gameCell.dimensions.height,
+        },
+        dimentions: this.field.params.gameCell.dimensions,
+        weapons: [
+          // ,
+        ],
+      });
+
+      this.gameObjects.insertGameObject(newEnemy);
+
+      newEnemy.addWeapon(weapons.regular);
+      newEnemy.setWeapon();
     }
   }
 
@@ -242,11 +408,24 @@ export default class Map {
   }
 
   constructor(gameCell: { dimensions: Dimensions }, isLobby: boolean = false) {
-    this.mapScheme = [];
+
+    this.mapCells = [];
+
 
     this.isLobby = isLobby;
     this.setID();
     this.field = new Field({ gameCell });
     this.gameObjects = new GameObjects();
+
+
+    this.objectTypesToGeneatate = ["void", "reserved", "obstacle", "door"];
+
+
+    const wordgen = new WordGen();
+    const word = wordgen.gen();
+
+    this.title = word;
+
+    console.log(this.title);
   }
 }

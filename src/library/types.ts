@@ -1,5 +1,6 @@
 import { Bullet } from "../gameobjects/bullet";
 import { Enemy } from "../gameobjects/enemy";
+import Obstacle from "../gameobjects/obstacle";
 import { Player } from "../gameobjects/player";
 import { SupplyBox } from "../gameobjects/supply-box";
 import { Armor } from "./armore";
@@ -52,7 +53,12 @@ export type UI_stat = {
   };
 };
 
-export type GameObjectExtendsClasses = Enemy | Bullet | SupplyBox | Player;
+export type GameObjectExtendsClasses =
+  | Enemy
+  | Bullet
+  | SupplyBox
+  | Player
+  | Obstacle;
 
 export type SupplyBoxContent = "health" | "armor" | "damage";
 

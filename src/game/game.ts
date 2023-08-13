@@ -50,9 +50,9 @@ sprite.src = knightIdleSprite;
 export default class Game {
   roomChangeTickController = new TickController(2000);
 
-  protected currentRoom: Map;
+  protected currentMap: Map;
 
-  protected rooms: Map[];
+  protected mapObjects: Map[];
 
   protected spriteManager: SpriteManager_beta;
 
@@ -110,7 +110,7 @@ export default class Game {
     walkStepsLimit: number;
     isRigidBody: boolean;
   }) {
-    const gameObjects = this.currentRoom.get_gameObjects();
+    const gameObjects = this.currentMap.get_gameObjects();
 
     const fieldParams = this.field;
 
@@ -137,7 +137,7 @@ export default class Game {
     const keys = this.keysManager.getPressedKeys();
 
     // const gameObjects = this.
-    const currentMap = this.currentRoom;
+    const currentMap = this.currentMap;
     const currentMapGameObjects = currentMap.get_gameObjects();
 
     if (this.player.position) {
@@ -159,14 +159,14 @@ export default class Game {
         ...currentMapGameObjects.get_obstacles(),
         ...currentMapGameObjects.get_doors(),
       ],
-      fieldDimentions: this.currentRoom.get_dimetions(),
+      fieldDimentions: this.currentMap.get_dimetions(),
       game: this,
     });
 
     currentMapGameObjects.get_enemies().forEach((enemy) => {
       enemy.update({
         objects: [this.player, ...currentMapGameObjects.get_obstacles()],
-        fieldDimentions: this.currentRoom.get_dimetions(),
+        fieldDimentions: this.currentMap.get_dimetions(),
         game: this,
       });
     });
@@ -179,7 +179,7 @@ export default class Game {
           this.player,
           ...currentMapGameObjects.get_obstacles(),
         ],
-        fieldDimentions: this.currentRoom.get_dimetions(),
+        fieldDimentions: this.currentMap.get_dimetions(),
         game: this,
       });
     });
@@ -187,7 +187,7 @@ export default class Game {
 
     currentMapGameObjects.get_supplyBoxes().forEach((supBox) => {
       supBox.update({
-        fieldDimentions: this.currentRoom.get_dimetions(),
+        fieldDimentions: this.currentMap.get_dimetions(),
         game: this,
       });
     });
@@ -195,7 +195,7 @@ export default class Game {
 
     currentMapGameObjects.get_doors().forEach((door) => {
       door.update({
-        fieldDimentions: this.currentRoom.get_dimetions(),
+        fieldDimentions: this.currentMap.get_dimetions(),
         game: this,
         objects: [],
       });
@@ -254,14 +254,14 @@ export default class Game {
     for (
       let i = 0;
       i <
-      this.currentRoom.getFieldDimentions().height /
+      this.currentMap.getFieldDimentions().height /
         this.UIManager.gameCellDimentions.height;
       i++
     ) {
       for (
         let j = 0;
         j <
-        this.currentRoom.getFieldDimentions().width /
+        this.currentMap.getFieldDimentions().width /
           this.UIManager.gameCellDimentions.width;
         j++
       ) {
@@ -281,7 +281,7 @@ export default class Game {
       }
     }
 
-    const curMapGameObjects = this.currentRoom.get_gameObjects();
+    const curMapGameObjects = this.currentMap.get_gameObjects();
 
     curMapGameObjects.get_doors().forEach((door) => {
       door.draw(this.UIManager.ctx, this.viewPort.position);
@@ -309,18 +309,63 @@ export default class Game {
       `HEALTH :  ${this.player.getHealth().toLocaleString()}`,
       `ARMOR : ${this.player.armor.getHealthValue()}`,
       `weapon : ${this.player.get_AttackStats()}`,
+      `map ID : ${this.currentMap.getID()}`  , 
+      `map name : ${this.currentMap.title}`  , 
     ]);
+
+    const doors = this.currentMap.get_gameObjects().get_doors() ;
+
+    let str = '' ;
+
+    doors.forEach(theDoor => {
+
+      const mapID = theDoor.getMapID();
+
+      str += ':' + ((mapID !== undefined) ? mapID : 'undefined') ;
+    });
+
+    console.log(str);
   }
 
-  changeCurrentRoom(roomID: number) {
-    for (const room of this.rooms) {
-      if (room.getID() === roomID) {
-        this.currentRoom = room;
-        return true;
+  getCurrentRoomID () {
+    return this.currentMap.getID();
+  }
+
+  addMap (roomId:number|undefined) {
+    const newMap = new Map({
+      dimensions:{width:100 , height:100}
+    });
+
+    newMap.initTheMap(roomId);
+
+    this.mapObjects.push(newMap);
+    
+    return newMap.getID();
+
+  }
+
+  changeCurrentRoom(roomID: number|undefined) {
+
+    if(roomID !== undefined) {
+      
+      for (const map of this.mapObjects) {
+        
+        // console.log('room id : ' , room.getID() , 'to room : ' , roomID);
+        if (map.getID() === roomID) {
+          
+          // console.log(room.getID() === roomID);
+          this.currentMap = map;
+          return true;
+        }
       }
     }
+    else {
 
-    return false;
+      console.log('undef');
+      return false;
+    }
+
+
   }
 
   constructor({
@@ -336,15 +381,17 @@ export default class Game {
 
     // create the lobby room
 
-    const lobbyRoom = new Map({ dimensions: gameCellDimentions }, true);
-    this.rooms = [lobbyRoom];
-    lobbyRoom.initTheMap();
+    const lobbyMap = new Map({ dimensions: gameCellDimentions }, true);
+    this.mapObjects = [lobbyMap];
+    lobbyMap.initTheMap(undefined);
 
-    this.currentRoom = lobbyRoom; // устанавливаем текущую комнату
+    this.currentMap = lobbyMap; // устанавливаем текущую комнату
 
-    this.rooms.push(new Map({ dimensions: gameCellDimentions }));
+    // this.rooms.push(new Map({ dimensions: gameCellDimentions }));
 
-    console.log(this.rooms);
+    console.log(this.mapObjects);
+
+
 
     // создаем игрока
     this.player = new Player({
@@ -352,8 +399,8 @@ export default class Game {
       position: { x: 6, y: 6 },
       weapons: [],
       dimentions: {
-        width: gameCellDimentions.width - 0.5,
-        height: gameCellDimentions.height - 0.5,
+        width: gameCellDimentions.width - 10,
+        height: gameCellDimentions.height - 10,
       },
     });
 

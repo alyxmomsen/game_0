@@ -76,7 +76,7 @@ export class Enemy extends GameObject {
       color: "#2e3628",
       id,
       kind: "enemy",
-      maxAllowWalkStepRange: 10,
+      maxAllowWalkStepRange: 2,
       walkStepRangeDelta: 2,
       walkStepRangeDeltaMod: 0,
       walkStepDirectionRange: { x: 0, y: 0 },

@@ -9,9 +9,12 @@ import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 import spriteIMG from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png";
+import { TickController } from "../library/main";
 
 export default class Door extends GameObject {
-  roomID: number;
+  private mapID:number|undefined ;
+
+  private static doorIDs:number[] ;
 
   collisionHandlerWith(
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
@@ -27,14 +30,47 @@ export default class Door extends GameObject {
 
   worldLimitCollision_handler() {}
 
+  generateID () {
+    this.id= Door.doorIDs.length ;
+    Door.doorIDs.push(this.id);
+  }
+
+  getDoorID () {
+    return this.id  ;
+  }
+
+  getMapID () {
+    return this.mapID ;
+  }
+
+  initMapID (id:number) {
+    this.mapID = id ;
+  }
+
+  // rendering: { animateTicker: TickController; currentSpriteState: number; };
+  draw(ctx: CanvasRenderingContext2D, viewPort: { x: number; y: number; }): void {
+    super.draw(ctx , viewPort);
+
+    // console.log(this.getMapID());
+    if(this.position) {
+
+      const mapID = this.getMapID();
+
+      ctx.globalAlpha = 1;
+      ctx.font = "24px serif";
+      ctx.fillStyle = "whitesmoke";
+      ctx.fillText(mapID !== undefined ? mapID.toLocaleString() : 'void', this.position.x - viewPort.x, this.position.y - viewPort.y);
+    }
+  }
+
   constructor({
     position,
     dimentions,
-    roomID,
+    mapID,
   }: {
     position: Position;
     dimentions: Dimensions;
-    roomID: number;
+    mapID: number|undefined;
   }) {
     super({
       color: "#2e3628",
@@ -68,6 +104,8 @@ export default class Door extends GameObject {
       isRigidBody: false,
     });
 
-    this.roomID = roomID;
+    
+
+    this.mapID = mapID ;
   }
 }
