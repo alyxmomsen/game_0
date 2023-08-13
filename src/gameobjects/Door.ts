@@ -27,6 +27,8 @@ export default class Door extends GameObject {
 
   worldLimitCollision_handler() {}
 
+  
+
   constructor({
     position,
     dimentions,
