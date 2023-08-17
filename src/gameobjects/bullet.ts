@@ -14,7 +14,7 @@ import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import Game from "../game/game";
 
-import bulletIMG from "./../images/spites/Weapons/Bone/Bone.png";
+import bulletIMG from "./../images/spites/Weapons/Hands/Hands.png";
 
 export class Bullet extends GameObject {
   audio: HTMLAudioElement;
@@ -35,8 +35,10 @@ export class Bullet extends GameObject {
         value: this.attack.getOwnDamage() * calculeteStepRange,
       });
 
-      this.movement.currentStepRange.x = -this.movement.currentStepRange.x / 3;
-      this.movement.currentStepRange.y = -this.movement.currentStepRange.y / 3;
+      this.movement.currentStepRange.x =
+        -this.movement.currentStepRange.x / 1.2;
+      this.movement.currentStepRange.y =
+        -this.movement.currentStepRange.y / 1.2;
 
       if (this.movement.currentStepRange.y === 0) {
         this.movement.currentStepRange.y =
@@ -86,6 +88,31 @@ export class Bullet extends GameObject {
     }
 
     super.update({ objects, fieldDimentions, game });
+  }
+
+  draw(
+    ctx: CanvasRenderingContext2D,
+    viewPort: { x: number; y: number }
+  ): void {
+    super.draw(ctx, viewPort);
+
+    const frame = this.spriteManager_.getFrame(0);
+
+    if (this.position) {
+      if (frame) {
+        ctx.drawImage(
+          frame./* spriteImage */ src,
+          frame./* x */ pos.x,
+          frame./* y */ pos.y,
+          frame./* width */ dim.width,
+          frame./* height */ dim.height,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y,
+          this.dimentions.width,
+          this.dimentions.height
+        );
+      }
+    }
   }
 
   constructor({
@@ -142,6 +169,25 @@ export class Bullet extends GameObject {
           firstFramePosition: { x: 51, y: 3 },
           maxAllowFrames: 1,
           stepRange: 1,
+        },
+      ]),
+      spriteManager_: new SpriteManager([
+        {
+          frames: {
+            totalSteps: 1,
+            dimensions: {
+              width: 7,
+              height: 7,
+            },
+            first: { x: 4, y: 5 },
+            step: {
+              velocity: {
+                x: 0,
+                y: 0,
+              },
+            },
+          },
+          spriteSrc: bulletIMG,
         },
       ]),
       isRigidBody,

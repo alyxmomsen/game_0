@@ -10,11 +10,12 @@ import { SupplyBox } from "./supply-box";
 
 import spriteIMG from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png";
 import { TickController } from "../library/main";
+import { SpriteManager } from "../library/sprite-manager";
 
 export default class Door extends GameObject {
-  private mapID:number|undefined ;
+  private mapID: number | undefined;
 
-  private static doorIDs:number[] ;
+  private static doorIDs: number[];
 
   collisionHandlerWith(
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
@@ -30,36 +31,66 @@ export default class Door extends GameObject {
 
   worldLimitCollision_handler() {}
 
-  generateID () {
-    this.id= Door.doorIDs.length ;
+  generateID() {
+    this.id = Door.doorIDs.length;
     Door.doorIDs.push(this.id);
   }
 
-  getDoorID () {
-    return this.id  ;
+  getDoorID() {
+    return this.id;
   }
 
-  getMapID () {
-    return this.mapID ;
+  getMapID() {
+    return this.mapID;
   }
 
-  initMapID (id:number) {
-    this.mapID = id ;
+  initMapID(id: number) {
+    this.mapID = id;
   }
 
-  // rendering: { animateTicker: TickController; currentSpriteState: number; };
-  draw(ctx: CanvasRenderingContext2D, viewPort: { x: number; y: number; }): void {
-    super.draw(ctx , viewPort);
+  draw(
+    ctx: CanvasRenderingContext2D,
+    viewPort: { x: number; y: number }
+  ): void {
+    super.draw(ctx, viewPort);
 
-    // console.log(this.getMapID());
-    if(this.position) {
-
+    if (this.position) {
       const mapID = this.getMapID();
 
       ctx.globalAlpha = 1;
       ctx.font = "24px serif";
       ctx.fillStyle = "whitesmoke";
-      ctx.fillText(mapID !== undefined ? mapID.toLocaleString() : 'void', this.position.x - viewPort.x, this.position.y - viewPort.y);
+      ctx.fillText(
+        mapID !== undefined ? mapID.toLocaleString() : "void",
+        this.position.x - viewPort.x,
+        this.position.y - viewPort.y
+      );
+    }
+
+    const frame: null | {
+      spriteImage: HTMLImageElement;
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    } = this.spriteManager.getFrame(
+      this.kind === "player" ? (this.state === "move" ? 1 : 0) : 0
+    );
+
+    if (this.position) {
+      if (frame) {
+        ctx.drawImage(
+          frame.spriteImage,
+          frame.x,
+          frame.y,
+          frame.width,
+          frame.height,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y,
+          this.dimentions.width,
+          this.dimentions.height
+        );
+      }
     }
   }
 
@@ -70,7 +101,7 @@ export default class Door extends GameObject {
   }: {
     position: Position;
     dimentions: Dimensions;
-    mapID: number|undefined;
+    mapID: number | undefined;
   }) {
     super({
       color: "#2e3628",
@@ -101,11 +132,10 @@ export default class Door extends GameObject {
           stepRange: 1,
         },
       ]),
+      spriteManager_: new SpriteManager([]),
       isRigidBody: false,
     });
 
-    
-
-    this.mapID = mapID ;
+    this.mapID = mapID;
   }
 }

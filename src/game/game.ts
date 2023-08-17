@@ -267,10 +267,10 @@ export default class Game {
       ) {
         this.UIManager.ctx.drawImage(
           background,
-          160,
-          0,
-          60,
-          63,
+          170,
+          20,
+          30,
+          30,
           j * this.UIManager.gameCellDimentions.width -
             this.viewPort.position.x,
           i * this.UIManager.gameCellDimentions.height -
@@ -309,63 +309,51 @@ export default class Game {
       `HEALTH :  ${this.player.getHealth().toLocaleString()}`,
       `ARMOR : ${this.player.armor.getHealthValue()}`,
       `weapon : ${this.player.get_AttackStats()}`,
-      `map ID : ${this.currentMap.getID()}`  , 
-      `map name : ${this.currentMap.title}`  , 
+      `map ID : ${this.currentMap.getID()}`,
+      `map name : ${this.currentMap.title}`,
     ]);
 
-    const doors = this.currentMap.get_gameObjects().get_doors() ;
+    const doors = this.currentMap.get_gameObjects().get_doors();
 
-    let str = '' ;
+    let str = "";
 
-    doors.forEach(theDoor => {
-
+    doors.forEach((theDoor) => {
       const mapID = theDoor.getMapID();
 
-      str += ':' + ((mapID !== undefined) ? mapID : 'undefined') ;
+      str += ":" + (mapID !== undefined ? mapID : "undefined");
     });
-
-    console.log(str);
   }
 
-  getCurrentRoomID () {
+  getCurrentRoomID() {
     return this.currentMap.getID();
   }
 
-  addMap (roomId:number|undefined) {
+  addMap(roomId: number | undefined) {
     const newMap = new Map({
-      dimensions:{width:100 , height:100}
+      dimensions: { width: 100, height: 100 },
     });
 
     newMap.initTheMap(roomId);
 
     this.mapObjects.push(newMap);
-    
-    return newMap.getID();
 
+    return newMap.getID();
   }
 
-  changeCurrentRoom(roomID: number|undefined) {
-
-    if(roomID !== undefined) {
-      
+  changeCurrentRoom(roomID: number | undefined) {
+    if (roomID !== undefined) {
       for (const map of this.mapObjects) {
-        
         // console.log('room id : ' , room.getID() , 'to room : ' , roomID);
         if (map.getID() === roomID) {
-          
           // console.log(room.getID() === roomID);
           this.currentMap = map;
           return true;
         }
       }
-    }
-    else {
-
-      console.log('undef');
+    } else {
+      console.log("undef");
       return false;
     }
-
-
   }
 
   constructor({
@@ -387,19 +375,13 @@ export default class Game {
 
     this.currentMap = lobbyMap; // устанавливаем текущую комнату
 
-    // this.rooms.push(new Map({ dimensions: gameCellDimentions }));
-
-    console.log(this.mapObjects);
-
-
-
     // создаем игрока
     this.player = new Player({
       id: 0,
       position: { x: 6, y: 6 },
       weapons: [],
       dimentions: {
-        width: gameCellDimentions.width - 10,
+        width: (22 / 32) * gameCellDimentions.height,
         height: gameCellDimentions.height - 10,
       },
     });
@@ -407,8 +389,6 @@ export default class Game {
     this.player.addWeapon(playerWeapon.regular); // добавляем оружие из JSON файла
     this.player.addWeapon(playerWeapon.boosted); // добавляем оружие из JSON файла
     this.player.setWeapon(); // устанавливаем текущее оружие
-
-    // console.log(this.player);
 
     this.UIManager = new UIManager({
       canvas,

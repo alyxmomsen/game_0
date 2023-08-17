@@ -229,31 +229,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     ctx.imageSmoothingEnabled = false;
     ctx.fillStyle = "white";
     ctx.lineWidth = 2;
-    // ctx.fillRect(this.position.x , this.position.y , this.dimentions.width , this.dimentions.height);
     ctx.strokeStyle = "white";
-
-    if (this.position) {
-      // ctx.strokeRect(
-      //   this.position.x - viewPort.x,
-      //   this.position.y - viewPort.y,
-      //   this.dimentions.width,
-      //   this.dimentions.height
-      // );
-    } else {
-      console.log("position is NULL");
-    }
-
-    const frame: null | {
-      spriteImage: HTMLImageElement;
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    } = this.spriteManager.getFrame(
-      this.kind === "player" ? (this.state === "move" ? 1 : 0) : 0
-    );
-
-    // console.log(frame);
 
     const calculate = function (
       maxBarWide: number,
@@ -312,27 +288,6 @@ export default abstract class GameObject extends GameObject_part_2 {
         console.log("position is NULL");
       }
     }
-
-    if (this.position) {
-      if (frame) {
-        ctx.drawImage(
-          frame.spriteImage,
-          frame.x,
-          frame.y,
-          frame.width,
-          frame.height,
-          this.position.x - viewPort.x,
-          this.position.y - viewPort.y,
-          this.dimentions.width,
-          this.dimentions.height
-        );
-      }
-    }
-
-    
-
-    
-
   }
 
   constructor({
@@ -353,6 +308,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     walkStepRangeDeltaMod: stepRangeDeltaMod,
     spriteManager,
     isRigidBody,
+    spriteManager_,
   }: // spriteManager_ ,
   {
     id: number;
@@ -371,7 +327,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     walkStepRangeDelta: number;
     walkStepRangeDeltaMod: number;
     spriteManager: SpriteManager_beta;
-    // spriteManager_:SpriteManager ;
+    spriteManager_: SpriteManager;
     isRigidBody: boolean;
   }) {
     super();
@@ -419,7 +375,7 @@ export default abstract class GameObject extends GameObject_part_2 {
     this.controller = new Controller();
 
     this.spriteManager = spriteManager;
-    // this.spriteManager_ = spriteManager_ ;
+    this.spriteManager_ = spriteManager_;
 
     this.state = "stand";
 
