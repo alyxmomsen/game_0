@@ -1,7 +1,14 @@
+import { GameObjectExtendsClasses } from "./types";
 
 export default class RayTracing {
 
-    constructor () {
+    gameObject:GameObjectExtendsClasses ;
+
+
+    constructor (gameObject:GameObjectExtendsClasses) {
+
+        this.gameObject = gameObject ;
+
 
     }
 }
