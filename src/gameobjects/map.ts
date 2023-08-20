@@ -20,10 +20,7 @@ class Field {
     dimentions: Dimensions | undefined;
   };
 
-
-
   // map: (MapCellContentTypes | "r")[][];
-
 
   constructor(params: { gameCell: { dimensions: Dimensions } }) {
     console.log("map created. params: ", params);
@@ -33,7 +30,6 @@ class Field {
     // this.map = [];
     // this.map[0] = [];
     // this.map[0][0] = 'void';
-
   }
 }
 
@@ -107,7 +103,6 @@ class GameObjects {
   }
 }
 
-
 type MapCellContentTypes = "void" | "reserved" | "obstacle" | "door";
 
 export class Iterator {
@@ -142,9 +137,7 @@ export default class Map {
 
   private mapCells: MapCellContentTypes[][];
 
-
   private objectTypesToGeneatate: MapCellContentTypes[];
-
 
   private static allIDs: number[] = [];
   protected id: number;
@@ -179,7 +172,6 @@ export default class Map {
   get_fieldParams() {
     return { ...this.field.params };
   }
-
 
   checkThatIsThePointVacant({ x, y }: { x: number; y: number }) {
     if (this.mapCells[y] === undefined) {
@@ -366,7 +358,6 @@ export default class Map {
             : false
         );
       }
-
     }
   }
 
@@ -383,11 +374,10 @@ export default class Map {
     this.setSquare({ x: 6, y: 3 }, fromRoomId, []);
     this.setSquare({ x: 6, y: 6 }, fromRoomId, []);
     this.setSquare({ x: 6, y: 9 }, fromRoomId, ["y"]);
-    this.setSquare({ x: 9, y: 0 }, fromRoomId, ['x']);
-    this.setSquare({ x: 9, y: 3 }, fromRoomId, ['x']);
-    this.setSquare({ x: 9, y: 6 }, fromRoomId, ['x']);
-    this.setSquare({ x: 9, y: 9 }, fromRoomId, ['x' , "y"]);
-
+    this.setSquare({ x: 9, y: 0 }, fromRoomId, ["x"]);
+    this.setSquare({ x: 9, y: 3 }, fromRoomId, ["x"]);
+    this.setSquare({ x: 9, y: 6 }, fromRoomId, ["x"]);
+    this.setSquare({ x: 9, y: 9 }, fromRoomId, ["x", "y"]);
 
     // create enemies
     for (let i = 0; i < 3; i++) {
@@ -417,7 +407,6 @@ export default class Map {
 
       newEnemy.addWeapon(weapons.regular);
       newEnemy.setWeapon();
-
     }
   }
 
@@ -445,7 +434,6 @@ export default class Map {
   }
 
   constructor(gameCell: { dimensions: Dimensions }, isLobby: boolean = false) {
-
     this.mapCells = [];
 
     this.isLobby = isLobby;
@@ -461,6 +449,5 @@ export default class Map {
     this.title = word;
 
     console.log(this.title);
-
   }
 }
