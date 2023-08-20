@@ -20,13 +20,9 @@ class Field {
     dimentions: Dimensions | undefined;
   };
 
-<<<<<<< HEAD
 
   // map: (MapCellContentTypes | "r")[][];
 
-=======
-  // map: (MapCellContentTypes | "r")[][];
->>>>>>> feature
 
   constructor(params: { gameCell: { dimensions: Dimensions } }) {
     console.log("map created. params: ", params);
@@ -36,10 +32,8 @@ class Field {
     // this.map = [];
     // this.map[0] = [];
     // this.map[0][0] = 'void';
-<<<<<<< HEAD
 
-=======
->>>>>>> feature
+
   }
 }
 
