@@ -1,14 +1,18 @@
-import { GameObjectExtendsClasses } from "./types";
+import { Dimensions, GameObjectExtendsClasses, Position } from "./types";
 
 export default class RayTracing {
 
-    gameObject:GameObjectExtendsClasses ;
+    subject: {
+        position:Position ;
+        dimensions:Dimensions ;
+    }
 
+    updatePosition () {
+        
+    }
 
-    constructor (gameObject:GameObjectExtendsClasses) {
+    constructor (gameObject: {position:Position , dimensions:Dimensions}) {
 
-        this.gameObject = gameObject ;
-
-
+        this.subject = {...gameObject} ;
     }
 }
