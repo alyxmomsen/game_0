@@ -9,9 +9,13 @@ import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 import spriteIMG from "./../images/spites/Environment/Dungeon Prison/Assets/Tiles.png";
+import { TickController } from "../library/main";
+import { SpriteManager } from "../library/sprite-manager";
 
 export default class Door extends GameObject {
-  roomID: number;
+  private mapID: number | undefined;
+
+  private static doorIDs: number[];
 
   collisionHandlerWith(
     object: GameObject | Enemy | Player | Bullet | SupplyBox | null
@@ -27,16 +31,77 @@ export default class Door extends GameObject {
 
   worldLimitCollision_handler() {}
 
-  
+  generateID() {
+    this.id = Door.doorIDs.length;
+    Door.doorIDs.push(this.id);
+  }
+
+  getDoorID() {
+    return this.id;
+  }
+
+  getMapID() {
+    return this.mapID;
+  }
+
+  initMapID(id: number) {
+    this.mapID = id;
+  }
+
+  draw(
+    ctx: CanvasRenderingContext2D,
+    viewPort: { x: number; y: number }
+  ): void {
+    super.draw(ctx, viewPort);
+
+    if (this.position) {
+      const mapID = this.getMapID();
+
+      ctx.globalAlpha = 1;
+      ctx.font = "24px serif";
+      ctx.fillStyle = "whitesmoke";
+      ctx.fillText(
+        mapID !== undefined ? mapID.toLocaleString() : "void",
+        this.position.x - viewPort.x,
+        this.position.y - viewPort.y
+      );
+    }
+
+    const frame: null | {
+      spriteImage: HTMLImageElement;
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    } = this.spriteManager.getFrame(
+      this.kind === "player" ? (this.state === "move" ? 1 : 0) : 0
+    );
+
+    if (this.position) {
+      if (frame) {
+        ctx.drawImage(
+          frame.spriteImage,
+          frame.x,
+          frame.y,
+          frame.width,
+          frame.height,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y,
+          this.dimentions.width,
+          this.dimentions.height
+        );
+      }
+    }
+  }
 
   constructor({
     position,
     dimentions,
-    roomID,
+    mapID,
   }: {
     position: Position;
     dimentions: Dimensions;
-    roomID: number;
+    mapID: number | undefined;
   }) {
     super({
       color: "#2e3628",
@@ -67,9 +132,10 @@ export default class Door extends GameObject {
           stepRange: 1,
         },
       ]),
+      spriteManager_: new SpriteManager([]),
       isRigidBody: false,
     });
 
-    this.roomID = roomID;
+    this.mapID = mapID;
   }
 }

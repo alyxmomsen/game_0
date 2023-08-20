@@ -16,13 +16,13 @@
     "title": "automatic gun",
     "damage": { "damageClass": "phisical", "value": 100 },
     "fireRate": 50,
-    "maxAllowedStepRange": 50,
-    "impulse": 50,
+    "maxAllowedStepRange": 30,
+    "impulse": 25,
     "stepRateFadeDown": true,
     "stepsLimit": 0,
     "bullet": {
       "weight": 10,
-      "dimensions": { "width": 10, "height": 10 }
+      "dimensions": { "width": 20, "height": 20 }
     }
   }
 }

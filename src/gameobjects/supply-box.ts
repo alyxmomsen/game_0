@@ -45,6 +45,39 @@ export class SupplyBox extends GameObject {
     });
   }
 
+  draw(
+    ctx: CanvasRenderingContext2D,
+    viewPort: { x: number; y: number }
+  ): void {
+    super.draw(ctx, viewPort);
+
+    const frame: null | {
+      spriteImage: HTMLImageElement;
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    } = this.spriteManager.getFrame(
+      this.kind === "player" ? (this.state === "move" ? 1 : 0) : 0
+    );
+
+    if (this.position) {
+      if (frame) {
+        ctx.drawImage(
+          frame.spriteImage,
+          frame.x,
+          frame.y,
+          frame.width,
+          frame.height,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y,
+          this.dimentions.width,
+          this.dimentions.height
+        );
+      }
+    }
+  }
+
   constructor({ position }: { position: Position | null }) {
     super({
       id: 0,
@@ -57,7 +90,7 @@ export class SupplyBox extends GameObject {
       shouldFadeDownStepRate: false,
       color: "grey",
       position,
-      dimentions: { width: 160, height: 160 },
+      dimentions: { width: 100, height: 100 },
       ownDamage: new Damage({ damageClass: "phisical", value: 0 }),
       weapons: [],
       health: 666,
@@ -74,6 +107,10 @@ export class SupplyBox extends GameObject {
           maxAllowFrames: 1,
           firstFramePosition: { x: -2, y: 10 },
         },
+      ]),
+      spriteManager_: new SpriteManager([
+        // {
+        // }
       ]),
       isRigidBody: false,
     });

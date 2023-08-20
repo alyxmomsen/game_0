@@ -12,6 +12,7 @@ import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 import weapons from "./../weapon-sets.json";
+import WordGen from "../library/word-gen";
 
 class Field {
   params: {
@@ -19,9 +20,13 @@ class Field {
     dimentions: Dimensions | undefined;
   };
 
+<<<<<<< HEAD
 
   // map: (MapCellContentTypes | "r")[][];
 
+=======
+  // map: (MapCellContentTypes | "r")[][];
+>>>>>>> feature
 
   constructor(params: { gameCell: { dimensions: Dimensions } }) {
     console.log("map created. params: ", params);
@@ -31,7 +36,10 @@ class Field {
     // this.map = [];
     // this.map[0] = [];
     // this.map[0][0] = 'void';
+<<<<<<< HEAD
 
+=======
+>>>>>>> feature
   }
 }
 
@@ -136,9 +144,12 @@ export class Iterator {
 }
 
 export default class Map {
+  public title: string;
+
   private mapCells: MapCellContentTypes[][];
 
-  private availableObjectTypes: MapCellContentTypes[];
+
+  private objectTypesToGeneatate: MapCellContentTypes[];
 
 
   private static allIDs: number[] = [];
@@ -185,25 +196,42 @@ export default class Map {
   }
 
   generateObjectType() {
-    const type = Math.floor(Math.random() * this.availableObjectTypes.length);
-
-    return this.availableObjectTypes[type];
+    const type = Math.floor(Math.random() * this.objectTypesToGeneatate.length);
+    return this.objectTypesToGeneatate[type];
   }
 
-  setSquare({ x, y }: { x: number; y: number }) {
+  setPeriphery() {
+    this.mapCells;
+  }
+
+  setSquare(
+    { x, y }: { x: number; y: number },
+    backRoomID: number | undefined,
+    end: ("x" | "y")[]
+  ) {
     const iter = new Iterator();
-    // iter.setStartPosition({x , y});
-    // checkPoint
 
-    const handlePosition = () => {};
-
-    const currentStartPointHandler = (ofsetX: number, ofsetY: number) => {
+    const currentStartPointHandler = (
+      ofsetX: number,
+      ofsetY: number,
+      end: boolean
+    ) => {
       let letItGo = true;
+
       do {
         iter.setStartPosition({ x, y });
         iter.setOffset({ x: ofsetX, y: ofsetY });
 
-        const newObjectType = this.generateObjectType();
+        const newObjectType: MapCellContentTypes =
+          end === true
+            ? "obstacle"
+            : x === 0 && y === 0
+            ? "void"
+            : ofsetX === 0 && x === 0
+            ? "obstacle"
+            : ofsetY === 0 && y === 0
+            ? "obstacle"
+            : this.generateObjectType();
         let newObject: GameObjectExtendsClasses | null = null;
         let newObjectDimensions: Dimensions;
         let cellDimensions: Dimensions;
@@ -212,15 +240,31 @@ export default class Map {
             newObject = new Obstacle({ position: null });
             break;
           case "door":
+            const doors = this.get_gameObjects().get_doors();
+            const mapID =
+              backRoomID === undefined
+                ? undefined
+                : doors.filter((door) => door.getMapID() === backRoomID)
+                    .length > 0
+                ? undefined
+                : backRoomID;
+
             newObject = new Door({
-              dimentions: { width: 100, height: 100 },
+              dimentions: this.field.params.gameCell.dimensions,
               position: { x: 0, y: 0 },
-              roomID: 0,
+              mapID,
             });
             break;
           case "void":
             // nothing
             break;
+        }
+
+        const numberOfDoors = this.get_gameObjects().get_doors().length;
+        console.log(numberOfDoors);
+
+        if (numberOfDoors > 3 && newObjectType === "door") {
+          continue;
         }
 
         /* ================================ */
@@ -308,25 +352,48 @@ export default class Map {
       } while (letItGo);
     };
 
-    for (let shiftY = 0; shiftY < 3; shiftY++) {
-      for (let shiftX = 0; shiftX < 3; shiftX++) {
-        currentStartPointHandler(shiftX, shiftY);
+    const maxY = 3;
+    const maxX = 3;
+
+    const isTheEndForX = end.includes("x");
+    const isTheEndForY = end.includes("y");
+
+    for (let shiftY = 0; shiftY < maxY; shiftY++) {
+      for (let shiftX = 0; shiftX < maxX; shiftX++) {
+        currentStartPointHandler(
+          shiftX,
+          shiftY,
+          isTheEndForX && shiftX === maxX - 1
+            ? isTheEndForY && shiftY === maxY - 1
+              ? true
+              : true
+            : isTheEndForY && shiftY === maxY - 1
+            ? true
+            : false
+        );
       }
 
     }
   }
 
+  initTheMap(fromRoomId: number | undefined) {
+    this.setSquare({ x: 0, y: 0 }, fromRoomId, []);
+    this.setSquare({ x: 0, y: 3 }, fromRoomId, []);
+    this.setSquare({ x: 0, y: 6 }, fromRoomId, []);
+    this.setSquare({ x: 0, y: 9 }, fromRoomId, ["y"]);
+    this.setSquare({ x: 3, y: 0 }, fromRoomId, []);
+    this.setSquare({ x: 3, y: 3 }, fromRoomId, []);
+    this.setSquare({ x: 3, y: 6 }, fromRoomId, []);
+    this.setSquare({ x: 3, y: 9 }, fromRoomId, ["y"]);
+    this.setSquare({ x: 6, y: 0 }, fromRoomId, []);
+    this.setSquare({ x: 6, y: 3 }, fromRoomId, []);
+    this.setSquare({ x: 6, y: 6 }, fromRoomId, []);
+    this.setSquare({ x: 6, y: 9 }, fromRoomId, ["y"]);
+    this.setSquare({ x: 9, y: 0 }, fromRoomId, ['x']);
+    this.setSquare({ x: 9, y: 3 }, fromRoomId, ['x']);
+    this.setSquare({ x: 9, y: 6 }, fromRoomId, ['x']);
+    this.setSquare({ x: 9, y: 9 }, fromRoomId, ['x' , "y"]);
 
-  initTheMap() {
-    this.setSquare({ x: 0, y: 0 });
-    this.setSquare({ x: 3, y: 0 });
-    this.setSquare({ x: 6, y: 0 });
-    this.setSquare({ x: 0, y: 3 });
-    this.setSquare({ x: 3, y: 3 });
-    this.setSquare({ x: 6, y: 3 });
-    this.setSquare({ x: 0, y: 6 });
-    this.setSquare({ x: 3, y: 6 });
-    this.setSquare({ x: 6, y: 6 });
 
     // create enemies
     for (let i = 0; i < 3; i++) {
@@ -343,7 +410,10 @@ export default class Map {
             ) /* this.field.params.resolution.vertical */ *
             this.field.params.gameCell.dimensions.height,
         },
-        dimentions: this.field.params.gameCell.dimensions,
+        dimentions: {
+          height: this.field.params.gameCell.dimensions.height - 10,
+          width: (25 / 34) * this.field.params.gameCell.dimensions.width,
+        },
         weapons: [
           // ,
         ],
@@ -384,14 +454,19 @@ export default class Map {
 
     this.mapCells = [];
 
-
     this.isLobby = isLobby;
     this.setID();
     this.field = new Field({ gameCell });
     this.gameObjects = new GameObjects();
 
+    this.objectTypesToGeneatate = ["void", "reserved", "obstacle", "door"];
 
-    this.availableObjectTypes = ["void", "reserved", "obstacle", "door"];
+    const wordgen = new WordGen();
+    const word = wordgen.gen();
+
+    this.title = word;
+
+    console.log(this.title);
 
   }
 }

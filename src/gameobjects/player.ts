@@ -8,12 +8,13 @@ import { Enemy } from "./enemy";
 import GameObject from "./gameobject";
 import { SupplyBox } from "./supply-box";
 
-import skeletonSpriteIdle from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle-Sheet.png";
-import skeletonSpriteRun from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet.png";
-import skeletonSpirteRun_mirror from "./../images/spites/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet-mirrior.png";
+import skeletonSpriteIdle from "./../images/spites/Heroes/Rogue/Idle/Idle-Sheet.png";
+import skeletonSpriteRun from "./../images/spites/Heroes/Rogue/Run/Run-Sheet.png";
+import skeletonSpirteRun_mirror from "./../images/spites/Heroes/Rogue/Run/Run-left-Sheet.png";
 import { SpriteManager } from "../library/sprite-manager";
 import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import Game from "../game/game";
+// import Door from "./door";
 import Door from "./door";
 
 export class Player extends GameObject {
@@ -29,10 +30,18 @@ export class Player extends GameObject {
         this.increaseHealth(500);
       } else if (object instanceof Door) {
         // меняем текущую комнату
+        const door = object;
 
-        if (game.changeCurrentRoom(object.roomID)) {
+        if (door.getMapID() === undefined) {
+          door.initMapID(game.addMap(game.getCurrentRoomID()));
+          console.log("doors map ID : ", door.getMapID());
+        }
+
+        if (game.changeCurrentRoom(door.getMapID())) {
           this.position = { x: 0, y: 0 };
           this.movement.targetPosition = { x: 0, y: 0 };
+        } else {
+          // alert('no map');
         }
       }
     }
@@ -71,6 +80,42 @@ export class Player extends GameObject {
       fieldDimentions,
       game,
     });
+
+    this.spriteManager_.getFrame(0);
+  }
+
+  draw(
+    ctx: CanvasRenderingContext2D,
+    viewPort: { x: number; y: number }
+  ): void {
+    super.draw(ctx, viewPort);
+    if (this.position) {
+      const frame = this.spriteManager_.getFrame(
+        this.theStates.direction.y !== "static"
+          ? this.theStates.direction.x === "right"
+            ? 1
+            : this.theStates.direction.x === "left"
+            ? 0
+            : 1
+          : this.theStates.direction.x === "right"
+          ? 1
+          : this.theStates.direction.x === "left"
+          ? 0
+          : 2
+      );
+
+      ctx.drawImage(
+        frame.src,
+        frame.pos.x,
+        frame.pos.y,
+        frame.dim.width,
+        frame.dim.height,
+        this.position.x - viewPort.x,
+        this.position.y - viewPort.y,
+        this.dimentions.width,
+        this.dimentions.height
+      );
+    }
   }
 
   constructor({
@@ -88,8 +133,8 @@ export class Player extends GameObject {
       id,
       kind: "player",
       maxAllowWalkStepRange: 2,
-      walkStepRangeDelta: 1,
-      walkStepRangeDeltaMod: 0,
+      walkStepRangeDelta: 0.1,
+      walkStepRangeDeltaMod: 0.1,
       walkStepDirectionRange: { x: 0, y: 0 },
       walkStepsLimit: 0,
       shouldFadeDownStepRate: false,
@@ -104,7 +149,7 @@ export class Player extends GameObject {
         dempher: 99 /* Math.floor(Math.random() * 99) + 1 */,
       }),
       spriteManager: new SpriteManager_beta([
-        {
+        /* {
           src: skeletonSpriteIdle,
           firstFramePosition: { x: 0, y: 0 },
           height: 32,
@@ -119,6 +164,59 @@ export class Player extends GameObject {
           width: 33,
           maxAllowFrames: 6,
           stepRange: 64,
+        }, */
+      ]),
+      spriteManager_: new SpriteManager([
+        {
+          frames: {
+            totalSteps: 5,
+            dimensions: {
+              width: 23,
+              height: 33,
+            },
+            first: { x: 342, y: 32 },
+            step: {
+              velocity: {
+                x: -64,
+                y: 0,
+              },
+            },
+          },
+          spriteSrc: skeletonSpirteRun_mirror,
+        },
+        {
+          frames: {
+            totalSteps: 5,
+            dimensions: {
+              width: 23,
+              height: 33,
+            },
+            first: { x: 20, y: 32 },
+            step: {
+              velocity: {
+                x: 64,
+                y: 0,
+              },
+            },
+          },
+          spriteSrc: skeletonSpriteRun,
+        },
+        {
+          frames: {
+            totalSteps: 3,
+            dimensions: {
+              width: 20,
+              height: 30,
+            },
+            first: { x: 4, y: 2 },
+            step: {
+              velocity: {
+                x: 32,
+                y: 0,
+              },
+            },
+          },
+          spriteSrc: skeletonSpriteIdle,
         },
       ]),
       isRigidBody: true,

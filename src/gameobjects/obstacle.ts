@@ -9,6 +9,7 @@ import { Player } from "./player";
 import { SupplyBox } from "./supply-box";
 
 import obstacleIMG from "./../images/spites/Environment/Green Woods/Assets/Props.png";
+import { SpriteManager } from "../library/sprite-manager";
 
 export default class Obstacle extends GameObject {
   collisionHandlerWith(
@@ -24,6 +25,31 @@ export default class Obstacle extends GameObject {
   ): void {}
 
   worldLimitCollision_handler(): void {}
+
+  draw(
+    ctx: CanvasRenderingContext2D,
+    viewPort: { x: number; y: number }
+  ): void {
+    super.draw(ctx, viewPort);
+
+    const frame = this.spriteManager_.getFrame(0);
+
+    if (this.position) {
+      if (frame) {
+        ctx.drawImage(
+          frame./* spriteImage */ src,
+          frame./* x */ pos.x,
+          frame./* y */ pos.y,
+          frame./* width */ dim.width,
+          frame./* height */ dim.height,
+          this.position.x - viewPort.x,
+          this.position.y - viewPort.y,
+          this.dimentions.width,
+          this.dimentions.height
+        );
+      }
+    }
+  }
 
   constructor({ position }: { position: Position | null }) {
     super({
@@ -53,6 +79,25 @@ export default class Obstacle extends GameObject {
           width: 30,
           maxAllowFrames: 1,
           stepRange: 1,
+        },
+      ]),
+      spriteManager_: new SpriteManager([
+        {
+          frames: {
+            totalSteps: 1,
+            dimensions: {
+              width: 43,
+              height: 44,
+            },
+            first: { x: 3, y: 100 },
+            step: {
+              velocity: {
+                x: 0,
+                y: 0,
+              },
+            },
+          },
+          spriteSrc: obstacleIMG,
         },
       ]),
       isRigidBody: true,
