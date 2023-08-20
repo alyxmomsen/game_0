@@ -9,6 +9,7 @@ import { GameObjectHTMLs } from "../library/game-object-htmls";
 import { GameController } from "../library/gameController";
 import KeysManager from "../library/keysManager";
 import { TickController } from "../library/main";
+// comment
 import {
   Dimensions,
   Direction,
