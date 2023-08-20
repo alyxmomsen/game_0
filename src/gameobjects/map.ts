@@ -20,7 +20,10 @@ class Field {
     dimentions: Dimensions | undefined;
   };
 
+
+
   // map: (MapCellContentTypes | "r")[][];
+
 
   constructor(params: { gameCell: { dimensions: Dimensions } }) {
     console.log("map created. params: ", params);
@@ -30,6 +33,7 @@ class Field {
     // this.map = [];
     // this.map[0] = [];
     // this.map[0][0] = 'void';
+
   }
 }
 
