@@ -13,6 +13,7 @@ import { SupplyBox } from "./supply-box";
 
 import weapons from "./../weapon-sets.json";
 import WordGen from "../library/word-gen";
+import PathFinder from "../library/ray-trace";
 
 class Field {
   params: {
@@ -378,6 +379,17 @@ export default class Map {
     this.setSquare({ x: 9, y: 3 }, fromRoomId, ["x"]);
     this.setSquare({ x: 9, y: 6 }, fromRoomId, ["x"]);
     this.setSquare({ x: 9, y: 9 }, fromRoomId, ["x", "y"]);
+
+
+    const checkTraces = new PathFinder ({dimensions:{width:100 , height:100} , position:{x:0 , y:0}} , []) ;
+
+    const obstacles = this.gameObjects.get_doors();
+    obstacles.forEach(obst => {
+      console.log('check target' , checkTraces.setTarget(obst));
+    });
+
+    // checkTraces.setTarget();
+
 
     // create enemies
     for (let i = 0; i < 3; i++) {

@@ -40,7 +40,7 @@ class SpriteSet {
         this.frames.currentStep = 0;
       }
 
-      console.log(this.frames.currentPos.x, this.frames.currentPos.y);
+      // console.log(this.frames.currentPos.x, this.frames.currentPos.y);
     }
   }
 
@@ -73,7 +73,7 @@ class SpriteSet {
       totalSteps: spriteSet.frames.total,
     };
 
-    console.log("first", this.frames.first);
+    // console.log("first", this.frames.first);
   }
 }
 
@@ -108,7 +108,7 @@ export class SpriteManager {
     // console.log('spriteset seteted' , this.spriteSets);
 
     spriteSets.forEach((spriteSet) => {
-      console.log("set spriteset");
+      // console.log("set spriteset");
       this.spriteSets.push(
         new SpriteSet({
           frames: {
