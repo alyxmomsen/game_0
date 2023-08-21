@@ -363,24 +363,30 @@ export default class Map {
   }
 
   initTheMap(fromRoomId: number | undefined) {
-    this.setSquare({ x: 0, y: 0 }, fromRoomId, []);
-    this.setSquare({ x: 0, y: 3 }, fromRoomId, []);
-    this.setSquare({ x: 0, y: 6 }, fromRoomId, []);
-    this.setSquare({ x: 0, y: 9 }, fromRoomId, ["y"]);
-    this.setSquare({ x: 3, y: 0 }, fromRoomId, []);
-    this.setSquare({ x: 3, y: 3 }, fromRoomId, []);
-    this.setSquare({ x: 3, y: 6 }, fromRoomId, []);
-    this.setSquare({ x: 3, y: 9 }, fromRoomId, ["y"]);
-    this.setSquare({ x: 6, y: 0 }, fromRoomId, []);
-    this.setSquare({ x: 6, y: 3 }, fromRoomId, []);
-    this.setSquare({ x: 6, y: 6 }, fromRoomId, []);
-    this.setSquare({ x: 6, y: 9 }, fromRoomId, ["y"]);
-    this.setSquare({ x: 9, y: 0 }, fromRoomId, ["x"]);
-    this.setSquare({ x: 9, y: 3 }, fromRoomId, ["x"]);
-    this.setSquare({ x: 9, y: 6 }, fromRoomId, ["x"]);
-    this.setSquare({ x: 9, y: 9 }, fromRoomId, ["x", "y"]);
 
 
+    const xv = 20 ;
+    const yv = xv ;
+
+    for (let xRow=0 ;xRow<xv ;xRow++) {
+      for (let yCol=0 ;yCol<yv ;yCol++) {
+
+        const finishOption:('x'|'y')[] = [] ;
+        
+        if(xRow === xv - 1) {
+          finishOption.push('x');
+        }
+
+        if(yCol === yv - 1) {
+          finishOption.push('y');
+        }
+
+
+        this.setSquare({ x: xRow * 3, y: yCol * 3 }, fromRoomId, finishOption);
+        
+      }
+    }
+    
     const checkTraces = new PathFinder ({dimensions:{width:100 , height:100} , position:{x:0 , y:0}} , []) ;
 
     const obstacles = this.gameObjects.get_doors();
