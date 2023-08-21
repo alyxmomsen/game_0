@@ -18,7 +18,7 @@ import PathFinder from "../library/ray-trace";
 class Field {
   params: {
     gameCell: { dimensions: Dimensions };
-    dimentions: Dimensions | undefined;
+    dimensions: Dimensions | undefined;
   };
 
   // map: (MapCellContentTypes | "r")[][];
@@ -26,7 +26,7 @@ class Field {
   constructor(params: { gameCell: { dimensions: Dimensions } }) {
     console.log("map created. params: ", params);
 
-    this.params = { gameCell: params.gameCell, dimentions: undefined };
+    this.params = { gameCell: params.gameCell, dimensions: undefined };
 
     // this.map = [];
     // this.map[0] = [];
@@ -160,14 +160,25 @@ export default class Map {
   }
 
   getFieldDimentions() {
-    return {
-      width:
-        10 /* this.field.params.resolution.horizontal */ *
-        this.field.params.gameCell.dimensions.width,
-      height:
-        10 /* this.field.params.resolution.vertical */ *
-        this.field.params.gameCell.dimensions.height,
-    };
+
+    const width = this.field.params.dimensions?.width ;
+    const height = this.field.params.dimensions?.height ;
+
+    if(width !== undefined && height !== undefined) {
+
+      return {
+        width:
+           width  *
+          this.field.params.gameCell.dimensions.width,
+        height:
+          height *
+          this.field.params.gameCell.dimensions.height,
+      };
+    }
+    else {
+      return false ;
+    }
+
   }
 
   get_fieldParams() {
@@ -363,48 +374,68 @@ export default class Map {
   }
 
   initTheMap(fromRoomId: number | undefined) {
-    this.setSquare({ x: 0, y: 0 }, fromRoomId, []);
-    this.setSquare({ x: 0, y: 3 }, fromRoomId, []);
-    this.setSquare({ x: 0, y: 6 }, fromRoomId, []);
-    this.setSquare({ x: 0, y: 9 }, fromRoomId, ["y"]);
-    this.setSquare({ x: 3, y: 0 }, fromRoomId, []);
-    this.setSquare({ x: 3, y: 3 }, fromRoomId, []);
-    this.setSquare({ x: 3, y: 6 }, fromRoomId, []);
-    this.setSquare({ x: 3, y: 9 }, fromRoomId, ["y"]);
-    this.setSquare({ x: 6, y: 0 }, fromRoomId, []);
-    this.setSquare({ x: 6, y: 3 }, fromRoomId, []);
-    this.setSquare({ x: 6, y: 6 }, fromRoomId, []);
-    this.setSquare({ x: 6, y: 9 }, fromRoomId, ["y"]);
-    this.setSquare({ x: 9, y: 0 }, fromRoomId, ["x"]);
-    this.setSquare({ x: 9, y: 3 }, fromRoomId, ["x"]);
-    this.setSquare({ x: 9, y: 6 }, fromRoomId, ["x"]);
-    this.setSquare({ x: 9, y: 9 }, fromRoomId, ["x", "y"]);
+    const xv = 5;
+    const yv = xv;
 
+    for (let xRow = 0; xRow < xv; xRow++) {
+      for (let yCol = 0; yCol < yv; yCol++) {
+        const finishOption: ("x" | "y")[] = [];
 
-    const checkTraces = new PathFinder ({dimensions:{width:100 , height:100} , position:{x:0 , y:0}} , []) ;
+        if (xRow === xv - 1) {
+          finishOption.push("x");
+        }
+
+        if (yCol === yv - 1) {
+          finishOption.push("y");
+        }
+
+        this.setSquare({ x: xRow * 3, y: yCol * 3 }, fromRoomId, finishOption);
+      }
+    }
+
+    /* set this map dimensions */
+
+    this.field.params.dimensions = {
+      width: this.mapCells[0].length,
+      height: this.mapCells.length,
+    };
+
+    console.log("this.field.params.dimentions", this.field.params.dimensions);
+
+    /* ========================  */
+
+    console.log("this map cells", this.mapCells);
+
+    const checkTraces = new PathFinder(
+      { dimensions: { width: 100, height: 100 }, position: { x: 0, y: 0 } },
+      []
+    );
 
     const obstacles = this.gameObjects.get_doors();
-    obstacles.forEach(obst => {
-      console.log('check target' , checkTraces.setTarget(obst));
+    obstacles.forEach((obst) => {
+      console.log("check target", checkTraces.setTarget(obst));
     });
 
-    // checkTraces.setTarget();
-
-
     // create enemies
+
+    console.log("init map , map params : ");
     for (let i = 0; i < 3; i++) {
+      const fieldWidth = this.field.params.dimensions.width;
+      const fieldHeight = this.field.params.dimensions.height;
+      const gameCellWidth = this.field.params.gameCell.dimensions.width;
+      const gameCellHeight = this.field.params.gameCell.dimensions.height;
+
       const newEnemy = new Enemy({
         id: 0,
         position: {
           x:
-            Math.floor(
-              Math.random() * 10 /* this.field.params.resolution.horizontal */
-            ) * this.field.params.gameCell.dimensions.width,
+            Math.floor(Math.random() * this.mapCells[0].length - 2) *
+              gameCellWidth +
+            gameCellWidth * 5,
           y:
-            Math.floor(
-              Math.random() * 10
-            ) /* this.field.params.resolution.vertical */ *
-            this.field.params.gameCell.dimensions.height,
+            Math.floor(Math.random() * this.mapCells.length - 2) *
+              gameCellHeight +
+            gameCellHeight * 5,
         },
         dimentions: {
           height: this.field.params.gameCell.dimensions.height - 10,
@@ -451,6 +482,7 @@ export default class Map {
     this.isLobby = isLobby;
     this.setID();
     this.field = new Field({ gameCell });
+
     this.gameObjects = new GameObjects();
 
     this.objectTypesToGeneatate = ["void", "reserved", "obstacle", "door"];
@@ -460,6 +492,6 @@ export default class Map {
 
     this.title = word;
 
-    console.log(this.title);
+    // console.log('this field' , this.field);
   }
 }
