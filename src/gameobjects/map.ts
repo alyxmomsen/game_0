@@ -14,6 +14,7 @@ import { SupplyBox } from "./supply-box";
 import weapons from "./../weapon-sets.json";
 import WordGen from "../library/word-gen";
 import PathFinder from "../library/ray-trace";
+import generateIDByRating from "../library/generate-id-by-rating";
 
 class Field {
   params: {
@@ -104,7 +105,7 @@ class GameObjects {
   }
 }
 
-type MapCellContentTypes = "void" | "reserved" | "obstacle" | "door";
+export type MapCellContentTypes = "void" | "reserved" | "obstacle" | "door";
 
 export class Iterator {
   private position: Position;
@@ -160,25 +161,17 @@ export default class Map {
   }
 
   getFieldDimentions() {
+    const width = this.field.params.dimensions?.width;
+    const height = this.field.params.dimensions?.height;
 
-    const width = this.field.params.dimensions?.width ;
-    const height = this.field.params.dimensions?.height ;
-
-    if(width !== undefined && height !== undefined) {
-
+    if (width !== undefined && height !== undefined) {
       return {
-        width:
-           width  *
-          this.field.params.gameCell.dimensions.width,
-        height:
-          height *
-          this.field.params.gameCell.dimensions.height,
+        width: width * this.field.params.gameCell.dimensions.width,
+        height: height * this.field.params.gameCell.dimensions.height,
       };
+    } else {
+      return false;
     }
-    else {
-      return false ;
-    }
-
   }
 
   get_fieldParams() {
@@ -194,8 +187,12 @@ export default class Map {
   }
 
   generateObjectType() {
-    const type = Math.floor(Math.random() * this.objectTypesToGeneatate.length);
-    return this.objectTypesToGeneatate[type];
+    this.objectTypesToGeneatate;
+    const id = generateIDByRating(this.objectTypesToGeneatate);
+
+    const typeID =
+      id; /* Math.floor(Math.random() * this.objectTypesToGeneatate.length) */
+    return this.objectTypesToGeneatate[typeID];
   }
 
   setPeriphery() {
@@ -224,10 +221,10 @@ export default class Map {
           end === true
             ? "obstacle"
             : x === 0 && y === 0
-            ? "void"
-            : ofsetX === 0 && x === 0
-            ? "obstacle"
-            : ofsetY === 0 && y === 0
+            ? ofsetX === 0 || ofsetY === 0
+              ? "obstacle"
+              : "void"
+            : (x === 0 && ofsetX === 0) || (y === 0 && ofsetY === 0)
             ? "obstacle"
             : this.generateObjectType();
         let newObject: GameObjectExtendsClasses | null = null;
