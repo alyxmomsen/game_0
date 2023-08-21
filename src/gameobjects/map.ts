@@ -397,6 +397,8 @@ export default class Map {
     // checkTraces.setTarget();
 
 
+    
+
     // create enemies
     for (let i = 0; i < 3; i++) {
       const newEnemy = new Enemy({
