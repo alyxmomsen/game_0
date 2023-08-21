@@ -38,8 +38,8 @@ export class Player extends GameObject {
         }
 
         if (game.changeCurrentRoom(door.getMapID())) {
-          this.position = { x: 0, y: 0 };
-          this.movement.targetPosition = { x: 0, y: 0 };
+          this.position = { x: 150, y: 150 };
+          this.movement.targetPosition = { x: 150, y: 150 };
         } else {
           // alert('no map');
         }

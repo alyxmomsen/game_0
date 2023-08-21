@@ -35,6 +35,7 @@ import { SpriteManager_beta } from "../library/sprite-manager-beta";
 import playerWeapon from "../weapon-sets.json";
 
 import Map from "../gameobjects/map";
+import generateIDByRating from "../library/generate-id-by-rating";
 
 console.log(playerWeapon);
 
@@ -255,22 +256,18 @@ export default class Game {
     const fieldDimensions = this.currentMap.getFieldDimentions();
 
     const field = {
-      width:fieldDimensions !== false ? fieldDimensions.width : 5 ,
-      height:fieldDimensions !== false ? fieldDimensions.height : 5 ,
-    }
+      width: fieldDimensions !== false ? fieldDimensions.width : 5,
+      height: fieldDimensions !== false ? fieldDimensions.height : 5,
+    };
 
     for (
       let i = 0;
-      i <
-      field.height /
-        this.UIManager.gameCellDimentions.height;
+      i < field.height / this.UIManager.gameCellDimentions.height;
       i++
     ) {
       for (
         let j = 0;
-        j <
-        field.width /
-          this.UIManager.gameCellDimentions.width;
+        j < field.width / this.UIManager.gameCellDimentions.width;
         j++
       ) {
         this.UIManager.ctx.drawImage(
@@ -386,7 +383,7 @@ export default class Game {
     // создаем игрока
     this.player = new Player({
       id: 0,
-      position: { x: 6, y: 6 },
+      position: { x: 105, y: 105 },
       weapons: [],
       dimentions: {
         width: (22 / 32) * gameCellDimentions.height,
@@ -413,6 +410,8 @@ export default class Game {
     this.viewPort = new ViewPort();
 
     // this.audio.play();
+
+    // console.log(generateIDByRating());
 
     window.addEventListener("click", () => {
       this.audio.muted = false;
