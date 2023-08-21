@@ -252,17 +252,24 @@ export default class Game {
     const background = new Image();
     background.src = bkg;
 
+    const fieldDimensions = this.currentMap.getFieldDimentions();
+
+    const field = {
+      width:fieldDimensions !== false ? fieldDimensions.width : 5 ,
+      height:fieldDimensions !== false ? fieldDimensions.height : 5 ,
+    }
+
     for (
       let i = 0;
       i <
-      this.currentMap.getFieldDimentions().height /
+      field.height /
         this.UIManager.gameCellDimentions.height;
       i++
     ) {
       for (
         let j = 0;
         j <
-        this.currentMap.getFieldDimentions().width /
+        field.width /
           this.UIManager.gameCellDimentions.width;
         j++
       ) {

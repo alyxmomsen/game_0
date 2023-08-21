@@ -1,75 +1,59 @@
 import Obstacle from "../gameobjects/obstacle";
 import { Dimensions, GameObjectExtendsClasses, Position } from "./types";
 
-
 interface SubjectProps {
-    position: Position;
-    dimensions: Dimensions;
+  position: Position;
+  dimensions: Dimensions;
 }
 
-
-
 class Subject {
-    private position: Position;
-    private dimensions: Dimensions;
-    private delta: { x: number; y: number };
+  private position: Position;
+  private dimensions: Dimensions;
+  private delta: { x: number; y: number };
 
-    getDelta () {
-        return {...this.delta} ;
-    }
+  getDelta() {
+    return { ...this.delta };
+  }
 
-    updateDelta () {
+  updateDelta() {}
 
-    }
+  updatePosition() {
+    this.position.x += this.delta.x;
+    this.position.y += this.delta.y;
+  }
 
-    updatePosition () {
-        this.position.x += this.delta.x ;
-        this.position.y += this.delta.y ;
-    }
-
-    constructor ({position , dimensions}:SubjectProps) {
-        this.position = position ;
-        this.dimensions = dimensions ;
-    }
-};
-
-
+  constructor({ position, dimensions }: SubjectProps) {
+    this.position = position;
+    this.dimensions = dimensions;
+  }
+}
 
 export default class PathFinder {
-    private subject: Subject ;
-    private obstacles:Obstacle[] ;
+  private subject: Subject;
+  private obstacles: Obstacle[];
 
-    private target: {
-        obstacle:Obstacle|null ;
-        position:Position|null ;
+  private target: {
+    obstacle: Obstacle | null;
+    position: Position | null;
+  };
+
+  setTarget(obstacle: Obstacle) {
+    if (obstacle.position) {
+      this.target.obstacle = obstacle;
+      this.target.position = obstacle.position;
+      return true;
+    } else {
+      return false;
     }
+  }
 
-    setTarget (obstacle:Obstacle) {
+  private updateSubjectPosition() {}
 
-        if(obstacle.position) {
-            
-            this.target.obstacle = obstacle ;
-            this.target.position = obstacle.position ;
-            return true ;
-        }
-        else {
-            return false ;
-        }
+  search() {}
 
-    }
-
-    private updateSubjectPosition() {
-        
-    }
-
-    search () {
-        
-    }
-    
-    constructor(subject:SubjectProps , obstacles:Obstacle[]) {
-        
-        this.subject = new Subject({...subject});
-        this.obstacles = obstacles ;
-        this.target = {obstacle:null , position:null} ;
-    }
+  constructor(subject: SubjectProps, obstacles: Obstacle[]) {
+    this.subject = new Subject({ ...subject });
+    this.obstacles = obstacles;
+    this.target = { obstacle: null, position: null };
+  }
 }
