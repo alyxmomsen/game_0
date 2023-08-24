@@ -412,9 +412,7 @@ export default class Game {
 
     // this.audio.play();
 
-    const MAPmMANAGER = new MapManager ();
-
-    
+    const MAPmMANAGER = new MapManager();
 
     window.addEventListener("click", () => {
       this.audio.muted = false;
