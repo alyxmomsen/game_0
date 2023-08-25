@@ -36,6 +36,7 @@ import playerWeapon from "../weapon-sets.json";
 
 import Map from "../gameobjects/map";
 import generateIDByRating from "../library/generate-id-by-rating";
+import LocationManager from "../library/location-manager";
 
 console.log(playerWeapon);
 
@@ -369,8 +370,8 @@ export default class Game {
     gameCellDimentions: Dimensions;
   }) {
     this.keysManager = new KeysManager(); // управленец нажатыми клавишами
-    this.creatorEnemyTicker = new TickController(1000);
-    this.supplyBoxCreatingTicker = new TickController(10000);
+    this.creatorEnemyTicker = new TickController(1000) ;
+    this.supplyBoxCreatingTicker = new TickController(10000) ;
 
     // create the lobby room
 
@@ -411,7 +412,7 @@ export default class Game {
 
     // this.audio.play();
 
-    // console.log(generateIDByRating());
+    // const MAPmMANAGER = new MapManager();
 
     window.addEventListener("click", () => {
       this.audio.muted = false;

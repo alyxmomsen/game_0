@@ -6,9 +6,11 @@ body {
   margin: 0 auto;
 }
 
-canvas {
+canvas#main-canvas {
+
   margin: 0 auto;
   display: block;
+  /* display: none; */
 }
 
 .main-section {

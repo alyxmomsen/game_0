@@ -14,7 +14,7 @@ export default function generateIDByRating(arr: MapCellContentTypes[]) {
     }
   }
 
-  console.log(results.sort());
+  // console.log(results.sort());
 
   return results[Math.floor(Math.random() * results.length)];
 }

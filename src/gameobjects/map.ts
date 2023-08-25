@@ -393,8 +393,8 @@ export default class Map {
     /* set this map dimensions */
 
     this.field.params.dimensions = {
-      width: this.mapCells[0].length,
-      height: this.mapCells.length,
+      width: this.mapCells[0].length ,
+      height: this.mapCells.length ,
     };
 
     console.log("this.field.params.dimentions", this.field.params.dimensions);
