@@ -1,6 +1,6 @@
 Technical Specification
 
-Project: Game "Game Title"
+Project: "Game 0"
 
 1. Critical Damage
 
