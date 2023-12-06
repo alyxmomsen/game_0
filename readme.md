@@ -1,35 +1,78 @@
-критический урон
+Technical Specification
 
-пресеты оружия в отдельном файле
+Project: Game "Game Title"
 
-взрывы гранат (пуля уничтожается и генерирует несколько осколков в разных направлениях)
+1. Critical Damage
 
-поведение летящей пули (зигзаги и тд)
+- Description: Implement a critical damage system where certain attacks deal increased damage.
+- Additional Requirements: Clarify the percentage of critical damage and its application mechanics.
 
-имитация дробовика (несколько пуль в разных направлениях)
+2. Weapon Presets in Separate File
 
-выбор (смена) оружия
+- Description: Move weapon presets data to a separate file for easy editing and adding new presets.
 
-карточка героя
+3. Grenade Explosions
 
-бонусы, оружие , жизни, препятствия
+- Description: Upon grenade explosion, destroy the bullet and generate fragments that spread in different directions.
 
-стрельба
+4. Flying Bullet Behavior
 
-движение объектов по алгоритму (работа с массивом истории ходов)
+- Description: Implement various trajectory patterns for the flying bullet, including zigzags and others.
+- Additional Requirements: Clarify the required trajectory patterns.
 
-трупы лежат некоторое время, а затем исчезают (опционально, для галочки)
+5. Shotgun Simulation
 
-пул стек объектов, для ускорения рантайм
+- Description: Create a shotgun effect where multiple bullets are fired in different directions.
 
-дерево квадрантов 
+6. Weapon Selection (Switching)
 
-использование связанного списка, хотябы эпизодически (для галочки)
+- Description: Develop a mechanism for selecting and switching weapons for the player character.
 
-холст, webGL
+7. Hero Card
 
-в момент попадания пули в стате выделяется фокус на атакуемом объекте
+- Description: Create an information card for the hero, displaying their name, health, level, and other attributes.
 
-объекты имеют такие возможности как ускорение и замедление
+8. Bonuses, Weapons, Lives, Obstacles
 
-урон зависит от скорости
+- Description: Implement various bonuses, weapons, lives, and obstacles in the game.
+- Additional Requirements: Specify the list of specific bonuses, weapons, lives, and obstacles.
+
+9. Shooting Mechanism
+
+- Description: Design a shooting mechanics, including hit detection and corresponding reactions.
+
+10. Object Movement with Algorithm
+
+- Description: Implement object movement based on an algorithm using a history array.
+
+11. Object Corpses
+
+- Description: Display object corpses on the field that disappear after a certain time.
+
+12. Object Pooling
+
+- Description: Utilize object pooling to optimize runtime performance.
+
+13. Quadtree
+
+- Description: Implement a quadtree for efficient collision detection between objects.
+
+14. Linked List Usage
+
+- Description: Utilize a linked list for specific cases during game development.
+
+15. Canvas, WebGL
+
+- Description: Use canvas and WebGL technology for rendering the game world and objects.
+
+16. Focus on Targeted Object
+
+- Description: Highlight the targeted object upon bullet impact.
+
+17. Object Acceleration and Deceleration
+
+- Description: Implement the ability for objects to accelerate and decelerate in the game.
+
+18. Speed-dependent Damage
+
+- Description: Implement a mechanism where the damage inflicted by an object depends on its speed.
